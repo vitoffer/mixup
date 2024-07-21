@@ -1,0 +1,11 @@
+{
+	"name": "mixup",
+	"version": "1.0.0",
+	"description": "MixUp - Mashups collection",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"dev": "npm run dev --prefix client"
+	},
+	"author": "vitoffer",
+	"license": "MIT"
+}
