@@ -1,6 +1,6 @@
 <script setup>
-import TitleLogo from "./TitleLogo.vue"
-import TitleSection from "./TitleSection.vue"
+import TitleLogo from "./Title/TitleLogo.vue"
+import TitleSection from "./Title/TitleSection.vue"
 </script>
 
 <template>
