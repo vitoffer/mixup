@@ -4,7 +4,7 @@ import HeaderTitle from "./Header/HeaderTitle.vue"
 </script>
 
 <template>
-	<header class="mt-[16px]">
+	<header class="mt-[16px] flex items-center gap-[24px]">
 		<HeaderTitle />
 		<HeaderActions />
 	</header>
