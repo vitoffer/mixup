@@ -1,3 +1,7 @@
-<script setup></script>
+<script setup>
+import TrackCard from "./TrackList/TrackCard.vue"
+</script>
 
-<template>Track list</template>
+<template>
+	<TrackCard />
+</template>
