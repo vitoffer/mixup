@@ -17,10 +17,11 @@ export default {
 				DEFAULT: "#79aea3",
 				light: "#a1c6bf",
 			},
+			transparent: "transparent",
 		},
 		fontFamily: {
-			"open-sans": "Open Sans",
-			"nunito-sans": "Nunito Sans 10pt",
+			primary: "Open Sans",
+			accent: "Nunito Sans 10pt",
 			holtwood: "Holtwood One SC",
 		},
 	},
