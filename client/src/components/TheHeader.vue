@@ -7,5 +7,3 @@ import HeaderTitle from "./HeaderTitle.vue"
 	<HeaderTitle />
 	<HeaderActions />
 </template>
-
-<style scoped></style>

@@ -1,11 +1,3 @@
-<script setup>
+<script setup></script>
 
-</script>
-
-<template>
- Track list
-</template>
-
-<style scoped>
-
-</style>
+<template>Track list</template>

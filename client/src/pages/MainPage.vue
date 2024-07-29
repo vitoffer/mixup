@@ -7,5 +7,3 @@ import TheHeader from "../components/TheHeader.vue"
 	<TheHeader />
 	<TrackList />
 </template>
-
-<style scoped></style>
