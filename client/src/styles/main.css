@@ -2,13 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+	@apply font-primary;
+}
+
 @layer components {
 	.header-action-block {
-		@apply flex min-w-[150px] items-center justify-center gap-[16px] rounded-[10px] bg-gray-light px-[16px] py-[4px] font-primary text-[18px] text-yellow;
+		@apply flex min-w-[150px] items-center justify-center gap-[16px] rounded-[10px] bg-gray-light px-[20px] py-[4px] text-[18px] text-yellow;
 	}
 
 	.button {
-		@apply flex w-[170px] items-center justify-center gap-[5px] rounded-[10px] border border-solid py-[5px] font-primary;
+		@apply flex w-[170px] items-center justify-center gap-[5px] rounded-[10px] border border-solid py-[5px] font-primary text-[12px] leading-[16px];
 	}
 
 	.button--red {
@@ -24,18 +28,18 @@
 	}
 
 	.button--solid {
-		@apply border-transparent bg-[--color];
+		@apply border-transparent bg-[--color] font-bold;
 	}
 
 	.button--solid:hover {
-		@apply border-[--color] bg-transparent text-[--color];
+		@apply border-[--color] bg-transparent font-normal text-[--color];
 	}
 
 	.button--outline {
-		@apply border-[--color] bg-transparent text-[--color];
+		@apply border-[--color] bg-transparent font-normal text-[--color];
 	}
 
 	.button--outline:hover {
-		@apply border-transparent bg-[--color];
+		@apply border-transparent bg-[--color] font-bold text-gray;
 	}
 }

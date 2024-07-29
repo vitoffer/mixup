@@ -24,6 +24,9 @@ export default {
 				accent: "Nunito Sans 10pt",
 				holtwood: "Holtwood One SC",
 			},
+			boxShadow: {
+				card: "4px 0px 4px 0px rgba(121, 174, 163, 0.2), 0px 4px 4px 0px rgba(121, 174, 163, 0.2), -4px 0px 4px 0px rgba(121, 174, 163, 0.2), 0px -4px 4px 0px rgba(121, 174, 163, 0.2), 4px 0px 4px 0px rgba(121, 174, 163, 0.2) inset, 0px 4px 4px 0px rgba(121, 174, 163, 0.2) inset, -4px 0px 4px 0px rgba(121, 174, 163, 0.2) inset, 0px -4px 4px 0px rgba(121, 174, 163, 0.2) inset",
+			},
 		},
 	},
 
