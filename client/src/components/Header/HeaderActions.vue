@@ -1,6 +1,10 @@
-<script setup></script>
+<script setup>
+import ActionSearch from "./Actions/ActionSearch.vue"
+</script>
 
 <template>
-	<div>Search</div>
-	<div>Filters</div>
+	<div class="flex">
+		<ActionSearch />
+		<div>Filters</div>
+	</div>
 </template>
