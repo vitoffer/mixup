@@ -1,9 +1,11 @@
 <script setup>
-import HeaderActions from "./HeaderActions.vue"
-import HeaderTitle from "./HeaderTitle.vue"
+import HeaderActions from "./Header/HeaderActions.vue"
+import HeaderTitle from "./Header/HeaderTitle.vue"
 </script>
 
 <template>
-	<HeaderTitle />
-	<HeaderActions />
+	<header class="mt-[16px]">
+		<HeaderTitle />
+		<HeaderActions />
+	</header>
 </template>
