@@ -15,7 +15,7 @@ export default {
 				red: "#f25445",
 				cyan: {
 					DEFAULT: "#79aea3",
-					light: "#a1c6bf",
+					light: "#C9DFDA",
 				},
 				transparent: "transparent",
 			},
@@ -26,6 +26,10 @@ export default {
 			},
 			boxShadow: {
 				card: "4px 0px 4px 0px rgba(121, 174, 163, 0.2), 0px 4px 4px 0px rgba(121, 174, 163, 0.2), -4px 0px 4px 0px rgba(121, 174, 163, 0.2), 0px -4px 4px 0px rgba(121, 174, 163, 0.2), 4px 0px 4px 0px rgba(121, 174, 163, 0.2) inset, 0px 4px 4px 0px rgba(121, 174, 163, 0.2) inset, -4px 0px 4px 0px rgba(121, 174, 163, 0.2) inset, 0px -4px 4px 0px rgba(121, 174, 163, 0.2) inset",
+				link: "1px 0px 4px 0px rgba(255, 226, 157, 0.2), 0px 1px 4px 0px rgba(255, 226, 157, 0.2), -1px 0px 4px 0px rgba(255, 226, 157, 0.2), 0px -1px 4px 0px rgba(255, 226, 157, 0.2), 2px 0px 4px 0px rgba(255, 226, 157, 0.2) inset, 0px 2px 4px 0px rgba(255, 226, 157, 0.2) inset, -2px 0px 4px 0px rgba(255, 226, 157, 0.2) inset, 0px -2px 4px 0px rgba(255, 226, 157, 0.2) inset",
+			},
+			maxWidth: {
+				"256px": "256px",
 			},
 		},
 	},
