@@ -6,40 +6,38 @@ body {
 	@apply font-primary;
 }
 
-@layer components {
-	.header-action-block {
-		@apply flex min-w-[150px] items-center justify-center gap-[16px] rounded-[10px] bg-gray-light px-[20px] py-[4px] text-[18px] text-yellow;
-	}
+.header-action-block {
+	@apply flex min-w-[150px] items-center justify-center gap-[16px] rounded-[10px] bg-gray-light px-[20px] py-[4px] text-[18px] text-yellow;
+}
 
-	.button {
-		@apply flex w-[170px] items-center justify-center gap-[5px] rounded-[10px] border border-solid py-[5px] font-primary text-[12px] leading-[16px];
-	}
+.button {
+	@apply flex w-[170px] items-center justify-center gap-[5px] rounded-[10px] border border-solid py-[5px] font-primary text-[12px] leading-[16px];
+}
 
-	.button--red {
-		--color: theme("colors.red");
-	}
+.button--red {
+	--color: theme("colors.red");
+}
 
-	.button--yellow {
-		--color: theme("colors.yellow.DEFAULT");
-	}
+.button--yellow {
+	--color: theme("colors.yellow.DEFAULT");
+}
 
-	.button--cyan {
-		--color: theme("colors.cyan.DEFAULT");
-	}
+.button--cyan {
+	--color: theme("colors.cyan.DEFAULT");
+}
 
-	.button--solid {
-		@apply border-transparent bg-[--color] font-bold;
-	}
+.button--solid {
+	@apply border-transparent bg-[--color] font-bold;
+}
 
-	.button--solid:hover {
-		@apply border-[--color] bg-transparent font-normal text-[--color];
-	}
+.button--solid:hover {
+	@apply border-[--color] bg-transparent font-normal text-[--color];
+}
 
-	.button--outline {
-		@apply border-[--color] bg-transparent font-normal text-[--color];
-	}
+.button--outline {
+	@apply border-[--color] bg-transparent font-normal text-[--color];
+}
 
-	.button--outline:hover {
-		@apply border-transparent bg-[--color] font-bold text-gray;
-	}
+.button--outline:hover {
+	@apply border-transparent bg-[--color] font-bold text-gray;
 }
