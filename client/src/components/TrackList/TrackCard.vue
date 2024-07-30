@@ -1,6 +1,4 @@
 <script setup>
-import UtilityButton from "../utilities/UtilityButton.vue"
-
 defineProps(["track"])
 </script>
 
@@ -34,11 +32,8 @@ defineProps(["track"])
 				{{ trackInside }}
 			</li>
 		</ul>
-		<UtilityButton
-			color="red"
-			:is-solid="false"
-		>
+		<button class="button button--red button--outline">
 			Трек в дискорд боте
-		</UtilityButton>
+		</button>
 	</div>
 </template>
