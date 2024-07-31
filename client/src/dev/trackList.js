@@ -3,7 +3,7 @@ import image2Url from "@/dev/images/card_image_2.jpg"
 import image3Url from "@/dev/images/card_image_3.jpg"
 import image4Url from "@/dev/images/card_image_4.jpg"
 import image5Url from "@/dev/images/card_image_5.jpg"
-// import image6Url from "@/dev/images/card_image_6.jpg"
+import image6Url from "@/dev/images/card_image_6.jpg"
 
 export default [
 	{
@@ -25,7 +25,7 @@ export default [
 		id: 2,
 		image: image2Url,
 		title: "Vmeste My - 5sta Family, 6YNTHMANE, budAGE",
-		author: "author 1",
+		author: "author 1asfa afn ajfsasdadadsadad",
 		tracksInside: ["Track 1 - Kent 1", "Gooop - Lorem ipsum dolor si."],
 		platforms: [
 			{ youtube: "https://www.youtube.com/watch?v=AAUFziFIpgo" },
@@ -45,7 +45,7 @@ export default [
 		image: image4Url,
 		title: "Музыка громче - BUSHIDO ZHO",
 		author: "author 4",
-		tracksInside: ["Track 4 - Kent 1", "Track 2 - Kiii"],
+		tracksInside: ["Track 2 - Kiii"],
 		platforms: [
 			{ youtube: "https://www.youtube.com/watch?v=zYS0gSGhgfw" },
 			{ yandex: "https://music.yandex.ru/album/28398458/track/119694233" },
@@ -63,12 +63,16 @@ export default [
 			{ vk: "https://vk.com/audio-2001502235_127502235" },
 		],
 	},
-	// {
-	// 	id: 6,
-	// 	image: image6Url,
-	// 	title: "Москва - Yanix",
-	// 	author: "by author 2",
-	// 	tracksInside: ["Track 2 - Kent 5", "Track 22 - SSnfasibfaubfahbfia"],
-	// 	platforms: ["youtube", "yandex", "vk",],
-	// },
+	{
+		id: 6,
+		image: image6Url,
+		title: "Москва - Yanix",
+		author: "by author 2",
+		tracksInside: [
+			"Track 2 - Kent 5",
+			"Track 22 - SSnfasibfaubfahbfia",
+			"asdadassdad -asss",
+		],
+		platforms: [{ youtube: "" }, { yandex: "" }, { vk: "" }],
+	},
 ]

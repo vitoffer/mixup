@@ -16,6 +16,7 @@ export default {
 				cyan: {
 					DEFAULT: "#79aea3",
 					light: "#C9DFDA",
+					accent: "#A1C6BF",
 				},
 				transparent: "transparent",
 			},
@@ -30,6 +31,10 @@ export default {
 			},
 			maxWidth: {
 				"256px": "256px",
+				"100%": "100%",
+			},
+			width: {
+				"100%": "100%",
 			},
 		},
 	},
