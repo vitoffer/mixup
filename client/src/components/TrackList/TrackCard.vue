@@ -44,6 +44,7 @@ onMounted(() => {
 			extraLinesIndicator.textContent = `| +${extraLines}`
 			extraLinesIndicator.classList.add("text-cyan-accent")
 			extraLinesIndicator.classList.add("ml-[5px]")
+			extraLinesIndicator.classList.add("whitespace-nowrap")
 			element.append(extraLinesIndicator)
 		}
 		console.log(element, "is ellipsis", isEllipsisActive(element.children[0]))
@@ -97,7 +98,7 @@ function countLines(el) {
 			:id="`${$props.track.id}-ul`"
 		>
 			<li
-				class="flex items-center justify-center"
+				class="flex max-w-256px items-center justify-center"
 				v-for="trackInside in tracksInside"
 				:key="trackInside"
 			>
