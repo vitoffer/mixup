@@ -47,9 +47,9 @@ export default [
 	{
 		id: 4,
 		image: image4Url,
-		title: "Музыка громче - BUSHIDO ZHO",
-		author: "author 4",
-		tracksInside: ["Track 2 - Kiii"],
+		title: "Музыка громче - BUSHIDO ZHO emsghknle dhgjd nhd shgfsd hd",
+		author: "author 4g skngn jdj,d snhdjkl nhkd f",
+		tracksInside: ["Track 2 - Kiii nsjgb sj gjb hsd hsrh sgf shsh s"],
 		platforms: [
 			{ youtube: "https://www.youtube.com/watch?v=zYS0gSGhgfw" },
 			{ yandex: "https://music.yandex.ru/album/28398458/track/119694233" },

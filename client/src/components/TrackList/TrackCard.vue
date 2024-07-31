@@ -1,14 +1,16 @@
 <script setup>
-import { onMounted } from "vue"
+import { computed, onMounted, ref } from "vue"
+import TrackInside from "./TrackInside.vue"
 
 const props = defineProps(["track"])
 
-let tracksInside = props.track.tracksInside
-let extraLines = 0
-if (tracksInside.length > 2) {
-	extraLines = tracksInside.length - 2
-	tracksInside = tracksInside.slice(0, 2)
-}
+const tracksInside = props.track.tracksInside
+
+const tracksInsideFiltered =
+	tracksInside.length > 2 ? tracksInside.slice(0, 2) : tracksInside
+
+let tracksInsideList = ref(tracksInsideFiltered)
+let extraLines = Math.max(0, tracksInside.length - 2)
 
 let lis
 
@@ -89,7 +91,7 @@ function drawFullTextWidget(el, isList) {
 		isList == "list"
 			? parseFloat(computedStyles.marginTop) +
 				parseFloat(computedStyles.marginBottom) +
-				0.4
+				-0.2
 			: 0
 
 	const { top: elTop } = getCoords(el)
@@ -186,11 +188,12 @@ function hideFullText(event) {
 
 function showFullList(event) {
 	const el = event.target
-	console.log(el)
 
 	if (extraLines == 0 && lis.every((li) => !isEllipsisActive(li.children[0]))) {
 		return
 	}
+
+	tracksInsideList.value = tracksInside
 
 	drawFullTextWidget(el, "list")
 
@@ -206,13 +209,12 @@ function showFullList(event) {
 		}
 	})
 	el.classList.add("flex", "flex-col", "items-center")
-	console.log(1)
 }
 
 function hideFullList(event) {
 	const el = event.target
+	tracksInsideList.value = tracksInsideFiltered
 	clearFullTextWidget(el)
-
 	Array.from(el.children).forEach((li) => {
 		const liChildren = li.children
 		liChildren[0].classList.add(
@@ -261,17 +263,11 @@ function hideFullList(event) {
 			@mouseenter="showFullList"
 			@mouseleave="hideFullList"
 		>
-			<li
-				class="flex max-w-256px items-center justify-center"
-				v-for="trackInside in tracksInside"
+			<TrackInside
+				v-for="trackInside in tracksInsideList"
 				:key="trackInside"
-			>
-				<div
-					class="custom-list-marker relative inline-block max-w-256px overflow-hidden text-ellipsis whitespace-nowrap pl-[10px]"
-				>
-					{{ trackInside }}
-				</div>
-			</li>
+				:track="trackInside"
+			/>
 		</ul>
 		<div class="flex w-[100%] gap-[8px]">
 			<a
@@ -309,7 +305,7 @@ function hideFullList(event) {
 	position: absolute;
 
 	left: 0;
-	top: 50%;
+	top: 10px;
 	transform: translateY(-50%);
 	@apply bg-cyan-light;
 }
