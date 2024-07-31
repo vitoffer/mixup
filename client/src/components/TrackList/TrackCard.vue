@@ -16,12 +16,9 @@ onMounted(() => {
 	const ul = document.getElementById(`${props.track.id}-ul`)
 	let lis = ul.children
 
-	console.log(title, "is clamped", isClamped(title))
 	if (countLines(title) == 1) {
-		console.log("1 line")
 		ul.style.marginTop = "auto"
 	} else {
-		console.log("2 lines")
 		ul.style.marginTop = "4px"
 	}
 
@@ -42,12 +39,14 @@ onMounted(() => {
 
 			const extraLinesIndicator = document.createElement("span")
 			extraLinesIndicator.textContent = `| +${extraLines}`
-			extraLinesIndicator.classList.add("text-cyan-accent")
-			extraLinesIndicator.classList.add("ml-[5px]")
-			extraLinesIndicator.classList.add("whitespace-nowrap")
+			extraLinesIndicator.classList.add(
+				"text-cyan-accent",
+				"ml-[5px]",
+				"whitespace-nowrap",
+			)
+
 			element.append(extraLinesIndicator)
 		}
-		console.log(element, "is ellipsis", isEllipsisActive(element.children[0]))
 	})
 })
 
@@ -67,6 +66,51 @@ function countLines(el) {
 	var lines = Math.round(divHeight / lineHeight)
 	return lines
 }
+
+function mouseOverTitle(e) {
+	if (!isClamped(e.target)) {
+		return
+	}
+
+	const el = e.target
+	el.classList.add("expanded")
+	const elWidth = el.clientWidth
+	const elHeight = el.clientHeight
+
+	el.style.overflow = "visible"
+	el.style.position = "absolute"
+
+	el.style.width = "150%"
+	el.style.borderRadius = "10px"
+	el.style.left = "-25%"
+	el.style.boxShadow = "0 0 6px 0 rgba(0 0 0 / 10%)"
+
+	el.classList.add("bg-gray-light")
+
+	if (el.nextSibling.nodeName == "DIV") {
+		el.nextSibling.style.display = ""
+	} else {
+		const emptyEl = document.createElement("div")
+		emptyEl.style.width = `${elWidth}px`
+		emptyEl.style.height = `${elHeight - 0.2}px`
+
+		el.after(emptyEl)
+	}
+}
+
+function mouseOutTitle(e) {
+	const el = e.target
+	if (!el.classList.contains("expanded")) {
+		return
+	}
+
+	el.style.overflow = "hidden"
+	el.style.position = ""
+	el.style.width = ""
+	el.classList.remove("bg-gray-light")
+
+	el.nextSibling.style.display = "none"
+}
 </script>
 
 <template>
@@ -79,11 +123,13 @@ function countLines(el) {
 			width="256"
 			class="mb-[8px]"
 		/>
-		<div class="flex flex-col gap-[4px]">
+		<div class="relative flex flex-col gap-[4px]">
 			<h2
 				class="line-clamp-2 text-[18px] leading-[1.3] text-yellow"
 				ref="el"
 				:id="`${$props.track.id}-h2`"
+				@mouseover="mouseOverTitle"
+				@mouseout="mouseOutTitle"
 			>
 				{{ $props.track.title }}
 			</h2>
