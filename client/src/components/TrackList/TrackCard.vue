@@ -18,6 +18,7 @@ onMounted(() => {
 
 	if (countLines(title) == 1) {
 		ul.style.marginTop = "auto"
+		ul.style.marginBottom = "16px"
 	} else {
 		ul.style.marginTop = "4px"
 	}
@@ -55,7 +56,7 @@ function isEllipsisActive(e) {
 }
 
 function isClamped(e) {
-	return e.scrollHeight > e.clientHeight
+	return e.scrollHeight - e.clientHeight > 5
 }
 
 function countLines(el) {
