@@ -10,11 +10,13 @@ if (tracksInside.length > 2) {
 	tracksInside = tracksInside.slice(0, 2)
 }
 
+let lis
+
 onMounted(() => {
 	const title = document.getElementById(`${props.track.id}-h2`)
 
 	const ul = document.getElementById(`${props.track.id}-ul`)
-	let lis = ul.children
+	lis = ul.children
 
 	if (linesCount(title) == 1) {
 		ul.style.marginTop = "auto"
@@ -68,73 +70,32 @@ function linesCount(el) {
 	return lines
 }
 
-// function mouseOverTitle(e) {
-// 	if (!isClamped(e.target)) {
-// 		return
-// 	}
+function getCoords(elem) {
+	let box = elem.getBoundingClientRect()
 
-// 	const el = e.target
-// 	el.classList.add("expanded")
-// 	const elWidth = el.clientWidth
-// 	const elHeight = el.clientHeight
-
-// 	el.style.overflow = "visible"
-// 	el.style.position = "absolute"
-
-// 	el.style.width = "150%"
-// 	el.style.borderRadius = "10px"
-// 	el.style.left = "-25%"
-// 	el.style.boxShadow = "0 0 6px 0 rgba(0 0 0 / 10%)"
-
-// 	el.classList.add("bg-gray-light")
-
-// 	if (el.nextSibling.nodeName == "DIV") {
-// 		el.nextSibling.style.display = ""
-// 	} else {
-// 		const emptyEl = document.createElement("div")
-// 		emptyEl.style.width = `${elWidth}px`
-// 		emptyEl.style.height = `${elHeight - 0.2}px`
-
-// 		el.after(emptyEl)
-// 	}
-// }
-
-// function mouseOutTitle(e) {
-// 	const el = e.target
-// 	if (!el.classList.contains("expanded")) {
-// 		return
-// 	}
-
-// 	el.style.overflow = "hidden"
-// 	el.style.position = ""
-// 	el.style.width = ""
-// 	el.classList.remove("bg-gray-light")
-
-// 	el.nextSibling.style.display = "none"
-// }
-
-function showFullText(event) {
-	const el = event.target
-
-	if (
-		(linesCount(el) >= 2 && !isClamped(el)) ||
-		(linesCount(el) == 1 &&
-			el.classList.contains("author") &&
-			!isClamped(el)) ||
-		(linesCount(el) == 1 &&
-			!el.classList.contains("author") &&
-			!isEllipsisActive(el))
-	) {
-		return
+	return {
+		top: box.top + window.scrollY,
+		right: box.right + window.scrollX,
+		bottom: box.bottom + window.scrollY,
+		left: box.left + window.scrollX,
 	}
+}
 
+function drawFullTextWidget(el, isList) {
 	const elWidth = el.clientWidth
-	const elHeight = el.clientHeight
+	let elHeight = el.clientHeight
+	const computedStyles = getComputedStyle(el)
+	elHeight +=
+		isList == "list"
+			? parseFloat(computedStyles.marginTop) +
+				parseFloat(computedStyles.marginBottom) +
+				0.4
+			: 0
 
 	const { top: elTop } = getCoords(el)
 	const { top: cardTop } = getCoords(el.closest(".card"))
 
-	if (el.nextSibling?.classList.contains("empty-el")) {
+	if (el.nextSibling?.classList?.contains("empty-el")) {
 		el.nextSibling.style.display = "block"
 	} else {
 		const emptyEl = document.createElement("div")
@@ -154,20 +115,24 @@ function showFullText(event) {
 		"p-[5px]",
 	)
 
-	el.style.cssText = `
+	let calculatedTop = elTop - cardTop - 5
+	calculatedTop -=
+		isList == "list" && computedStyles.marginBottom == "8px"
+			? 4
+			: isList == "list" && computedStyles.marginBottom == "16px"
+				? -0.1
+				: 0
+
+	el.style.cssText += `
 	z-index: 1;
 	width: 384px;
-	top: ${elTop - cardTop - 5}px;
+	top: ${calculatedTop}px;
 	left: -48px;
 	box-shadow: 0 0 4px 0 rgba(0 0 0 / 10%);
 	`
-
-	el.classList.remove("line-clamp-1", "line-clamp-2")
 }
 
-function hideFullText(event) {
-	const el = event.target
-
+function clearFullTextWidget(el) {
 	if (!el.classList.contains("expanded")) {
 		return
 	}
@@ -181,27 +146,84 @@ function hideFullText(event) {
 		"p-[5px]",
 	)
 
+	if (el.nextSibling.classList.contains("empty-el")) {
+		el.nextSibling.style.display = "none"
+	}
+}
+
+function showFullText(event) {
+	const el = event.target
+
+	if (
+		(linesCount(el) >= 2 && !isClamped(el)) ||
+		(linesCount(el) == 1 &&
+			el.classList.contains("author") &&
+			!isClamped(el)) ||
+		(linesCount(el) == 1 &&
+			!el.classList.contains("author") &&
+			!isEllipsisActive(el))
+	) {
+		return
+	}
+
+	drawFullTextWidget(el)
+
+	el.classList.remove("line-clamp-1", "line-clamp-2")
+}
+
+function hideFullText(event) {
+	const el = event.target
+
+	clearFullTextWidget(el)
+
 	if (el.classList.contains("author")) {
 		el.classList.add("line-clamp-1")
 	}
 	if (el.classList.contains("title")) {
 		el.classList.add("line-clamp-2")
 	}
-
-	if (el.nextSibling.classList.contains("empty-el")) {
-		el.nextSibling.style.display = "none"
-	}
 }
 
-function getCoords(elem) {
-	let box = elem.getBoundingClientRect()
+function showFullList(event) {
+	const el = event.target
+	console.log(el)
 
-	return {
-		top: box.top + window.scrollY,
-		right: box.right + window.scrollX,
-		bottom: box.bottom + window.scrollY,
-		left: box.left + window.scrollX,
+	if (extraLines == 0 && lis.every((li) => !isEllipsisActive(li.children[0]))) {
+		return
 	}
+
+	drawFullTextWidget(el, "list")
+
+	Array.from(el.children).forEach((li) => {
+		const liChildren = li.children
+		liChildren[0].classList.remove(
+			"overflow-hidden",
+			"text-ellipsis",
+			"whitespace-nowrap",
+		)
+		if (liChildren.length == 2) {
+			liChildren[1].style.display = "none"
+		}
+	})
+	el.classList.add("flex", "flex-col", "items-center")
+	console.log(1)
+}
+
+function hideFullList(event) {
+	const el = event.target
+	clearFullTextWidget(el)
+
+	Array.from(el.children).forEach((li) => {
+		const liChildren = li.children
+		liChildren[0].classList.add(
+			"overflow-hidden",
+			"text-ellipsis",
+			"whitespace-nowrap",
+		)
+		if (liChildren.length == 2) {
+			liChildren[1].style.display = "inline"
+		}
+	})
 }
 </script>
 
@@ -236,6 +258,8 @@ function getCoords(elem) {
 		<ul
 			class="mb-[8px] text-[14px] leading-[1.4] text-cyan-light"
 			:id="`${$props.track.id}-ul`"
+			@mouseenter="showFullList"
+			@mouseleave="hideFullList"
 		>
 			<li
 				class="flex max-w-256px items-center justify-center"
