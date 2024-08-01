@@ -1,6 +1,11 @@
 <script setup>
-import { computed, onMounted, ref } from "vue"
-import TrackInside from "./TrackInside.vue"
+import { onMounted, ref } from "vue"
+import TrackInside from "./TrackCard/TrackCardTrackInside.vue"
+import EmptyBlock from "../utilities/EmptyBlock.vue"
+import TrackCardImage from "./TrackCard/TrackCardImage.vue"
+import TrackCardTextBlock from "./TrackCard/TrackCardTextBlock.vue"
+import TrackCardTrackInsideList from "./TrackCard/TrackCardTrackInsideList.vue"
+import TrackCardPlatformLinkList from "./TrackCard/TrackCardPlatformLinkList.vue"
 
 const props = defineProps(["track"])
 
@@ -12,287 +17,187 @@ const tracksInsideFiltered =
 let tracksInsideList = ref(tracksInsideFiltered)
 let extraLines = Math.max(0, tracksInside.length - 2)
 
+let [emptyBlockAfterTitle, emptyBlockAfterAuthor, emptyBlockAfterList] = [
+	false,
+	false,
+	false,
+]
+
 let lis
 
-onMounted(() => {
-	const title = document.getElementById(`${props.track.id}-h2`)
+// onMounted(() => {
+// 	// const title = document.getElementById(`${props.track.id}-h2`)
 
-	const ul = document.getElementById(`${props.track.id}-ul`)
-	lis = ul.children
+// 	const ul = document.getElementById(`${props.track.id}-ul`)
+// 	lis = ul.children
 
-	if (linesCount(title) == 1) {
-		ul.style.marginTop = "auto"
-		ul.style.marginBottom = "16px"
-	} else {
-		ul.style.marginTop = "4px"
-	}
+// 	// if (linesCount(title) == 1) {
+// 	// 	ul.style.marginTop = "auto"
+// 	// 	ul.style.marginBottom = "16px"
+// 	// } else {
+// 	// 	ul.style.marginTop = "4px"
+// 	// }
 
-	lis = Array.from(lis)
+// 	lis = Array.from(lis)
 
-	if (lis.length == 1) {
-		ul.style.marginTop = "auto"
-		ul.style.marginBottom = "16px"
-	} else if (lis.length > 2) {
-		extraLines = lis.length - 2
-		lis = lis.slice(0, 2)
-	}
-	lis.forEach((element) => {
-		if (lis.indexOf(element) == lis.length - 1 && extraLines) {
-			if (!isEllipsisActive(element.children[0])) {
-				element.children[0]
-			}
+// 	if (lis.length == 1) {
+// 		ul.style.marginTop = "auto"
+// 		ul.style.marginBottom = "16px"
+// 	} else if (lis.length > 2) {
+// 		extraLines = lis.length - 2
+// 		lis = lis.slice(0, 2)
+// 	}
+// 	lis.forEach(
+// 		(element) => {
+// 			if (lis.indexOf(element) == lis.length - 1 && extraLines) {
+// 				// if (!isEllipsisActive(element.children[0])) {
+// 				element.children[0]
+// 			}
 
-			const extraLinesIndicator = document.createElement("span")
-			extraLinesIndicator.textContent = `| +${extraLines}`
-			extraLinesIndicator.classList.add(
-				"text-cyan-accent",
-				"ml-[5px]",
-				"whitespace-nowrap",
-			)
+// 			const extraLinesIndicator = document.createElement("span")
+// 			extraLinesIndicator.textContent = `| +${extraLines}`
+// 			extraLinesIndicator.classList.add(
+// 				"text-cyan-accent",
+// 				"ml-[5px]",
+// 				"whitespace-nowrap",
+// 			)
 
-			element.append(extraLinesIndicator)
-		}
-	})
-})
+// 			element.append(extraLinesIndicator)
+// 		},
+// 		// }
+// 	)
+// })
 
-function isEllipsisActive(e) {
-	return e.offsetWidth < e.scrollWidth
-}
+// function isEllipsisActive(e) {
+// 	return e.offsetWidth < e.scrollWidth
+// }
 
-function isClamped(e) {
-	return e.scrollHeight - e.clientHeight > 5
-}
+// function getCoords(elem) {
+// 	let box = elem.getBoundingClientRect()
 
-function linesCount(el) {
-	const divHeight = el.clientHeight
+// 	return {
+// 		top: box.top + window.scrollY,
+// 		right: box.right + window.scrollX,
+// 		bottom: box.bottom + window.scrollY,
+// 		left: box.left + window.scrollX,
+// 	}
+// }
 
-	const lineHeight = parseFloat(window.getComputedStyle(el).lineHeight)
 
-	const lines = Math.round(divHeight / lineHeight)
-	return lines
-}
 
-function getCoords(elem) {
-	let box = elem.getBoundingClientRect()
 
-	return {
-		top: box.top + window.scrollY,
-		right: box.right + window.scrollX,
-		bottom: box.bottom + window.scrollY,
-		left: box.left + window.scrollX,
-	}
-}
 
-function drawFullTextWidget(el, isList) {
-	const elWidth = el.clientWidth
-	let elHeight = el.clientHeight
-	const computedStyles = getComputedStyle(el)
-	elHeight +=
-		isList == "list"
-			? parseFloat(computedStyles.marginTop) +
-				parseFloat(computedStyles.marginBottom) +
-				-0.2
-			: 0
+// 	switch (elType) {
+// 		case "title":
+// 			emptyBlockAfterTitle = true
+// 			break
+// 		case "author":
+// 			emptyBlockAfterAuthor = true
+// 			break
+// 		case "list":
+// 			emptyBlockAfterList = true
+// 			break
+// 	}
 
-	const { top: elTop } = getCoords(el)
-	const { top: cardTop } = getCoords(el.closest(".card"))
+// 	el.classList.add(
+// 		"expanded",
+// 		"bg-gray-light",
+// 		linesCount(el) == 1 ? "rounded-[5px]" : "rounded-[10px]",
+// 		"absolute",
+// 		"p-[5px]",
+// 	)
 
-	if (el.nextSibling?.classList?.contains("empty-el")) {
-		el.nextSibling.style.display = "block"
-	} else {
-		const emptyEl = document.createElement("div")
+// 	let calculatedTop = elTop - cardTop - 5
+// 	calculatedTop -=
+// 		elType == "list" && computedStyles.marginBottom == "8px"
+// 			? 4
+// 			: elType == "list" && computedStyles.marginBottom == "16px"
+// 				? -0.1
+// 				: 0
 
-		emptyEl.style.width = `${elWidth}px`
-		emptyEl.style.height = `${elHeight - 0.2}px`
-		emptyEl.classList.add("empty-el")
+// 	el.style.cssText += `
+// 	z-index: 1;
+// 	width: 384px;
+// 	top: ${calculatedTop}px;
+// 	left: -48px;
+// 	box-shadow: 0 0 4px 0 rgba(0 0 0 / 10%);
+// 	`
+// }
 
-		el.after(emptyEl)
-	}
+// function clearFullTextWidget(el) {
+// 	if (!el.classList.contains("expanded")) {
+// 		return
+// 	}
 
-	el.classList.add(
-		"expanded",
-		"bg-gray-light",
-		linesCount(el) == 1 ? "rounded-[5px]" : "rounded-[10px]",
-		"absolute",
-		"p-[5px]",
-	)
+// 	el.style.width = "initial"
+// 	el.classList.remove(
+// 		"bg-gray-light",
+// 		"absolute",
+// 		"rounded-[10px]",
+// 		"expanded",
+// 		"p-[5px]",
+// 	)
 
-	let calculatedTop = elTop - cardTop - 5
-	calculatedTop -=
-		isList == "list" && computedStyles.marginBottom == "8px"
-			? 4
-			: isList == "list" && computedStyles.marginBottom == "16px"
-				? -0.1
-				: 0
+// 	if (el.nextSibling.classList.contains("empty-el")) {
+// 		el.nextSibling.style.display = "none"
+// 	}
+// }
 
-	el.style.cssText += `
-	z-index: 1;
-	width: 384px;
-	top: ${calculatedTop}px;
-	left: -48px;
-	box-shadow: 0 0 4px 0 rgba(0 0 0 / 10%);
-	`
-}
+// function showFullList(event) {
+// 	const el = event.target
 
-function clearFullTextWidget(el) {
-	if (!el.classList.contains("expanded")) {
-		return
-	}
+// 	if (extraLines == 0 && lis.every((li) => !isEllipsisActive(li.children[0]))) {
+// 		return
+// 	}
 
-	el.style.width = "initial"
-	el.classList.remove(
-		"bg-gray-light",
-		"absolute",
-		"rounded-[10px]",
-		"expanded",
-		"p-[5px]",
-	)
+// 	tracksInsideList.value = tracksInside
 
-	if (el.nextSibling.classList.contains("empty-el")) {
-		el.nextSibling.style.display = "none"
-	}
-}
+// 	drawFullTextWidget(el, "list")
 
-function showFullText(event) {
-	const el = event.target
+// 	Array.from(el.children).forEach((li) => {
+// 		const liChildren = li.children
+// 		liChildren[0].classList.remove(
+// 			"overflow-hidden",
+// 			"text-ellipsis",
+// 			"whitespace-nowrap",
+// 		)
+// 		if (liChildren.length == 2) {
+// 			liChildren[1].style.display = "none"
+// 		}
+// 	})
+// 	el.classList.add("flex", "flex-col", "items-center")
+// }
 
-	if (
-		(linesCount(el) >= 2 && !isClamped(el)) ||
-		(linesCount(el) == 1 &&
-			el.classList.contains("author") &&
-			!isClamped(el)) ||
-		(linesCount(el) == 1 &&
-			!el.classList.contains("author") &&
-			!isEllipsisActive(el))
-	) {
-		return
-	}
-
-	drawFullTextWidget(el)
-
-	el.classList.remove("line-clamp-1", "line-clamp-2")
-}
-
-function hideFullText(event) {
-	const el = event.target
-
-	clearFullTextWidget(el)
-
-	if (el.classList.contains("author")) {
-		el.classList.add("line-clamp-1")
-	}
-	if (el.classList.contains("title")) {
-		el.classList.add("line-clamp-2")
-	}
-}
-
-function showFullList(event) {
-	const el = event.target
-
-	if (extraLines == 0 && lis.every((li) => !isEllipsisActive(li.children[0]))) {
-		return
-	}
-
-	tracksInsideList.value = tracksInside
-
-	drawFullTextWidget(el, "list")
-
-	Array.from(el.children).forEach((li) => {
-		const liChildren = li.children
-		liChildren[0].classList.remove(
-			"overflow-hidden",
-			"text-ellipsis",
-			"whitespace-nowrap",
-		)
-		if (liChildren.length == 2) {
-			liChildren[1].style.display = "none"
-		}
-	})
-	el.classList.add("flex", "flex-col", "items-center")
-}
-
-function hideFullList(event) {
-	const el = event.target
-	tracksInsideList.value = tracksInsideFiltered
-	clearFullTextWidget(el)
-	Array.from(el.children).forEach((li) => {
-		const liChildren = li.children
-		liChildren[0].classList.add(
-			"overflow-hidden",
-			"text-ellipsis",
-			"whitespace-nowrap",
-		)
-		if (liChildren.length == 2) {
-			liChildren[1].style.display = "inline"
-		}
-	})
-}
+// function hideFullList(event) {
+// 	const el = event.target
+// 	tracksInsideList.value = tracksInsideFiltered
+// 	clearFullTextWidget(el)
+// 	Array.from(el.children).forEach((li) => {
+// 		const liChildren = li.children
+// 		liChildren[0].classList.add(
+// 			"overflow-hidden",
+// 			"text-ellipsis",
+// 			"whitespace-nowrap",
+// 		)
+// 		if (liChildren.length == 2) {
+// 			liChildren[1].style.display = "inline"
+// 		}
+// 	})
+// }
 </script>
 
 <template>
 	<div
 		class="card relative flex flex-col items-center rounded-[20px] bg-gray p-[16px] text-center shadow-card"
 	>
-		<img
-			:src="$props.track.image"
-			alt="Card image"
-			width="256"
-			class="mb-[8px]"
+		<TrackCardImage :image-url="track.imageUrl" />
+		<TrackCardTextBlock
+			:id="track.id"
+			:title="track.title"
+			:author="track.author"
 		/>
-		<div class="flex flex-col gap-[4px]">
-			<h2
-				class="title line-clamp-2 text-[18px] leading-[1.3] text-yellow"
-				ref="el"
-				:id="`${$props.track.id}-h2`"
-				@mouseover="showFullText"
-				@mouseout="hideFullText"
-			>
-				{{ $props.track.title }}
-			</h2>
-			<p
-				class="author line-clamp-1 font-accent text-[16px] leading-[1.3] text-yellow-light"
-				@mouseover="showFullText"
-				@mouseout="hideFullText"
-			>
-				by {{ $props.track.author }}
-			</p>
-		</div>
-		<ul
-			class="mb-[8px] text-[14px] leading-[1.4] text-cyan-light"
-			:id="`${$props.track.id}-ul`"
-			@mouseenter="showFullList"
-			@mouseleave="hideFullList"
-		>
-			<TrackInside
-				v-for="trackInside in tracksInsideList"
-				:key="trackInside"
-				:track="trackInside"
-			/>
-		</ul>
-		<div class="flex w-[100%] gap-[8px]">
-			<a
-				class="flex h-[30px] w-[30px] items-center justify-center rounded-[8px] shadow-link"
-				v-for="platform in $props.track.platforms"
-				:href="Object.values(platform)[0]"
-				:key="platform"
-			>
-				<img
-					class="w-[22px] translate-x-[0.5px]"
-					:src="`/src/assets/images/${Object.keys(platform)[0]}_logo.svg`"
-					alt="Platform logo"
-				/>
-			</a>
-			<a
-				href=""
-				class="ml-auto flex h-[30px] w-[30px] items-center justify-center rounded-[8px] shadow-link"
-			>
-				<img
-					class="w-[22px]"
-					src="/src/assets/images/discord_logo.svg"
-					alt="Discord logo"
-				/>
-			</a>
-		</div>
+		<TrackCardTrackInsideList :track-inside-list="track.tracksInside" />
+		<TrackCardPlatformLinkList :platform-list="track.platforms" />
 	</div>
 </template>
 
