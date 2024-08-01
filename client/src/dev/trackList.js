@@ -39,11 +39,7 @@ export default [
 		imageUrl: image3Url,
 		title: "Supersonic - Big Baby Tape, Aarne",
 		author: "author 2",
-		tracksInside: [
-			"Track 2 - Kent 2",
-			"Track 22 - SSSAAA",
-			"asdhjfbasufhgafsa",
-		],
+		tracksInside: ["Track 2 - Kent 2", "Track 22 - SSSAAA"],
 		platforms: [
 			{ youtube: "https://www.youtube.com/watch?v=qMb9hQ_9QKY" },
 			{ discord: "" },
@@ -82,7 +78,6 @@ export default [
 		tracksInside: [
 			"Track 2 - Kent 5",
 			"Track 22 - SSnfasibfaubfahbfiasdadafasfafa",
-			"asdadassdad -asss",
 		],
 		platforms: [{ youtube: "" }, { yandex: "" }, { vk: "" }, { discord: "" }],
 	},

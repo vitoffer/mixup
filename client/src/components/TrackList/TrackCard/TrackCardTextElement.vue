@@ -1,25 +1,39 @@
 <script setup>
 import EmptyBlock from "@/components/utilities/EmptyBlock.vue"
-import { ref } from "vue"
+import {
+	isEllipsisActive,
+	isTextClamped,
+	linesCount,
+} from "@/scripts/functions"
+import { nextTick, reactive, ref } from "vue"
 
 const props = defineProps(["id", "title", "author", "element"])
 
 const renderEmptyBlock = ref(false)
-const textElement = ref()
+const textElement = ref(null)
+const textElementStyle = reactive({
+	maxWidth: "256px",
+})
+
+let textElementClasses = ref([
+	"leading-[1.3]",
+	...generateClasses(props.element),
+])
 
 function generateClasses(el) {
-	let classList = ["leading-[1.3]"]
+	let classList = []
 	if (el == "h2") {
 		classList.push("title", "line-clamp-2", "text-[18px]", "text-yellow")
 	} else {
 		classList.push(
 			"author",
-			"line-clamp-1",
 			"font-accent",
 			"text-[16px]",
 			"text-yellow-light",
+			"line-clamp-1",
 		)
 	}
+
 	return classList
 }
 
@@ -33,78 +47,80 @@ function chooseTextContent(el) {
 	return textContent
 }
 
-function generateEmptyBlockClasses() {
-	const classList = []
-	classList.push(textElement.value.clientHeight)
+function getCoords(elem) {
+	let box = elem.getBoundingClientRect()
+
+	return {
+		top: box.top + window.scrollY,
+		right: box.right + window.scrollX,
+		bottom: box.bottom + window.scrollY,
+		left: box.left + window.scrollX,
+	}
 }
 
-function showFull() {
+async function showFull() {
+	if (
+		(textElementClasses.value.includes("title") &&
+			linesCount(textElement.value) == 1) ||
+		(textElementClasses.value.includes("title") &&
+			!isTextClamped(textElement.value)) ||
+		(textElementClasses.value.includes("author") &&
+			!isEllipsisActive(textElement.value) &&
+			!isTextClamped(textElement.value))
+	) {
+		return
+	}
 	renderEmptyBlock.value = true
+
+	const textElemCoords = getCoords(textElement.value)
+	const cardCoords = getCoords(textElement.value.closest(".card"))
+
+	await nextTick()
+
+	textElementStyle.top = textElemCoords.top - cardCoords.top + "px"
+	textElementStyle.left = cardCoords.width / 2 - textElemCoords.width / 2 + "px"
+	textElementStyle.maxWidth = "150%"
+	textElementStyle.zIndex = "1"
+
+	textElementClasses.value = textElementClasses.value.filter(
+		(item) => !["line-clamp-1", "line-clamp-2"].includes(item),
+	)
+	textElementClasses.value.push("bg-gray-light")
 }
 
 function hideFull() {
 	renderEmptyBlock.value = false
+
+	textElementStyle.maxWidth = "256px"
+	textElementStyle.zIndex = ""
+
+	textElementClasses.value.push(
+		textElementClasses.value.includes("title")
+			? "line-clamp-2"
+			: "line-clamp-1",
+	)
+
+	textElementClasses.value = textElementClasses.value.filter(
+		(item) => item != "bg-gray-light",
+	)
 }
-
-// function showFullText(event) {
-// 	const el = event.target
-
-// 	if (
-// 		(linesCount(el) >= 2 && !isClamped(el)) ||
-// 		(linesCount(el) == 1 &&
-// 			el.classList.contains("author") &&
-// 			!isClamped(el)) ||
-// 		(linesCount(el) == 1 &&
-// 			!el.classList.contains("author") &&
-// 			!isEllipsisActive(el))
-// 	) {
-// 		return
-// 	}
-
-// 	drawFullTextWidget(el)
-
-// 	el.classList.remove("line-clamp-1", "line-clamp-2")
-// }
-
-// function hideFullText(event) {
-// 	const el = event.target
-
-// 	clearFullTextWidget(el)
-
-// 	if (el.classList.contains("author")) {
-// 		el.classList.add("line-clamp-1")
-// 	}
-// 	if (el.classList.contains("title")) {
-// 		el.classList.add("line-clamp-2")
-// 	}
-// }
-
-// function isClamped(e) {
-// 	return e.scrollHeight - e.clientHeight > 5
-// }
-
-// function linesCount(el) {
-// 	const divHeight = el.clientHeight
-
-// 	const lineHeight = parseFloat(window.getComputedStyle(el).lineHeight)
-
-// 	const lines = Math.round(divHeight / lineHeight)
-// 	return lines
-// }
 </script>
 
 <template>
 	<component
-		:ref="textElement"
+		ref="textElement"
 		:is="element"
-		:class="generateClasses(element)"
+		:class="[
+			textElementClasses,
+			{
+				absolute: renderEmptyBlock,
+			},
+		]"
+		:style="textElementStyle"
 		@mouseover="showFull"
 		@mouseout="hideFull"
 	>
 		{{ chooseTextContent(element) }}
 	</component>
-	<EmptyBlock
-		v-if="renderEmptyBlock"
-		:class="generateEmptyBlockClasses()"
-	/>
+	<EmptyBlock v-if="renderEmptyBlock" />
 </template>
