@@ -2,36 +2,28 @@
 async function postTrack(e) {
 	const form = e.target
 
-	const formData = new FormData(form)
-	const data = {}
-	formData.forEach(function (value, key) {
-		data[key] = value
-	})
-
 	const url = new URL("http://localhost:3000/add-track")
 
 	let response = await fetch(url, {
 		method: "POST",
-		headers: {
-			"Content-Type": "application/json; charset=utf-8",
-		},
-		body: JSON.stringify(data),
+		body: new FormData(form),
 	})
 
 	let result = await response.json()
 
-	console.log(result)
+	form.reset()
 }
 </script>
 
 <template>
 	<form @submit.prevent="postTrack">
-		<p>Картинка трека:</p>
-		<input
-			type="file"
-			name="imageUrl"
-			value=""
-		/>
+		<label>
+			Картинка трека:
+			<input
+				type="file"
+				name="image"
+			/>
+		</label>
 		<input
 			type="text"
 			placeholder="Название"
@@ -75,9 +67,24 @@ async function postTrack(e) {
 </template>
 
 <style>
+form {
+	margin: auto;
+	width: 500px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 5px;
+}
+
+label {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
 input {
 	display: block;
-	margin-block: 5px;
 	border: solid #000 1px;
+	padding: 5px;
 }
 </style>

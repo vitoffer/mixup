@@ -2,11 +2,18 @@ const express = require("express")
 const mongoose = require("mongoose")
 const bodyParser = require("body-parser")
 const cors = require("cors")
+const fileUpload = require("express-fileupload")
 const Track = require("./models/track")
 
 require("dotenv").config()
 
 const app = express()
+
+app.use(
+	fileUpload({
+		createParentPath: true,
+	})
+)
 
 app.use(bodyParser.json())
 app.use(
@@ -39,9 +46,16 @@ app.get("/tracks", (req, res) => {
 app.post("/add-track", (req, res) => {
 	let data = req.body
 
+	let imageUrl = ""
+	if (req.files) {
+		let image = req.files.image
+		image.mv("./uploads/" + image.name)
+		imageUrl = "./uploads/" + image.name
+	}
+
 	data = {
 		_id: new mongoose.Types.ObjectId(),
-		imageUrl: "imageUrl1",
+		imageUrl: imageUrl,
 		title: data.title,
 		author: data.author,
 		tracksInside: [data.track1, data.track2],
