@@ -1,7 +1,19 @@
 <script setup>
+import { onMounted, ref } from "vue"
 import TrackCard from "./TrackList/TrackCard.vue"
 
-import trackList from "@/dev/trackList"
+// import trackList from "@/dev/trackList"
+
+const trackList = ref([])
+
+onMounted(() => {
+	loadData()
+})
+
+async function loadData() {
+	const response = await fetch("http://localhost:3000/tracks")
+	trackList.value = await response.json()
+}
 </script>
 
 <template>

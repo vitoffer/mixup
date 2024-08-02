@@ -63,6 +63,7 @@ app.post("/add-track", (req, res) => {
 			{ platform: "youtube", link: data.youtube },
 			{ platform: "yandex", link: data.yandex },
 			{ platform: "vk", link: data.vk },
+			{ platform: "discord", link: "" },
 		],
 	}
 
@@ -74,6 +75,10 @@ app.post("/add-track", (req, res) => {
 			res.status(200).json(result)
 		})
 		.catch((err) => handleError(res, err))
+})
+
+app.get("/get-image", (req, res) => {
+	res.sendFile(req.query.imageUrl, { root: "." })
 })
 
 const handleError = (res, error) => {
