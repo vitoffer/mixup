@@ -13,7 +13,7 @@ export default [
 		author: "author 1",
 		tracksInside: [
 			"Opsss 1 - Kent 1",
-			"Track 1 - Lorem ipsum dolordfhgdgdgdedhassf ",
+			"Track 1 - Lorem ipsum dolordfhgdgdgdedhassf",
 		],
 		platforms: [
 			{ youtube: "https://www.youtube.com/watch?v=xmE_8Y7Ofu4" },

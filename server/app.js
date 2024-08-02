@@ -54,7 +54,7 @@ app.post("/add-track", (req, res) => {
 	}
 
 	data = {
-		_id: new mongoose.Types.ObjectId(),
+		_id: new mongoose.mongo.ObjectId(),
 		imageUrl: imageUrl,
 		title: data.title,
 		author: data.author,
