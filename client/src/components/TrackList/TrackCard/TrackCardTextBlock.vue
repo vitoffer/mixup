@@ -7,9 +7,9 @@ defineProps(["id", "title", "author"])
 <template>
 	<div class="text-block">
 		<TrackCardTextElement
-			v-for="element in ['h2', 'p']"
-			:key="element"
-			:element="element"
+			v-for="elementType in ['h2', 'p']"
+			:key="elementType"
+			:element-type="elementType"
 			:id="id"
 			:title="title"
 			:author="author"

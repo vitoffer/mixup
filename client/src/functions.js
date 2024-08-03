@@ -13,3 +13,14 @@ export function isTextClamped(elm) {
 export function isEllipsisActive(e) {
 	return e.offsetWidth < e.scrollWidth
 }
+
+export function getAbsoluteCoords(elem) {
+	let box = elem.getBoundingClientRect()
+
+	return {
+		top: box.top + window.scrollY,
+		left: box.left + window.scrollX,
+		bottom: box.bottom + window.scrollY,
+		right: box.right + window.scrollX,
+	}
+}
