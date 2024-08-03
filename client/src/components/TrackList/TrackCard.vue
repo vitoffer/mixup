@@ -20,11 +20,16 @@ async function loadImage() {
 				imageUrl: props.track.imageUrl,
 			}).toString(),
 	)
-	const blob = await response.blob()
-	if (blob) {
-		imageUrl.value = URL.createObjectURL(blob)
+
+	if (props.track.imageUrl) {
+		const blob = await response.blob()
+		if (blob) {
+			imageUrl.value = URL.createObjectURL(blob)
+		} else {
+			console.log("Loading image error")
+		}
 	} else {
-		console.log("Loading image error")
+		imageUrl.value = ""
 	}
 }
 </script>

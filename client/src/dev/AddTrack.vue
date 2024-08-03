@@ -1,9 +1,32 @@
 <script setup>
+import { onMounted, ref } from "vue"
 
+let form
 
-async function postTrack(e) {
-	const form = e.target
+const imagePlaceholder = ref("Картинка не выбрана")
+onMounted(() => {
 
+	form = document.querySelector('form')
+
+})
+
+function changeImageText(e) {
+	const file = e.target.files[0]
+
+	imagePlaceholder.value = file.name
+
+	document.querySelector('.custom-file-upload').style.color = "var(--yellow)"
+
+	const imagePreview = document.getElementById('imagePreview')
+	var fr = new FileReader();
+  fr.onload = function () {
+		imagePreview.src = fr.result;
+  }
+	imagePreview.style.display = "block"
+  fr.readAsDataURL(file);
+}
+
+async function postTrack() {
 	const url = new URL("http://localhost:3000/add-track")
 
 	let response = await fetch(url, {
@@ -21,11 +44,12 @@ async function postTrack(e) {
 
 <template>
 	<div class="form-wrapper">
-		<form @submit.prevent="postTrack">
+		<form @submit.prevent="postTrack" >
 			<h1 style="font-size: 24px">Добавить трек</h1>
 			<label class="custom-file-upload">
-    		<input type="file"/>
-    		Картинка трека
+    		<input type="file" id="imageInput" name="image" @change="changeImageText"/>
+    		{{ imagePlaceholder }}
+				<img src="" alt="Selected image preview" class="imagePreview" width="256" height="256" id="imagePreview">
 			</label>
 			<input
 				type="text"
@@ -79,10 +103,12 @@ async function postTrack(e) {
 }
 
 form {
+	position: relative;
 	margin: auto;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	width: fit-content;
 	gap: 10px;
 	color: var(--yellow);
 }
@@ -90,8 +116,6 @@ form {
 input[type="file"] {
     display: none;
 }
-
-
 
 input, .custom-file-upload {
 	display: flex;
@@ -108,6 +132,13 @@ input, .custom-file-upload {
 .custom-file-upload {
 	margin-top: 20px;
 	padding: 8px 20px;
+}
+
+.imagePreview {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: calc(100% + 20px);
 }
 
 input::placeholder,

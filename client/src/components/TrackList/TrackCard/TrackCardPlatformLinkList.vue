@@ -8,11 +8,15 @@ const platformList = props.platformList
 
 <template>
 	<ul class="list-platforms">
-		<TrackCardPlatformLink
+		<template
 			v-for="platform in platformList"
 			:key="platform"
-			:platform="platform"
-		/>
+		>
+			<TrackCardPlatformLink
+				v-if="platform.link"
+				:platform="platform"
+			/>
+		</template>
 	</ul>
 </template>
 

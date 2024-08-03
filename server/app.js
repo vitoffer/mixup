@@ -78,7 +78,12 @@ app.post("/add-track", (req, res) => {
 })
 
 app.get("/get-image", (req, res) => {
-	res.sendFile(req.query.imageUrl, { root: "." })
+	if (req.query.imageUrl) {
+		res.sendFile(req.query.imageUrl, { root: "." })
+	} else {
+		console.log("image not found for url:", req.query.imageUrl || "'empty url'")
+		res.send("")
+	}
 })
 
 function handleError(res, error) {

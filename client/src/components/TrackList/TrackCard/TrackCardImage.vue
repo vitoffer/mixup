@@ -14,9 +14,7 @@ defineProps(["imageUrl"])
 	<div
 		v-else
 		class="empty-image-div"
-	>
-
-	</div>
+	></div>
 </template>
 
 <style>
