@@ -49,8 +49,8 @@ app.post("/add-track", (req, res) => {
 	let imageUrl = ""
 	if (req.files) {
 		let image = req.files.image
-		image.mv("./uploads/" + image.name)
-		imageUrl = "./uploads/" + image.name
+		image.mv("./uploads/images/" + image.name)
+		imageUrl = "./uploads/images/" + image.name
 	}
 
 	data = {
@@ -81,6 +81,6 @@ app.get("/get-image", (req, res) => {
 	res.sendFile(req.query.imageUrl, { root: "." })
 })
 
-const handleError = (res, error) => {
+function handleError(res, error) {
 	res.status(500).json({ error })
 }
