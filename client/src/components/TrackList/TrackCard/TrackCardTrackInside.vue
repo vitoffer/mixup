@@ -7,13 +7,13 @@ defineProps(["track"])
 
 const renderEmptyBlock = ref(false)
 const listElement = ref()
-const listElementStyle = reactive({})
-const listElementClasses = ref([
-	"max-w-256px",
-	"overflow-hidden",
-	"text-ellipsis",
-	"whitespace-nowrap",
-])
+
+const listElementStyles = reactive({
+	maxWidth: "256px",
+	overflow: "hidden",
+	textOverflow: "ellipsis",
+	whiteSpace: "nowrap",
+})
 
 function getCoords(elem) {
 	let box = elem.getBoundingClientRect()
@@ -37,43 +37,44 @@ async function showFull() {
 
 	await nextTick()
 
-	listElementStyle.top = textElemCoords.top - cardCoords.top + "px"
-	listElementStyle.left = cardCoords.width / 2 - textElemCoords.width / 2 + "px"
-	listElementStyle.width = "384px"
-	listElementStyle.zIndex = "1"
+	Object.assign(listElementStyles, {
+		top: textElemCoords.top - cardCoords.top + "px",
+		left: cardCoords.width / 2 - textElemCoords.width / 2 + "px",
+		width: "384px",
+		zIndex: 1,
+		backgroundColor: "var(--light-gray)",
+	})
 
-	listElementClasses.value = listElementClasses.value.filter(
-		(item) =>
-			!["whitespace-nowrap", "overflow-hidden", "text-ellipsis"].includes(item),
-	)
-	listElementClasses.value.push("bg-gray-light")
+	for (const p of ["whiteSpace", "overflow", "textOverflow"]) {
+		delete listElementStyles[p]
+	}
 }
 
 function hideFull() {
 	renderEmptyBlock.value = false
 
-	listElementStyle.width = "384px"
-	listElementStyle.zIndex = ""
+	Object.assign(listElementStyles, {
+		width: "384px",
+		overflow: "hidden",
+		textOverflow: "ellipsis",
+		whiteSpace: "nowrap",
+	})
 
-	listElementClasses.value.push(
-		"overflow-hidden",
-		"text-ellipsis",
-		"whitespace-nowrap",
-	)
-	listElementClasses.value = listElementClasses.value.filter(
-		(item) => item != "bg-gray-light",
-	)
+	delete listElementStyles["backgroundColor"]
+	delete listElementStyles["zIndex"]
 }
 </script>
 
 <template>
-	<!-- TODO change classes to styles -->
 	<li
 		ref="listElement"
-		:class="[...listElementClasses, { absolute: renderEmptyBlock }]"
+		class="list-elem"
+		:style="{
+			...listElementStyles,
+			position: renderEmptyBlock ? 'absolute' : '',
+		}"
 		@mouseover="showFull"
 		@mouseout="hideFull"
-		:style="listElementStyle"
 	>
 		&bull; {{ track }}
 	</li>

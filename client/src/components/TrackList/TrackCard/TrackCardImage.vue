@@ -15,7 +15,7 @@ defineProps(["imageUrl"])
 		v-else
 		class="empty-image-div"
 	>
-		Изображение не загрузилось
+
 	</div>
 </template>
 
@@ -30,6 +30,5 @@ defineProps(["imageUrl"])
 	margin-bottom: 8px;
 	width: 256px;
 	height: 256px;
-	color: #fff;
 }
 </style>
