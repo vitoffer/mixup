@@ -4,8 +4,17 @@ import HeaderTitle from "./Header/HeaderTitle.vue"
 </script>
 
 <template>
-	<header class="mb-[16px] flex items-center gap-[24px]">
+	<header>
 		<HeaderTitle />
 		<HeaderActions />
 	</header>
 </template>
+
+<style scoped>
+header {
+	margin-bottom: 16px;
+	display: flex;
+	align-items: center;
+	gap: 24px;
+}
+</style>

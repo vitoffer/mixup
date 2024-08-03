@@ -21,14 +21,16 @@ async function loadImage() {
 			}).toString(),
 	)
 	const blob = await response.blob()
-	imageUrl.value = URL.createObjectURL(blob)
+	if (blob) {
+		imageUrl.value = URL.createObjectURL(blob)
+	} else {
+		console.log("Loading image error")
+	}
 }
 </script>
 
 <template>
-	<div
-		class="card relative flex flex-col items-center rounded-[20px] bg-gray p-[16px] text-center shadow-card"
-	>
+	<div class="card">
 		<TrackCardImage :image-url="imageUrl" />
 		<TrackCardTextBlock
 			:id="track.id"
@@ -41,16 +43,17 @@ async function loadImage() {
 </template>
 
 <style>
-.custom-list-marker::before {
-	content: "";
-	width: 5px;
-	aspect-ratio: 1;
-	border-radius: 50%;
-	position: absolute;
-
-	left: 0;
-	top: 10px;
-	transform: translateY(-50%);
-	@apply bg-cyan-light;
+.card {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	border-radius: 20px;
+	background-color: var(--gray);
+	padding: 16px;
+	text-align: center;
+	box-shadow:
+		0px 0px 8px 0px rgba(121, 174, 163, 0.8),
+		0px 0px 8px 0px rgba(121, 174, 163, 0.8) inset;
 }
 </style>

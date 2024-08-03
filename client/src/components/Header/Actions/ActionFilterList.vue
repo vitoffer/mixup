@@ -3,16 +3,25 @@ import { ChevronDownIcon } from "@heroicons/vue/24/solid"
 </script>
 
 <template>
-	<div class="flex flex-grow justify-end gap-[32px]">
+	<div class="filters-list">
 		<div
-			class="header-action-block"
+			class="action-block"
 			v-for="item in ['Платформа', 'Жанр']"
 			:key="item"
 		>
 			<span>{{ item }}</span>
 			<button>
-				<ChevronDownIcon class="w-[20px]" />
+				<ChevronDownIcon style="width: 20px; color: var(--yellow)" />
 			</button>
 		</div>
 	</div>
 </template>
+
+<style scoped>
+.filters-list {
+	display: flex;
+	flex-grow: 1;
+	justify-content: end;
+	gap: 32px;
+}
+</style>

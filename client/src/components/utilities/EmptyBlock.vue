@@ -14,7 +14,13 @@ onMounted(() => {
 <template>
 	<div
 		ref="block"
-		class="w-100%"
+		class="empty-block"
 		:style="styles"
 	></div>
 </template>
+
+<style scoped>
+.empty-block {
+	width: 100%;
+}
+</style>

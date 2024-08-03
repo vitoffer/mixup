@@ -8,9 +8,7 @@ const tracksList = ref(props.trackInsideList.slice(0, 2))
 </script>
 
 <template>
-	<ul
-		class="list  mb-[8px] mt-auto flex flex-col items-center text-[14px] leading-[1.4] text-cyan-light"
-	>
+	<ul class="list-tracks-inside">
 		<TrackCardTrackInside
 			v-for="trackInside in tracksList"
 			:key="trackInside"
@@ -18,3 +16,15 @@ const tracksList = ref(props.trackInsideList.slice(0, 2))
 		/>
 	</ul>
 </template>
+
+<style scoped>
+.list-tracks-inside {
+	margin-block: auto 8px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	font-size: 14px;
+	line-height: 1.4;
+	color: var(--light-cyan);
+}
+</style>

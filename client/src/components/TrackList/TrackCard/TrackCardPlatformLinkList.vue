@@ -7,7 +7,7 @@ const platformList = props.platformList
 </script>
 
 <template>
-	<ul class="flex w-[100%] gap-[8px]">
+	<ul class="list-platforms">
 		<TrackCardPlatformLink
 			v-for="platform in platformList"
 			:key="platform"
@@ -15,3 +15,11 @@ const platformList = props.platformList
 		/>
 	</ul>
 </template>
+
+<style scoped>
+.list-platforms {
+	display: flex;
+	width: 100%;
+	gap: 8px;
+}
+</style>

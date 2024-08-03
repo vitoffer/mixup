@@ -5,7 +5,7 @@ defineProps(["id", "title", "author"])
 </script>
 
 <template>
-	<div class="flex flex-col items-center gap-[4px]">
+	<div class="text-block">
 		<TrackCardTextElement
 			v-for="element in ['h2', 'p']"
 			:key="element"
@@ -16,3 +16,12 @@ defineProps(["id", "title", "author"])
 		/>
 	</div>
 </template>
+
+<style scoped>
+.text-block {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 4px;
+}
+</style>

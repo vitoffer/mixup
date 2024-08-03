@@ -11,30 +11,47 @@ const props = defineProps(["id", "title", "author", "element"])
 
 const renderEmptyBlock = ref(false)
 const textElement = ref(null)
-const textElementStyle = reactive({
+const textElementStyles = reactive({
 	maxWidth: "256px",
+	lineHeight: "1.3",
+	...generateStyles(props.element),
 })
 
-let textElementClasses = ref([
-	"leading-[1.3]",
-	...generateClasses(props.element),
-])
+let textElementClass = chooseClass(props.element)
 
-function generateClasses(el) {
-	let classList = []
+function chooseClass(el) {
 	if (el == "h2") {
-		classList.push("title", "line-clamp-2", "text-[18px]", "text-yellow")
+		return "title"
 	} else {
-		classList.push(
-			"author",
-			"font-accent",
-			"text-[16px]",
-			"text-yellow-light",
-			"line-clamp-1",
-		)
+		return "author"
+	}
+}
+
+function generateStyles(el) {
+	let stylesList = {}
+
+	if (el == "h2") {
+		stylesList = {
+			fontSize: "18px",
+			color: "var(--yellow)",
+			overflow: "hidden",
+			display: "-webkit-box",
+			"-webkit-box-orient": "vertical",
+			"-webkit-line-clamp": "2",
+		}
+	} else {
+		stylesList = {
+			fontFamily: "var(--font-nunito-sans)",
+			textSize: "16px",
+			color: "var(--light-yellow)",
+			overflow: "hidden",
+			display: "-webkit-box",
+			"-webkit-box-orient": "vertical",
+			"-webkit-line-clamp": "1",
+		}
 	}
 
-	return classList
+	return stylesList
 }
 
 function chooseTextContent(el) {
@@ -60,11 +77,9 @@ function getCoords(elem) {
 
 async function showFull() {
 	if (
-		(textElementClasses.value.includes("title") &&
-			linesCount(textElement.value) == 1) ||
-		(textElementClasses.value.includes("title") &&
-			!isTextClamped(textElement.value)) ||
-		(textElementClasses.value.includes("author") &&
+		(textElementClass == "title" && linesCount(textElement.value) == 1) ||
+		(textElementClass == "title" && !isTextClamped(textElement.value)) ||
+		(textElementClass == "author" &&
 			!isEllipsisActive(textElement.value) &&
 			!isTextClamped(textElement.value))
 	) {
@@ -77,32 +92,43 @@ async function showFull() {
 
 	await nextTick()
 
-	textElementStyle.top = textElemCoords.top - cardCoords.top + "px"
-	textElementStyle.left = cardCoords.width / 2 - textElemCoords.width / 2 + "px"
-	textElementStyle.maxWidth = "150%"
-	textElementStyle.zIndex = "1"
+	Object.assign(textElementStyles, {
+		top: textElemCoords.top - cardCoords.top + "px",
+		left: cardCoords.width / 2 - textElemCoords.width / 2 + "px",
+		maxWidth: "150%",
+		zIndex: 1,
+		backgroundColor: "var(--light-gray)",
+	})
 
-	textElementClasses.value = textElementClasses.value.filter(
-		(item) => !["line-clamp-1", "line-clamp-2"].includes(item),
-	)
-	textElementClasses.value.push("bg-gray-light")
+	for (const p of [
+		"overflow",
+		"display",
+		"-webkit-box-orient",
+		"-webkit-line-clamp",
+	]) {
+		delete textElementStyles[p]
+	}
 }
 
 function hideFull() {
 	renderEmptyBlock.value = false
 
-	textElementStyle.maxWidth = "256px"
-	textElementStyle.zIndex = ""
+	Object.assign(textElementStyles, {
+		overflow: "hidden",
+		display: "-webkit-box",
+		"-webkit-box-orient": "vertical",
+	})
 
-	textElementClasses.value.push(
-		textElementClasses.value.includes("title")
-			? "line-clamp-2"
-			: "line-clamp-1",
-	)
+	if (textElementClass == "title") {
+		textElementStyles["-webkit-line-clamp"] = "2"
+	} else {
+		textElementStyles["-webkit-line-clamp"] = "1"
+	}
 
-	textElementClasses.value = textElementClasses.value.filter(
-		(item) => item != "bg-gray-light",
-	)
+	textElementStyles.maxWidth = "256px"
+
+	delete textElementStyles["zIndex"]
+	delete textElementStyles["backgroundColor"]
 }
 </script>
 
@@ -110,13 +136,11 @@ function hideFull() {
 	<component
 		ref="textElement"
 		:is="element"
-		:class="[
-			textElementClasses,
-			{
-				absolute: renderEmptyBlock,
-			},
-		]"
-		:style="textElementStyle"
+		:class="textElementClass"
+		:style="{
+			...textElementStyles,
+			position: renderEmptyBlock ? 'absolute' : '',
+		}"
 		@mouseover="showFull"
 		@mouseout="hideFull"
 	>

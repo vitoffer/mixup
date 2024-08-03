@@ -3,16 +3,35 @@ defineProps(["platform"])
 </script>
 
 <template>
-	<li :class="`${platform.platform == 'discord' ? 'ml-auto' : ''}`">
+	<li :style="{ marginLeft: platform.platform == 'discord' ? 'auto' : '' }">
 		<a
-			class="flex h-[30px] w-[30px] items-center justify-center rounded-[8px] shadow-link"
+			class="platform-link"
 			:href="platform.link"
 		>
 			<img
-				:class="`w-[22px] ${platform.platform == 'discord' ? '' : 'translate-x-[0.5px]'}`"
+				class="platform-logo"
+				:style="{ translate: platform.platform == 'discord' ? '' : '0.5px' }"
 				:src="`/src/assets/images/${platform.platform}_logo.svg`"
 				alt="Platform logo"
 			/>
 		</a>
 	</li>
 </template>
+
+<style scoped>
+.platform-link {
+	display: flex;
+	width: 30px;
+	aspect-ratio: 1;
+	align-items: center;
+	justify-content: center;
+	border-radius: 8px;
+	box-shadow:
+		0px 0px 4px 0px rgba(255, 226, 157, 0.8),
+		0px 0px 4px 0px rgba(255, 226, 157, 0.8) inset;
+}
+
+.platform-logo {
+	width: 22px;
+}
+</style>

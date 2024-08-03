@@ -67,6 +67,7 @@ function hideFull() {
 </script>
 
 <template>
+	<!-- TODO change classes to styles -->
 	<li
 		ref="listElement"
 		:class="[...listElementClasses, { absolute: renderEmptyBlock }]"

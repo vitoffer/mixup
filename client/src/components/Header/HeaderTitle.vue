@@ -4,8 +4,16 @@ import TitleSection from "./Title/TitleSection.vue"
 </script>
 
 <template>
-	<div class="flex items-center gap-[8px]">
+	<div class="header-title">
 		<TitleLogo />
 		<TitleSection />
 	</div>
 </template>
+
+<style scoped>
+.header-title {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+</style>

@@ -1,15 +1,22 @@
-@tailwind base;
+/* @tailwind base;
 @tailwind components;
-@tailwind utilities;
+@tailwind utilities; */
 
 body {
-	@apply font-primary;
+	font-family: var(--font-open-sans);
 }
 
-img {
-	max-width: initial;
-}
+:root {
+	--gray: #0d1f2d;
+	--light-gray: #253542;
+	--yellow: #ffc53a;
+	--light-yellow: #ffe29d;
+	--red: #f25445;
+	--cyan: #79aea3;
+	--light-cyan: #C9DFDA;
+	--accent-cyan: #A1C6BF;
 
-.header-action-block {
-	@apply flex min-w-[150px] items-center justify-center gap-[16px] rounded-[10px] bg-gray-light px-[20px] py-[4px] text-[18px] text-yellow;
+	--font-holtwood: "Holtwood One SC", sans-serif;
+	--font-nunito-sans: "Nunito Sans 10pt", sans-serif;
+	--font-open-sans: "Open Sans", sans-serif;
 }

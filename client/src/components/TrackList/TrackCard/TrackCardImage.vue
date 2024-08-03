@@ -4,9 +4,32 @@ defineProps(["imageUrl"])
 
 <template>
 	<img
+		v-if="imageUrl"
 		:src="imageUrl"
 		alt="Card image"
 		width="256"
-		class="mb-[8px]"
+		height="256"
+		class="card-image"
 	/>
+	<div
+		v-else
+		class="empty-image-div"
+	>
+		Изображение не загрузилось
+	</div>
 </template>
+
+<style>
+.card-image {
+	margin-bottom: 8px;
+}
+.empty-image-div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 8px;
+	width: 256px;
+	height: 256px;
+	color: #fff;
+}
+</style>

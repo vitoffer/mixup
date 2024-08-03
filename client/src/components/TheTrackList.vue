@@ -1,12 +1,10 @@
 <script setup>
-import { onMounted, ref } from "vue"
+import { onBeforeMount, ref } from "vue"
 import TrackCard from "./TrackList/TrackCard.vue"
-
-// import trackList from "@/dev/trackList"
 
 const trackList = ref([])
 
-onMounted(() => {
+onBeforeMount(() => {
 	loadData()
 })
 
@@ -17,8 +15,8 @@ async function loadData() {
 </script>
 
 <template>
-	<main class="m-auto flex justify-center">
-		<div class="grid grid-cols-[repeat(4,_min-content)] gap-[24px]">
+	<main>
+		<div class="tracks-grid">
 			<TrackCard
 				v-for="track in trackList"
 				:key="track.id"
@@ -27,3 +25,17 @@ async function loadData() {
 		</div>
 	</main>
 </template>
+
+<style scoped>
+main {
+	margin: auto;
+	display: flex;
+	justify-content: center;
+}
+
+.tracks-grid {
+	display: grid;
+	grid-template-columns: repeat(4, min-content);
+	gap: 24px;
+}
+</style>
