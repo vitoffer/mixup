@@ -76,7 +76,7 @@ function hideFull() {
 		@mouseover="showFull"
 		@mouseout="hideFull"
 	>
-		&bull; {{ track }}
+		<span :style="{fontWeight: 'bold'}">&bull;</span> {{ track }}
 	</li>
 	<EmptyBlock v-if="renderEmptyBlock" />
 </template>

@@ -55,7 +55,13 @@ button {
 	padding: 0;
 }
 
-input, button {
+input, input::placeholder, button {
 	font: inherit;
 	color: inherit;
+}
+
+input {
+	background-color: transparent;
+	border: none;
+	outline: none
 }
