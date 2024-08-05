@@ -1,20 +1,12 @@
-<script setup>
-import HeaderActions from "./Header/HeaderActions.vue"
-import HeaderTitle from "./Header/HeaderTitle.vue"
-</script>
+<script setup></script>
 
 <template>
-	<header>
-		<HeaderTitle />
-		<HeaderActions />
-	</header>
+	<img
+		src="../assets/images/logo_color.svg"
+		alt="Logo"
+		width="48"
+		height="48"
+	/>
 </template>
 
-<style scoped>
-header {
-	margin-bottom: 16px;
-	display: flex;
-	align-items: center;
-	gap: 24px;
-}
-</style>
+<style scoped></style>

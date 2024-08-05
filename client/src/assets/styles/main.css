@@ -1,0 +1,26 @@
+:root {
+	--gray-900: #0d1f2d;
+	--gray-800: #1B2C39;
+	--gray-700: #293946;
+	--gray-600: #54616B;
+	--gray-500: #8D969C;
+	--gray-400: #E3E5E6;
+
+	--yellow-900: #F8A917;
+	--yellow-800: #FABD4E;
+	--yellow-700: #FCDC9F;
+
+	--cyan-900: #75A69C;
+	--cyan-800: #AECBC5;
+	--cyan-700: #C6DAD6;
+	--cyan-600: #D6E5E2;
+	--cyan-500: #E7EFEE;
+
+	--font-carter-one: "Carter One", sans-serif;
+	--font-nunito: "Nunito", sans-serif;
+}
+
+body {
+	background-color: var(--gray-900);
+	font: var(--font-nunito) 1rem;
+}
