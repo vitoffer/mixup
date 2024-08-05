@@ -1,21 +1,21 @@
 <script setup>
 const navItems = [
 	{
-		name: "All tracks",
-		isAccessible: true,
+		name: "Все треки",
+		isEnabled: true,
 	},
 	{
-		name: "Authors",
-		isAccessible: false,
+		name: "Авторы",
+		isEnabled: false,
 	},
 	{
-		name: "Add track",
-		isAccessible: false,
+		name: "Добавить трек",
+		isEnabled: false,
 	},
 ]
 
-function generateStyles(isAccessible) {
-	if (isAccessible) {
+function generateStyles(isEnabled) {
+	if (isEnabled) {
 		return {
 			color: "var(--cyan-500)",
 			textDecoration: "underline",
@@ -33,16 +33,22 @@ function generateStyles(isAccessible) {
 		<ul class="nav__list">
 			<li
 				class="nav__item"
-				v-for="{ name, isAccessible } in navItems"
+				v-for="{ name, isEnabled } in navItems"
 				:key="name"
-				:style="generateStyles(isAccessible)"
 			>
 				<a
 					href="/"
 					class="nav__link"
-					:class="isAccessible ? '' : 'hover-not-allowed'"
+					:class="isEnabled ? '' : 'hover-not-allowed'"
+					:style="[generateStyles(isEnabled), { position: 'relative' }]"
 				>
 					{{ name }}
+					<div
+						class="tooltip"
+						v-if="!isEnabled"
+					>
+						В разработке
+					</div>
 				</a>
 			</li>
 		</ul>
@@ -72,5 +78,38 @@ function generateStyles(isAccessible) {
 
 .hover-not-allowed:hover {
 	cursor: not-allowed;
+}
+
+.tooltip {
+	visibility: hidden;
+	position: absolute;
+	top: 90%;
+	left: 50%;
+	translate: -50% 0;
+	z-index: 1;
+	width: 130px;
+	padding: 5px;
+	background-color: var(--gray-700);
+	border-radius: 10px;
+	color: var(--yellow-700);
+	text-align: center;
+}
+
+.tooltip::after {
+	content: " ";
+	position: absolute;
+	bottom: 100%; /* At the top of the tooltip */
+	left: 50%;
+	translate: 0 1px;
+	z-index: 2;
+	margin-left: -5px;
+	border-width: 5px;
+	border-style: solid;
+	border-color: transparent transparent var(--gray-700) transparent;
+}
+
+.nav__link:hover .tooltip {
+	visibility: visible;
+	transition: 100ms;
 }
 </style>
