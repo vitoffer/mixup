@@ -6,7 +6,7 @@
 		href="/"
 	>
 		<img
-			src="@/assets/images/logo_color.svg"
+			src="@/assets/images/logo.svg"
 			alt="Logo"
 			class="branding__logo"
 		/>
