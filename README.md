@@ -6,7 +6,7 @@
 npm run dev:client
 ```
 
-## Install global dependencies (because of nodemon bug)
+## Install global dependencies
 
 ```sh
 npm server-preinstall
