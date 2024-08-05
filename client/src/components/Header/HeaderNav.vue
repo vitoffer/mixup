@@ -81,18 +81,20 @@ function generateStyles(isEnabled) {
 }
 
 .tooltip {
-	visibility: hidden;
 	position: absolute;
 	top: 90%;
 	left: 50%;
 	translate: -50% 0;
 	z-index: 1;
+	opacity: 0;
+
 	width: 130px;
 	padding: 5px;
 	background-color: var(--gray-700);
 	border-radius: 10px;
 	color: var(--yellow-700);
 	text-align: center;
+	transition: 200ms;
 }
 
 .tooltip::after {
@@ -104,12 +106,12 @@ function generateStyles(isEnabled) {
 	z-index: 2;
 	margin-left: -5px;
 	border-width: 5px;
+
 	border-style: solid;
 	border-color: transparent transparent var(--gray-700) transparent;
 }
 
 .nav__link:hover .tooltip {
-	visibility: visible;
-	transition: 100ms;
+	opacity: 1;
 }
 </style>
