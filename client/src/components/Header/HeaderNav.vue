@@ -5,7 +5,7 @@ const navItems = [
 		isEnabled: true,
 	},
 	{
-		name: "Авторы",
+		name: "Кураторы",
 		isEnabled: false,
 	},
 	{
@@ -17,11 +17,13 @@ const navItems = [
 function generateStyles(isEnabled) {
 	if (isEnabled) {
 		return {
+			fontWeight: "bold",
 			color: "var(--cyan-500)",
 			textDecoration: "underline",
 		}
 	}
 	return {
+		fontWeight: 500,
 		color: "var(--cyan-700)",
 		textDecoration: "line-through",
 	}
@@ -42,7 +44,7 @@ function generateStyles(isEnabled) {
 					:class="isEnabled ? '' : 'hover-not-allowed'"
 					:style="[generateStyles(isEnabled), { position: 'relative' }]"
 				>
-					{{ name }}
+					<h2>{{ name }}</h2>
 					<div
 						class="tooltip"
 						v-if="!isEnabled"
