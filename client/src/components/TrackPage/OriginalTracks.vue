@@ -170,6 +170,6 @@ function getPlatformLink(platform) {
 }
 
 .platform-item__image {
-	width: 24px;
+	width: 28px;
 }
 </style>
