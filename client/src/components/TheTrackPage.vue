@@ -1,14 +1,28 @@
 <script setup>
+import { ref } from "vue"
 import OriginalTracks from "./TrackPage/OriginalTracks.vue"
 import TrackInfo from "./TrackPage/TrackInfo.vue"
+
+const appHeight = document.querySelector("#app").getBoundingClientRect().height
+const headerHeight = document
+	.querySelector(".header")
+	.getBoundingClientRect().height
+
+const elementHeight = ref(appHeight - headerHeight - 32 * 2 + "px")
 </script>
 
 <template>
-	<article>
+	<article class="container track-page">
 		<TrackInfo />
 		<OriginalTracks />
 	</article>
-	Тут конкретный трек с id: {{ $route.params.id }}
 </template>
 
-<style scoped></style>
+<style scoped>
+.container {
+	width: 1200px;
+	height: v-bind("elementHeight");
+	margin: 32px auto;
+	border-inline: solid 1px var(--gray-700);
+}
+</style>

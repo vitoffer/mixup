@@ -101,10 +101,12 @@ export default [
 			{ name: "Track 22", author: "SSnfasibfaubfahbfiasdadafasfafa" },
 		],
 		platforms: [
-			{ name: "youtube", link: "" },
+			{
+				name: "youtube",
+				link: "https://youtu.be/YNZm0YEZgXk?si=KAR9SlspbBp7-bYC",
+			},
 			{ name: "yandex", link: "" },
 			{ name: "vk", link: "" },
-			{ discord: "" },
 		],
 	},
 ]

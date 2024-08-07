@@ -1,3 +1,170 @@
+<script setup>
+import { Return } from "@icon-park/vue-next"
+import { useRoute } from "vue-router"
+import trackList from "@/dev/trackList"
+
+import youtubeLogo from "@/assets/images/youtube_logo.svg"
+import spotifyLogo from "@/assets/images/spotify_logo.svg"
+import vkLogo from "@/assets/images/vk_logo.svg"
+import yandexLogo from "@/assets/images/yandex_logo.svg"
+
+const route = useRoute()
+
+const track = trackList.find((track) => track.id == route.params.id)
+
+const platforms = ["youtube", "spotify", "vk", "yandex"]
+
+function getPlatformLogo(platform) {
+	switch (platform) {
+		case "youtube":
+			return youtubeLogo
+		case "spotify":
+			return spotifyLogo
+		case "vk":
+			return vkLogo
+		case "yandex":
+			return yandexLogo
+	}
+}
+
+function getPlatformLink(platform) {
+	console.log(
+		track.platforms.find((platformItem) => platformItem.name == platform),
+	)
+
+	const platformItem = track.platforms.find(
+		(platformItem) => platformItem.name == platform,
+	)
+
+	if (platformItem?.link) {
+		return platformItem.link
+	}
+	return "/"
+}
+</script>
+
 <template>
-	<section>Track info</section>
+	<section class="track-page__info track-info">
+		<a
+			class="track-info__return-link"
+			href="/"
+		>
+			<Return
+				class="track-info__return-icon"
+				theme="outline"
+				size="24"
+			/>
+		</a>
+		<img
+			class="track-info__image"
+			:src="track.imageUrl"
+			alt="Track image"
+		/>
+		<div class="track-info__description track-description">
+			<h3 class="track-description__name">{{ track.name }}</h3>
+			<h4 class="track-description__author">{{ track.author }}</h4>
+			<ul class="track-description__platform-list platform-list">
+				<li
+					class="platform-list__item platform-item"
+					v-for="platform in platforms"
+					:key="platform"
+				>
+					<a
+						class="platform-item__link"
+						:href="getPlatformLink(platform)"
+						target="_blank"
+					>
+						<img
+							class="platform-item__image"
+							:src="getPlatformLogo(platform)"
+							alt="Platform logo"
+						/>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</section>
 </template>
+
+<style scoped>
+.track-page__info {
+	display: grid;
+	grid-template-columns: 24px 300px auto;
+	gap: 64px;
+	margin: 0 64px;
+	padding-block: 32px;
+	border-bottom: solid 1px var(--gray-700);
+}
+
+.track-info__return-link {
+	align-self: start;
+	width: fit-content;
+	padding: 10px;
+	margin: -10px 0 -10px -10px;
+	line-height: 0;
+}
+
+.track-info__return-icon {
+	color: var(--cyan-500);
+}
+
+.track-info__image {
+	width: 300px;
+	aspect-ratio: 1;
+	border-radius: 20px;
+}
+
+.track-info__description {
+	justify-self: center;
+	display: flex;
+	flex-direction: column;
+	padding-top: 24px;
+}
+
+.track-description__name {
+	font-size: 36px;
+	line-height: 49px;
+	font-weight: bold;
+	color: var(--yellow-900);
+}
+
+.track-description__author {
+	font-size: 32px;
+	line-height: 44px;
+	font-weight: 600;
+	color: var(--yellow-700);
+}
+
+.track-description__platform-list {
+	display: flex;
+	justify-content: center;
+	gap: 4px;
+	margin-block: auto 24px;
+}
+
+.platform-item__link {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	padding: 5px;
+	background-color: var(--gray-700);
+}
+
+.platform-list__item:first-child .platform-item__link {
+	padding-left: 8px;
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+}
+
+.platform-list__item:last-child .platform-item__link {
+	padding-right: 8px;
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+
+.platform-item__image {
+	width: 32px;
+}
+</style>
