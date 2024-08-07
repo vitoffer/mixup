@@ -1,16 +1,12 @@
 <script setup>
 import { Return } from "@icon-park/vue-next"
-import { useRoute } from "vue-router"
-import trackList from "@/dev/trackList"
 
 import youtubeLogo from "@/assets/images/youtube_logo.svg"
 import spotifyLogo from "@/assets/images/spotify_logo.svg"
 import vkLogo from "@/assets/images/vk_logo.svg"
 import yandexLogo from "@/assets/images/yandex_logo.svg"
 
-const route = useRoute()
-
-const track = trackList.find((track) => track.id == route.params.id)
+const props = defineProps(["track"])
 
 const platforms = ["youtube", "spotify", "vk", "yandex"]
 
@@ -29,10 +25,10 @@ function getPlatformLogo(platform) {
 
 function getPlatformLink(platform) {
 	console.log(
-		track.platforms.find((platformItem) => platformItem.name == platform),
+		props.track.platforms.find((platformItem) => platformItem.name == platform),
 	)
 
-	const platformItem = track.platforms.find(
+	const platformItem = props.track.platforms.find(
 		(platformItem) => platformItem.name == platform,
 	)
 
@@ -62,7 +58,7 @@ function getPlatformLink(platform) {
 		/>
 		<div class="track-info__description track-description">
 			<h3 class="track-description__name">{{ track.name }}</h3>
-			<h4 class="track-description__author">{{ track.author }}</h4>
+			<p class="track-description__author">{{ track.author }}</p>
 			<ul class="track-description__platform-list platform-list">
 				<li
 					class="platform-list__item platform-item"
@@ -118,6 +114,7 @@ function getPlatformLink(platform) {
 	justify-self: center;
 	display: flex;
 	flex-direction: column;
+	gap: 10px;
 	padding-top: 24px;
 }
 

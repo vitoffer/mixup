@@ -2,6 +2,12 @@
 import { ref } from "vue"
 import OriginalTracks from "./TrackPage/OriginalTracks.vue"
 import TrackInfo from "./TrackPage/TrackInfo.vue"
+import { useRoute } from "vue-router"
+import trackList from "@/dev/trackList"
+
+const route = useRoute()
+
+const track = trackList.find((track) => track.id == route.params.id)
 
 const appHeight = document.querySelector("#app").getBoundingClientRect().height
 const headerHeight = document
@@ -13,8 +19,8 @@ const elementHeight = ref(appHeight - headerHeight - 32 * 2 + "px")
 
 <template>
 	<article class="container track-page">
-		<TrackInfo />
-		<OriginalTracks />
+		<TrackInfo :track="track" />
+		<OriginalTracks :track="track" />
 	</article>
 </template>
 

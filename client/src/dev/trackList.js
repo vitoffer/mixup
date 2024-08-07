@@ -97,8 +97,29 @@ export default [
 			{
 				name: "Track 2",
 				author: "Kent 5",
+				imageUrl: image1Url,
+				platforms: [
+					{
+						name: "youtube",
+						link: "https://www.youtube.com/watch?v=xmE_8Y7Ofu4",
+					},
+					{ name: "yandex", link: "" },
+					{ name: "vk", link: "" },
+				],
 			},
-			{ name: "Track 22", author: "SSnfasibfaubfahbfiasdadafasfafa" },
+			{
+				name: "Track 22",
+				author: "SSnfasibfaubfahbfiasdadafasfafa",
+				imageUrl: image2Url,
+				platforms: [
+					{
+						name: "youtube",
+						link: "https://www.youtube.com/watch?v=xmE_8Y7Ofu4",
+					},
+					{ name: "yandex", link: "" },
+					{ name: "vk", link: "" },
+				],
+			},
 		],
 		platforms: [
 			{

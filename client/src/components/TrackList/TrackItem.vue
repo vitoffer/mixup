@@ -51,7 +51,7 @@ const youtubeLink = computed(() => {
 				/>
 				<div class="track__info">
 					<h3 class="track__title">{{ track.name }}</h3>
-					<h4 class="track__author">{{ track.author }}</h4>
+					<p class="track__author">{{ track.author }}</p>
 				</div>
 				<ol class="track__original-track-list original-track-list">
 					<li
