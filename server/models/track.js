@@ -1,31 +1,21 @@
-const mongoose = require("mongoose")
+import mongoose, { Schema } from "mongoose"
 
-const Schema = mongoose.Schema
-
-const trackSchema = new Schema(
-	{
-		_id: Schema.Types.ObjectId,
-		imageUrl: String,
-		title: { type: String, required: true },
-		author: { type: String, required: true },
-		tracksInside: [String],
-		platforms: [
-			new Schema(
-				{
-					platform: String,
-					link: String,
-				},
-				{
-					_id: false,
-				}
-			),
-		],
+const trackSchema = new Schema({
+	name: { type: String, required: true },
+	author: { type: String, required: true },
+	imageUrl: String,
+	mixedTracks: [
+		{
+			type: Schema.Types.ObjectId,
+			ref: "Track",
+		},
+	],
+	platformLinks: {
+		youtube: String,
+		spotify: String,
+		vk: String,
+		yandex: String,
 	},
-	{
-		versionKey: false, // You should be aware of the outcome after set to false
-	}
-)
+})
 
-const Track = mongoose.model("Track", trackSchema)
-
-module.exports = Track
+export const Track = mongoose.model("Track", trackSchema)

@@ -1,91 +1,37 @@
-const express = require("express")
-const mongoose = require("mongoose")
-const bodyParser = require("body-parser")
-const cors = require("cors")
-const fileUpload = require("express-fileupload")
-const Track = require("./models/track")
+import dotenv from "dotenv"
+import cors from "cors"
+import express from "express"
+import { connectToDb } from "./db/db.js"
+import { router } from "./router/router.js"
 
-require("dotenv").config()
-
-const app = express()
-
-app.use(
-	fileUpload({
-		createParentPath: true,
-	})
-)
-
-app.use(bodyParser.json())
-app.use(
-	bodyParser.urlencoded({
-		extended: true,
-	})
-)
-app.use(cors())
+dotenv.config()
 
 const mongoUrl = process.env.MONGO_URL
 const port = process.env.PORT
 
-mongoose
-	.connect(mongoUrl)
-	.then((res) => console.log("connected to MongoDB"))
-	.catch((err) => console.log(`DB connection error: ${err}`))
+const app = express()
+
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
+if (process.env.NODE_ENV === "dev") {
+	app.use(
+		cors({
+			origin: "*",
+			credentials: true,
+		})
+	)
+} else if (process.env.NODE_ENV === "prod") {
+	app.use(
+		cors({
+			origin: "http://mixup.space",
+			credentials: true,
+		})
+	)
+}
+
+app.use(router)
+
+connectToDb(mongoUrl)
 
 app.listen(port, () => console.log("app is running on port:", port))
-
-app.get("/tracks", (req, res) => {
-	Track.find()
-		.then((tracks) => {
-			res.status(200).json(tracks)
-		})
-		.catch((error) => {
-			handleError(res, error)
-		})
-})
-
-app.post("/add-track", (req, res) => {
-	let data = req.body
-
-	let imageUrl = ""
-	if (req.files) {
-		let image = req.files.image
-		image.mv("./uploads/images/" + image.name)
-		imageUrl = "./uploads/images/" + image.name
-	}
-
-	data = {
-		_id: new mongoose.mongo.ObjectId(),
-		imageUrl: imageUrl,
-		title: data.title,
-		author: data.author,
-		tracksInside: [data.track1, data.track2],
-		platforms: [
-			{ platform: "youtube", link: data.youtube },
-			{ platform: "yandex", link: data.yandex },
-			{ platform: "vk", link: data.vk },
-			{ platform: "discord", link: "" },
-		],
-	}
-
-	const track = new Track(data)
-
-	track
-		.save()
-		.then((result) => {
-			res.status(200).json(result)
-		})
-		.catch((err) => handleError(res, err))
-})
-
-app.get("/get-image", (req, res) => {
-	if (req.query.imageUrl) {
-		res.sendFile(req.query.imageUrl, { root: "." })
-	} else {
-		console.log("image not found for url:", req.query.imageUrl || "'empty url'")
-		res.send("")
-	}
-})
-
-function handleError(res, error) {
-	res.status(500).json({ error })
-}
