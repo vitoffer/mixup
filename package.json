@@ -2,13 +2,12 @@
 	"name": "mixup",
 	"version": "1.0.0",
 	"description": "MixUp - Mashups collection",
+	"author": "vitoffer",
+	"license": "ISC",
 	"scripts": {
 		"dev:client": "cd ./client/ && npm run dev",
-		"server-preinstall": "npm i -g nodemon",
 		"dev:server": "cd ./server/ && nodemon app.js"
 	},
-	"author": "vitoffer",
-	"license": "MIT",
 	"dependencies": {
 		"express": "^4.19.2"
 	}

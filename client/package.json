@@ -1,8 +1,9 @@
 {
 	"name": "mixup-client",
 	"version": "0.0.0",
-	"private": true,
 	"type": "module",
+	"author": "vitoffer",
+	"license": "ISC",
 	"scripts": {
 		"dev": "vite",
 		"build": "vite build",
