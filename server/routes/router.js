@@ -1,8 +1,9 @@
 import { Router, default as express } from "express"
 import {
 	addTrack,
+	getTrackById,
 	getTrackByName,
-	getTrackImageByLink,
+	getTrackImageByFileName,
 	getTrackList,
 } from "../controllers/controller.js"
 import fileUpload from "express-fileupload"
@@ -14,8 +15,10 @@ router.use(fileUpload())
 
 router.get("/api/tracks", getTrackList)
 
+router.get("/api/tracks/:id", getTrackById)
+
 router.post("/api/add-track", addTrack)
 
 router.get("/api/tracks/:name", getTrackByName)
 
-router.get("/api/images/:link", getTrackImageByLink)
+router.get("/api/images/:fileName", getTrackImageByFileName)

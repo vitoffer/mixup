@@ -2,7 +2,7 @@ import { Track } from "../models/Track.js"
 import path from "path"
 
 export async function getTrackList(req, res) {
-	const tracks = await Track.find()
+	const tracks = await Track.find().populate("mixedTracks")
 	res.send(tracks)
 }
 
@@ -36,8 +36,24 @@ export async function getTrackByName(req, res) {
 	}
 }
 
-export async function getTrackImageByLink(req, res) {
-	const imagePath = path.join(import.meta.dirname, "../", req.params.link)
+export async function getTrackById(req, res) {
+	const id = req.params.id
+
+	try {
+		const track = await Track.findOne({ _id: id })
+
+		res.status(200).send(track)
+	} catch (err) {
+		console.log(err.message)
+	}
+}
+
+export async function getTrackImageByFileName(req, res) {
+	const imagePath = path.join(
+		import.meta.dirname,
+		"../uploads/images",
+		req.params.fileName
+	)
 
 	res.sendFile(imagePath)
 }

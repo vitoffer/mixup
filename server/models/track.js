@@ -3,7 +3,7 @@ import mongoose, { Schema } from "mongoose"
 const trackSchema = new Schema({
 	name: { type: String, required: true },
 	authors: [{ type: String, required: true }],
-	imageUrl: String,
+	imageName: String,
 	mixedTracks: [
 		{
 			type: Schema.Types.ObjectId,
