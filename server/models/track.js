@@ -1,8 +1,17 @@
-import mongoose, { Schema } from "mongoose"
+import { Schema, model } from "mongoose"
 
-const trackSchema = new Schema({
+export const validPlatformNames = ["youtube", "spotify", "vk", "yandex"]
+
+export const trackSchema = new Schema({
 	name: { type: String, required: true },
-	authors: [{ type: String, required: true }],
+	authors: {
+		type: [{ type: String, required: true }],
+
+		validate: {
+			validator: (v) => v.length > 0,
+			message: "should have at least one item",
+		},
+	},
 	imageName: String,
 	mixedTracks: [
 		{
@@ -11,11 +20,29 @@ const trackSchema = new Schema({
 		},
 	],
 	platformLinks: {
-		youtube: String,
-		spotify: String,
-		vk: String,
-		yandex: String,
+		type: Map,
+		required: true,
 	},
 })
 
-export const Track = mongoose.model("Track", trackSchema)
+export function validateSchemaPlatformLinks() {
+	trackSchema.path("platformLinks").validate((v) => {
+		for (const key of v.keys()) {
+			if (!validPlatformNames.includes(key)) {
+				return false
+			}
+		}
+		return true
+	}, "platform name not supported")
+
+	trackSchema.path("platformLinks").validate((v) => {
+		for (const value of v.values()) {
+			if (typeof value !== "string") {
+				return false
+			}
+		}
+		return true
+	}, "link must be string type")
+}
+
+export const Track = model("Track", trackSchema)

@@ -3,6 +3,7 @@ import cors from "cors"
 import express from "express"
 import { connectToDb } from "./db/db.js"
 import { router } from "./routes/router.js"
+import { validateSchemaPlatformLinks } from "./models/Track.js"
 
 dotenv.config()
 
@@ -14,27 +15,32 @@ const PORT = process.env.PORT || 3000
 
 const app = express()
 
+let origin
+
 if (NODE_ENV === "dev") {
-	app.use(
-		cors({
-			origin: "*",
-		})
-	)
+	origin = "http://localhost"
 }
 if (NODE_ENV === "prod") {
-	app.use(
-		cors({
-			origin: "http://mixup.space",
-		})
-	)
+	origin = "http://mixup.space"
 }
 
+app.use(
+	cors({
+		origin: origin || "http://localhost",
+	})
+)
 app.use(router)
 
 async function start() {
-	await connectToDb(MONGO_URL, MONGO_PORT, MONGO_DB)
+	try {
+		await connectToDb(MONGO_URL, MONGO_PORT, MONGO_DB)
 
-	app.listen(PORT, () => console.log("app is running on port:", PORT))
+		validateSchemaPlatformLinks()
+
+		app.listen(PORT, () => console.log("App is running on port:", PORT))
+	} catch (err) {
+		console.error(err)
+	}
 }
 
 start()
