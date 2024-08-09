@@ -1,9 +1,22 @@
 <script setup>
-import { ref, computed } from "vue"
+import { ref, computed, onBeforeMount } from "vue"
 
 const props = defineProps(["track"])
 
+const imageUrl = ref("")
 const trackStyles = ref({})
+
+onBeforeMount(() => {
+	loadImage(props.track.imageName)
+})
+
+async function loadImage(imageName) {
+	const response = await fetch(`http://localhost:3000/api/images/${imageName}`)
+
+	const blob = await response.blob()
+
+	imageUrl.value = URL.createObjectURL(blob)
+}
 
 function mouseEnterTrack(e) {
 	Object.assign(trackStyles.value, {
@@ -30,8 +43,7 @@ function mouseLeaveTrack(e) {
 }
 
 const youtubeLink = computed(() => {
-	return props.track.platforms.find((platform) => platform.name == "youtube")
-		?.link
+	return Object.keys(props.track.platformLinks).includes("youtube")
 })
 </script>
 
@@ -42,16 +54,16 @@ const youtubeLink = computed(() => {
 		@mouseleave="mouseLeaveTrack"
 		:style="trackStyles"
 	>
-		<a :href="`/tracks/${track.id}`">
+		<a :href="`/tracks/${track._id}`">
 			<article class="track__wrapper">
 				<img
 					class="track__image"
-					:src="track.imageUrl"
+					:src="imageUrl"
 					alt="Track image"
 				/>
 				<div class="track__info">
 					<h3 class="track__title">{{ track.name }}</h3>
-					<p class="track__author">{{ track.author }}</p>
+					<p class="track__author">{{ track.authors.join(", ") }}</p>
 				</div>
 				<ol class="track__mixed-track-list mixed-track-list">
 					<li
@@ -59,7 +71,7 @@ const youtubeLink = computed(() => {
 						v-for="mixedTrack in track.mixedTracks.slice(0, 2)"
 						:key="mixedTrack"
 					>
-						{{ mixedTrack.name }} - {{ mixedTrack.author }}
+						{{ mixedTrack.name }} - {{ mixedTrack.authors.join(", ") }}
 					</li>
 				</ol>
 				<a

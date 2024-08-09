@@ -1,6 +1,22 @@
 <script setup>
 import TrackItem from "./TrackList/TrackItem.vue"
-import trackList from "@/dev/trackList"
+// import trackList from "@/dev/trackList"
+
+import { addTrackToList, trackList } from "../storage"
+import { onMounted } from "vue"
+
+onMounted(() => {
+	loadAllTracks()
+})
+
+async function loadAllTracks() {
+	const response = await fetch("http://localhost:3000/api/tracks")
+	const tracks = await response.json()
+
+	tracks.forEach((track) => {
+		addTrackToList(track)
+	})
+}
 </script>
 
 <template>

@@ -3,13 +3,41 @@ import youtubeLogo from "@/assets/images/youtube_logo.svg"
 import spotifyLogo from "@/assets/images/spotify_logo.svg"
 import vkLogo from "@/assets/images/vk_logo.svg"
 import yandexLogo from "@/assets/images/yandex_logo.svg"
+import { onBeforeMount, ref } from "vue"
 
 const props = defineProps(["track"])
 
+const mixedTracks = ref([])
+
+onBeforeMount(() => {
+	loadMixedTracks(props.track.mixedTracks)
+})
+
+async function loadMixedTracks(mixedTrackIds) {
+	mixedTrackIds.forEach(async (mixedTrack) => {
+		const response = await fetch(
+			`http://localhost:3000/api/tracks/${mixedTrack}`,
+		)
+		const resultTrack = await response.json()
+
+		resultTrack.imageUrl = await loadImageUrl(resultTrack.imageName)
+
+		mixedTracks.value.push(resultTrack)
+	})
+}
+
+async function loadImageUrl(imageName) {
+	const response = await fetch(`http://localhost:3000/api/images/${imageName}`)
+
+	const blob = await response.blob()
+
+	return URL.createObjectURL(blob)
+}
+
 const platforms = ["youtube", "spotify", "vk", "yandex"]
 
-function getPlatformLogo(platform) {
-	switch (platform) {
+function getPlatformLogo(platformName) {
+	switch (platformName) {
 		case "youtube":
 			return youtubeLogo
 		case "spotify":
@@ -22,18 +50,7 @@ function getPlatformLogo(platform) {
 }
 
 function getPlatformLink(platform) {
-	console.log(
-		props.track.platforms.find((platformItem) => platformItem.name == platform),
-	)
-
-	const platformItem = props.track.platforms.find(
-		(platformItem) => platformItem.name == platform,
-	)
-
-	if (platformItem?.link) {
-		return platformItem.link
-	}
-	return "/"
+	return mixedTracks.value[0].platformLinks[platform] || "/"
 }
 </script>
 
@@ -43,7 +60,7 @@ function getPlatformLink(platform) {
 		<ul class="mixed-tracks__list">
 			<li
 				class="mixed-tracks__item mixed-track"
-				v-for="mixedTrack in track.mixedTracks"
+				v-for="mixedTrack in mixedTracks"
 				:key="mixedTrack.name"
 			>
 				<img
@@ -53,7 +70,7 @@ function getPlatformLink(platform) {
 				/>
 				<div class="mixed-track__description">
 					<h4 class="mixed-track__name">{{ mixedTrack.name }}</h4>
-					<p class="mixed-track__author">{{ mixedTrack.author }}</p>
+					<p class="mixed-track__author">{{ mixedTrack.authors.join(", ") }}</p>
 				</div>
 				<ul class="mixed-track__platform-list platform-list">
 					<li

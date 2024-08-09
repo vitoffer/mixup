@@ -5,8 +5,23 @@ import youtubeLogo from "@/assets/images/youtube_logo.svg"
 import spotifyLogo from "@/assets/images/spotify_logo.svg"
 import vkLogo from "@/assets/images/vk_logo.svg"
 import yandexLogo from "@/assets/images/yandex_logo.svg"
+import { onBeforeMount, ref } from "vue"
 
 const props = defineProps(["track"])
+
+const imageUrl = ref()
+
+onBeforeMount(() => {
+	loadImage(props.track.imageName)
+})
+
+async function loadImage(imageName) {
+	const response = await fetch(`http://localhost:3000/api/images/${imageName}`)
+
+	const blob = await response.blob()
+
+	imageUrl.value = URL.createObjectURL(blob)
+}
 
 const platforms = ["youtube", "spotify", "vk", "yandex"]
 
@@ -24,18 +39,7 @@ function getPlatformLogo(platform) {
 }
 
 function getPlatformLink(platform) {
-	console.log(
-		props.track.platforms.find((platformItem) => platformItem.name == platform),
-	)
-
-	const platformItem = props.track.platforms.find(
-		(platformItem) => platformItem.name == platform,
-	)
-
-	if (platformItem?.link) {
-		return platformItem.link
-	}
-	return "/"
+	return props.track.platformLinks[platform] || "/"
 }
 </script>
 
@@ -53,12 +57,12 @@ function getPlatformLink(platform) {
 		</a>
 		<img
 			class="track-info__image"
-			:src="track.imageUrl"
+			:src="imageUrl"
 			alt="Track image"
 		/>
 		<div class="track-info__description track-description">
 			<h3 class="track-description__name">{{ track.name }}</h3>
-			<p class="track-description__author">{{ track.author }}</p>
+			<p class="track-description__author">{{ track.authors.join(", ") }}</p>
 			<ul class="track-description__platform-list platform-list">
 				<li
 					class="platform-list__item platform-item"
