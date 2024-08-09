@@ -1,6 +1,14 @@
 import { Schema, model } from "mongoose"
 
-export const validPlatformNames = ["youtube", "spotify", "vk", "yandex"]
+const validPlatformNames = ["youtube", "spotify", "vk", "yandex"]
+
+const platformLinksValidators = [
+	{
+		validator: isAllPlatformNamesValid,
+		message: "platform name not supported",
+	},
+	{ validator: isAllPlatformLinksString, message: "link must be string type" },
+]
 
 export const trackSchema = new Schema({
 	name: { type: String, required: true },
@@ -8,7 +16,7 @@ export const trackSchema = new Schema({
 		type: [{ type: String, required: true }],
 
 		validate: {
-			validator: (v) => v.length > 0,
+			validator: (array) => array.length > 0,
 			message: "should have at least one item",
 		},
 	},
@@ -22,27 +30,26 @@ export const trackSchema = new Schema({
 	platformLinks: {
 		type: Map,
 		required: true,
+		validate: platformLinksValidators,
 	},
 })
 
-export function validateSchemaPlatformLinks() {
-	trackSchema.path("platformLinks").validate((v) => {
-		for (const key of v.keys()) {
-			if (!validPlatformNames.includes(key)) {
-				return false
-			}
-		}
-		return true
-	}, "platform name not supported")
+export const Track = model("Track", trackSchema)
 
-	trackSchema.path("platformLinks").validate((v) => {
-		for (const value of v.values()) {
-			if (typeof value !== "string") {
-				return false
-			}
+function isAllPlatformNamesValid(map) {
+	for (const key of map.keys()) {
+		if (!validPlatformNames.includes(key)) {
+			return false
 		}
-		return true
-	}, "link must be string type")
+	}
+	return true
 }
 
-export const Track = model("Track", trackSchema)
+function isAllPlatformLinksString(map) {
+	for (const value of map.values()) {
+		if (typeof value !== "string") {
+			return false
+		}
+	}
+	return true
+}

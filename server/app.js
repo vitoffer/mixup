@@ -3,7 +3,6 @@ import cors from "cors"
 import express from "express"
 import { connectToDb } from "./db/db.js"
 import { router } from "./routes/router.js"
-import { validateSchemaPlatformLinks } from "./models/Track.js"
 
 dotenv.config()
 
@@ -34,8 +33,6 @@ app.use(router)
 async function start() {
 	try {
 		await connectToDb(MONGO_URL, MONGO_PORT, MONGO_DB)
-
-		validateSchemaPlatformLinks()
 
 		app.listen(PORT, () => console.log("App is running on port:", PORT))
 	} catch (err) {

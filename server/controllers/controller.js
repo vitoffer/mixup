@@ -1,4 +1,4 @@
-import { Track, validPlatformNames } from "../models/Track.js"
+import { Track } from "../models/Track.js"
 import path from "path"
 import mongoose from "mongoose"
 
@@ -72,7 +72,6 @@ export async function addTrack(req, res) {
 		}
 
 		const track = new Track({ ...body, imageUrl: uploadPath })
-
 		await track.save()
 
 		if (file) {
