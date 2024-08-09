@@ -2,36 +2,39 @@ import dotenv from "dotenv"
 import cors from "cors"
 import express from "express"
 import { connectToDb } from "./db/db.js"
-import { router } from "./router/router.js"
+import { router } from "./routes/router.js"
 
 dotenv.config()
 
-const mongoUrl = process.env.MONGO_URL
-const port = process.env.PORT
+const NODE_ENV = process.env.NODE_ENV
+const MONGO_URL = process.env.MONGO_URL
+const MONGO_PORT = process.env.MONGO_PORT
+const MONGO_DB = process.env.MONGO_DB
+const PORT = process.env.PORT || 3000
 
 const app = express()
 
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-
-if (process.env.NODE_ENV === "dev") {
+if (NODE_ENV === "dev") {
 	app.use(
 		cors({
 			origin: "*",
-			credentials: true,
 		})
 	)
-} else if (process.env.NODE_ENV === "prod") {
+}
+if (NODE_ENV === "prod") {
 	app.use(
 		cors({
 			origin: "http://mixup.space",
-			credentials: true,
 		})
 	)
 }
 
 app.use(router)
 
-connectToDb(mongoUrl)
+async function start() {
+	await connectToDb(MONGO_URL, MONGO_PORT, MONGO_DB)
 
-app.listen(port, () => console.log("app is running on port:", port))
+	app.listen(PORT, () => console.log("app is running on port:", PORT))
+}
+
+start()
