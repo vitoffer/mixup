@@ -75,6 +75,7 @@ function generateStyles(isEnabled) {
 }
 
 .nav__link {
+	line-height: 25px;
 	padding-block: 8px;
 }
 
@@ -91,6 +92,7 @@ function generateStyles(isEnabled) {
 	opacity: 0;
 
 	width: 130px;
+
 	padding: 5px;
 	background-color: var(--gray-700);
 	border-radius: 10px;
@@ -102,7 +104,7 @@ function generateStyles(isEnabled) {
 .tooltip::after {
 	content: " ";
 	position: absolute;
-	bottom: 100%; /* At the top of the tooltip */
+	bottom: 100%;
 	left: 50%;
 	translate: 0 1px;
 	z-index: 2;
