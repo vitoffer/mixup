@@ -11,9 +11,13 @@ export default [
 		name: "Биг Сити Лайф - Whole Lotta Swag",
 		author: "author 1",
 		imageUrl: image1Url,
-		originalTracks: [
-			{ name: "Opsss 1", author: "Kent 1" },
-			{ name: "Track 1", author: "Lorem ipsum dolordfhgdgdgdedhassf" },
+		mixedTracks: [
+			{ name: "Opsss 1", author: "Kent 1", imageUrl: image1Url },
+			{
+				name: "Track 1",
+				author: "Lorem ipsum dolordfhgdgdgdedhassf",
+				imageUrl: image1Url,
+			},
 		],
 		platforms: [
 			{ name: "youtube", link: "https://www.youtube.com/watch?v=xmE_8Y7Ofu4" },
@@ -29,11 +33,12 @@ export default [
 		name: "Vmeste My - 5sta Family, 6YNTHMANE, budAGE",
 		author: "author 1asfa afn ajfsasdadadsadad",
 		imageUrl: image2Url,
-		originalTracks: [
-			{ name: "Track 1", author: "Kent 1" },
+		mixedTracks: [
+			{ name: "Track 1", author: "Kent 1", imageUrl: image1Url },
 			{
 				name: "Gooop",
 				author: "Lorem ipsum dolor si.",
+				imageUrl: image1Url,
 			},
 		],
 		platforms: [
@@ -46,9 +51,9 @@ export default [
 		name: "Supersonic - Big Baby Tape, Aarne",
 		author: "author 2",
 		imageUrl: image3Url,
-		originalTracks: [
-			{ name: "Track 2", author: "Kent 2" },
-			{ name: "Track 22", author: "SSSAAA" },
+		mixedTracks: [
+			{ name: "Track 2", author: "Kent 2", imageUrl: image1Url },
+			{ name: "Track 22", author: "SSSAAA", imageUrl: image1Url },
 		],
 		platforms: [
 			{ name: "youtube", link: "https://www.youtube.com/watch?v=qMb9hQ_9QKY" },
@@ -59,8 +64,12 @@ export default [
 		name: "Музыка громче - BUSHIDO ZHO emsghknle dhgjd nhd shgfsd hd",
 		author: "author 4g skngn jdj,d snhdjkl nhkd f",
 		imageUrl: image4Url,
-		originalTracks: [
-			{ name: "Track 2", author: "Kiii nsjgb sj gjb hsd hsrh sgf shsh s" },
+		mixedTracks: [
+			{
+				name: "Track 2",
+				author: "Kiii nsjgb sj gjb hsd hsrh sgf shsh s",
+				imageUrl: image1Url,
+			},
 		],
 		platforms: [
 			{ name: "youtube", link: "https://www.youtube.com/watch?v=zYS0gSGhgfw" },
@@ -75,9 +84,9 @@ export default [
 		name: "далеко (большой Бушизм) [prod. by wex & heysubr] - BUSHIDO ZHO",
 		author: "author 5",
 		imageUrl: image5Url,
-		originalTracks: [
-			{ name: "Track 5", author: "Kent 5" },
-			{ name: "Track 2", author: "Sawdadwadnfa ahsh" },
+		mixedTracks: [
+			{ name: "Track 5", author: "Kent 5", imageUrl: image1Url },
+			{ name: "Track 2", author: "Sawdadwadnfa ahsh", imageUrl: image1Url },
 		],
 		platforms: [
 			{ name: "youtube", link: "https://www.youtube.com/watch?v=7MdDtczKBsY" },
@@ -93,7 +102,7 @@ export default [
 		name: "Москва - Yanix",
 		author: "author 2",
 		imageUrl: image6Url,
-		originalTracks: [
+		mixedTracks: [
 			{
 				name: "Track 2",
 				author: "Kent 5",

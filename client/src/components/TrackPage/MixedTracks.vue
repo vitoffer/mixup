@@ -38,24 +38,24 @@ function getPlatformLink(platform) {
 </script>
 
 <template>
-	<section class="track-page__original-tracks original-tracks">
-		<h3 class="original-tracks__title">Original tracks:</h3>
-		<ul class="original-tracks__list">
+	<section class="track-page__mixed-tracks mixed-tracks">
+		<h3 class="mixed-tracks__title">Mixed tracks:</h3>
+		<ul class="mixed-tracks__list">
 			<li
-				class="original-tracks__item original-track"
-				v-for="originalTrack in track.originalTracks"
-				:key="originalTrack.name"
+				class="mixed-tracks__item mixed-track"
+				v-for="mixedTrack in track.mixedTracks"
+				:key="mixedTrack.name"
 			>
 				<img
-					class="original-track__image"
-					:src="originalTrack.imageUrl"
-					alt="Original track image"
+					class="mixed-track__image"
+					:src="mixedTrack.imageUrl"
+					alt="mixed track image"
 				/>
-				<div class="original-track__description">
-					<h4 class="original-track__name">{{ originalTrack.name }}</h4>
-					<p class="original-track__author">{{ originalTrack.author }}</p>
+				<div class="mixed-track__description">
+					<h4 class="mixed-track__name">{{ mixedTrack.name }}</h4>
+					<p class="mixed-track__author">{{ mixedTrack.author }}</p>
 				</div>
-				<ul class="original-track__platform-list platform-list">
+				<ul class="mixed-track__platform-list platform-list">
 					<li
 						class="platform-list__item platform-item"
 						v-for="platform in platforms"
@@ -80,62 +80,62 @@ function getPlatformLink(platform) {
 </template>
 
 <style scoped>
-.track-page__original-tracks {
+.track-page__mixed-tracks {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	margin: 32px 152px;
 }
 
-.original-tracks__title {
+.mixed-tracks__title {
 	font-size: 24px;
 	line-height: 33px;
 	font-weight: bold;
 	color: var(--cyan-500);
 }
 
-.original-tracks__list {
+.mixed-tracks__list {
 	width: 100%;
 }
 
-.original-tracks__item {
+.mixed-tracks__item {
 	display: flex;
 	align-items: center;
 	gap: 32px;
 	padding: 16px 32px;
 }
 
-.original-tracks__item:not(:first-child) {
+.mixed-tracks__item:not(:first-child) {
 	border-top: solid 1px var(--gray-700);
 }
 
-.original-track__image {
+.mixed-track__image {
 	width: 100px;
 	aspect-ratio: 1;
 	border-radius: 10px;
 }
 
-.original-track__description {
+.mixed-track__description {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
 }
 
-.original-track__name {
+.mixed-track__name {
 	font-size: 24px;
 	line-height: 33px;
 	font-weight: bold;
 	color: var(--yellow-900);
 }
 
-.original-track__author {
+.mixed-track__author {
 	font-size: 20px;
 	line-height: 27px;
 	font-weight: 600;
 	color: var(--yellow-700);
 }
 
-.original-track__platform-list {
+.mixed-track__platform-list {
 	display: grid;
 	grid-template-rows: 1fr 1fr;
 	grid-template-columns: 1fr 1fr;

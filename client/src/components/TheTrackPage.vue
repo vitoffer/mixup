@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from "vue"
-import OriginalTracks from "./TrackPage/OriginalTracks.vue"
+import MixedTracks from "./TrackPage/MixedTracks.vue"
 import TrackInfo from "./TrackPage/TrackInfo.vue"
 import { useRoute } from "vue-router"
 import trackList from "@/dev/trackList"
@@ -20,7 +20,7 @@ const elementHeight = ref(appHeight - headerHeight - 32 * 2 + "px")
 <template>
 	<article class="container track-page">
 		<TrackInfo :track="track" />
-		<OriginalTracks :track="track" />
+		<MixedTracks :track="track" />
 	</article>
 </template>
 

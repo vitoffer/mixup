@@ -53,13 +53,13 @@ const youtubeLink = computed(() => {
 					<h3 class="track__title">{{ track.name }}</h3>
 					<p class="track__author">{{ track.author }}</p>
 				</div>
-				<ol class="track__original-track-list original-track-list">
+				<ol class="track__mixed-track-list mixed-track-list">
 					<li
-						class="original-track-list__item"
-						v-for="originalTrack in track.originalTracks.slice(0, 2)"
-						:key="originalTrack"
+						class="mixed-track-list__item"
+						v-for="mixedTrack in track.mixedTracks.slice(0, 2)"
+						:key="mixedTrack"
 					>
-						{{ originalTrack.name }} - {{ originalTrack.author }}
+						{{ mixedTrack.name }} - {{ mixedTrack.author }}
 					</li>
 				</ol>
 				<a
@@ -125,13 +125,13 @@ const youtubeLink = computed(() => {
 	color: var(--yellow-700);
 }
 
-.track__original-track-list {
+.track__mixed-track-list {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 }
 
-.original-track-list__item {
+.mixed-track-list__item {
 	list-style: decimal inside;
 	font-size: 1rem;
 	line-height: 1.375rem;
