@@ -7,8 +7,5 @@
 	"scripts": {
 		"dev:client": "cd ./client/ && npm run dev",
 		"dev:server": "cd ./server/ && nodemon app.js"
-	},
-	"dependencies": {
-		"express": "^4.19.2"
 	}
 }
