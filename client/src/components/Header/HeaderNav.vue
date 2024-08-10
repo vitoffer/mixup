@@ -2,14 +2,18 @@
 const navItems = [
 	{
 		name: "Все треки",
+		link: "/",
 		isEnabled: true,
 	},
 	{
 		name: "Кураторы",
+		link: "/404",
+
 		isEnabled: false,
 	},
 	{
 		name: "Добавить трек",
+		link: "/404",
 		isEnabled: false,
 	},
 ]
@@ -35,11 +39,11 @@ function generateStyles(isEnabled) {
 		<ul class="nav__list">
 			<li
 				class="nav__item"
-				v-for="{ name, isEnabled } in navItems"
+				v-for="{ name, link, isEnabled } in navItems"
 				:key="name"
 			>
-				<a
-					href="/"
+				<RouterLink
+					:to="link"
 					class="nav__link"
 					:class="isEnabled ? '' : 'hover-not-allowed'"
 					:style="[generateStyles(isEnabled), { position: 'relative' }]"
@@ -51,7 +55,7 @@ function generateStyles(isEnabled) {
 					>
 						В разработке
 					</div>
-				</a>
+				</RouterLink>
 			</li>
 		</ul>
 	</nav>

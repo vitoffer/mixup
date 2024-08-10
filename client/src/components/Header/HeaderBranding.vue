@@ -1,9 +1,9 @@
 <script setup></script>
 
 <template>
-	<a
+	<RouterLink
 		class="header__branding branding"
-		href="/"
+		to="/"
 	>
 		<img
 			src="@/assets/images/logo.svg"
@@ -15,7 +15,7 @@
 			<h1 class="branding__name">MixUp</h1>
 			<p class="branding__description">Remix & Mashup Collection</p>
 		</div>
-	</a>
+	</RouterLink>
 </template>
 
 <style scoped>
