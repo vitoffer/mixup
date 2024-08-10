@@ -1,58 +1,12 @@
 <script setup>
-import { onMounted, ref } from "vue"
+import { useLoadingImage } from "@/composables/loadingImage"
+import { useTrackItem } from "@/composables/trackItem"
 
 const props = defineProps(["track"])
 
-const isImageLoading = ref(false)
-const imageUrl = ref("")
-const trackItemStyles = ref({})
+const { trackItemStyles, changeTrackItemStyles } = useTrackItem()
 
-const baseTrackItemStyles = {
-	backgroundColor: "transparent",
-	borderRadius: "0",
-	borderColor: "var(--gray-700)",
-}
-
-const highlightedTrackItemStyles = {
-	backgroundColor: "var(--gray-800)",
-	borderRadius: "20px",
-	borderColor: "transparent",
-}
-
-onMounted(() => {
-	loadImage(props.track.imageName)
-
-	setTimeout(() => {
-		if (isImageLoading.value) {
-			imageUrl.value = "/image_not_loaded.png"
-		}
-	}, 3000)
-})
-
-async function loadImage(imageName) {
-	isImageLoading.value = true
-
-	const response = await fetch(`http://localhost:3000/api/images/${imageName}`)
-	const blob = await response.blob()
-	imageUrl.value = URL.createObjectURL(blob)
-
-	isImageLoading.value = false
-}
-
-function changeTrackItemStyles(event, isSelected) {
-	trackItemStyles.value = isSelected
-		? highlightedTrackItemStyles
-		: baseTrackItemStyles
-
-	const nextSibling = event.target.nextSibling
-	if (!nextSibling || !nextSibling.style) {
-		return
-	}
-
-	nextSibling.style.borderTopColor = isSelected
-		? "transparent"
-		: "var(--gray-700)"
-}
+const imageUrl = useLoadingImage(props.track.imageName)
 
 function hasYoutubeLink(platforms) {
 	return platforms.youtube ?? false

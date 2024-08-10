@@ -1,87 +1,21 @@
 <script setup>
-import youtubeLogo from "@/assets/images/youtube_logo.svg"
-import spotifyLogo from "@/assets/images/spotify_logo.svg"
-import vkLogo from "@/assets/images/vk_logo.svg"
-import yandexLogo from "@/assets/images/yandex_logo.svg"
-import { onMounted, ref } from "vue"
+import { useLoadingImage } from "@/composables/loadingImage"
+import { useTrackItem } from "@/composables/trackItem"
+import { getPlatformLink, getPlatformLogo } from "@/platforms"
 
 const props = defineProps(["mixedTrack"])
 
-const isImageLoading = ref(false)
-const imageUrl = ref("")
-const mixedTrackItemStyles = ref({})
+const { trackItemStyles, changeTrackItemStyles } = useTrackItem()
 
-const baseMixedTrackItemStyles = {
-	backgroundColor: "transparent",
-	borderRadius: "0",
-	borderColor: "var(--gray-700)",
-}
-
-const highlightedMixedTrackItemStyles = {
-	backgroundColor: "var(--gray-800)",
-	borderRadius: "20px",
-	borderColor: "transparent",
-}
-
-onMounted(() => {
-	loadImage(props.mixedTrack.imageName)
-
-	setTimeout(() => {
-		if (isImageLoading.value) {
-			imageUrl.value = "/image_not_loaded.png"
-		}
-	}, 3000)
-})
-
-async function loadImage(imageName) {
-	isImageLoading.value = true
-
-	const response = await fetch(`http://localhost:3000/api/images/${imageName}`)
-	const blob = await response.blob()
-	imageUrl.value = URL.createObjectURL(blob)
-
-	isImageLoading.value = false
-}
-
-function changeMixedTrackItemStyles(event, isSelected) {
-	mixedTrackItemStyles.value = isSelected
-		? highlightedMixedTrackItemStyles
-		: baseMixedTrackItemStyles
-
-	const nextSibling = event.target.nextSibling
-	if (!nextSibling || !nextSibling.style) {
-		return
-	}
-
-	nextSibling.style.borderTopColor = isSelected
-		? "transparent"
-		: "var(--gray-700)"
-}
-
-function getPlatformLogo(platformName) {
-	switch (platformName) {
-		case "youtube":
-			return youtubeLogo
-		case "spotify":
-			return spotifyLogo
-		case "vk":
-			return vkLogo
-		case "yandex":
-			return yandexLogo
-	}
-}
-
-function getPlatformLink(platform) {
-	return props.mixedTrack.platformLinks[platform] || "/"
-}
+const imageUrl = useLoadingImage(props.mixedTrack.imageName)
 </script>
 
 <template>
 	<li
 		class="mixed-tracks__item mixed-track"
-		@mouseenter="changeMixedTrackItemStyles($event, true)"
-		@mouseleave="changeMixedTrackItemStyles($event, false)"
-		:style="mixedTrackItemStyles"
+		@mouseenter="changeTrackItemStyles($event, true)"
+		@mouseleave="changeTrackItemStyles($event, false)"
+		:style="trackItemStyles"
 	>
 		<RouterLink :to="`/tracks/${mixedTrack._id}`">
 			<article class="mixed-track__wrapper">
@@ -104,7 +38,7 @@ function getPlatformLink(platform) {
 					>
 						<a
 							class="platform-item__link"
-							:href="getPlatformLink(platform)"
+							:href="getPlatformLink(mixedTrack, platform)"
 							target="_blank"
 							@click.stop
 						>

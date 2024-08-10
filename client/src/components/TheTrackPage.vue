@@ -1,15 +1,14 @@
 <script setup>
-import { ref, watch, watchEffect } from "vue"
-import MixedTracksSection from "./TrackPage/MixedTracksSection.vue"
-import TrackInfoSection from "./TrackPage/TrackInfoSection.vue"
+import { ref, watch } from "vue"
 import { useRoute } from "vue-router"
+import MixedTracksSection from "@/components/TrackPage/MixedTracksSection.vue"
+import TrackInfoSection from "@/components/TrackPage/TrackInfoSection.vue"
 import { trackList } from "@/storage"
 
 const appHeight = document.querySelector("#app").getBoundingClientRect().height
 const headerHeight = document
 	.querySelector(".header")
 	.getBoundingClientRect().height
-
 const elementHeight = ref(appHeight - headerHeight - 32 * 2 + "px")
 
 const route = useRoute()

@@ -1,5 +1,5 @@
 <script setup>
-import MixedTrackItem from "./MixedTrackList/MixedTrackItem.vue"
+import MixedTrackItem from "@/components/TrackPage/MixedTracks/MixedTrackList/MixedTrackItem.vue"
 
 defineProps(["mixedTracks"])
 </script>

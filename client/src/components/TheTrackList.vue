@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from "vue"
-import TrackItem from "./TrackList/TrackItem.vue"
+import TrackItem from "@/components/TrackList/TrackItem.vue"
 import { addTrackToList, trackList } from "@/storage"
 
 const isLoading = ref(false)

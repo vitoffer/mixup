@@ -1,6 +1,6 @@
 <script setup>
-import HeaderNav from "./Header/HeaderNav.vue"
-import HeaderBranding from "./Header/HeaderBranding.vue"
+import HeaderNav from "@/components/Header/HeaderNav.vue"
+import HeaderBranding from "@/components/Header/HeaderBranding.vue"
 </script>
 
 <template>
