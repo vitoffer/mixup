@@ -3,38 +3,60 @@ import youtubeLogo from "@/assets/images/youtube_logo.svg"
 import spotifyLogo from "@/assets/images/spotify_logo.svg"
 import vkLogo from "@/assets/images/vk_logo.svg"
 import yandexLogo from "@/assets/images/yandex_logo.svg"
-import { onBeforeMount, ref } from "vue"
+import { onMounted, ref } from "vue"
 
-const props = defineProps(["track"])
+const props = defineProps(["mixedTrack"])
 
-const mixedTracks = ref([])
+const isImageLoading = ref(false)
+const imageUrl = ref("")
+const mixedTrackItemStyles = ref({})
 
-onBeforeMount(() => {
-	loadMixedTracks(props.track.mixedTracks)
+const baseMixedTrackItemStyles = {
+	backgroundColor: "transparent",
+	borderRadius: "0",
+	borderColor: "var(--gray-700)",
+}
+
+const highlightedMixedTrackItemStyles = {
+	backgroundColor: "var(--gray-800)",
+	borderRadius: "20px",
+	borderColor: "transparent",
+}
+
+onMounted(() => {
+	loadImage(props.mixedTrack.imageName)
+
+	setTimeout(() => {
+		if (isImageLoading.value) {
+			imageUrl.value = "/image_not_loaded.png"
+		}
+	}, 3000)
 })
 
-async function loadMixedTracks(mixedTrackIds) {
-	mixedTrackIds.forEach(async (mixedTrack) => {
-		const response = await fetch(
-			`http://localhost:3000/api/tracks/${mixedTrack}`,
-		)
-		const resultTrack = await response.json()
+async function loadImage(imageName) {
+	isImageLoading.value = true
 
-		resultTrack.imageUrl = await loadImageUrl(resultTrack.imageName)
-
-		mixedTracks.value.push(resultTrack)
-	})
-}
-
-async function loadImageUrl(imageName) {
 	const response = await fetch(`http://localhost:3000/api/images/${imageName}`)
-
 	const blob = await response.blob()
+	imageUrl.value = URL.createObjectURL(blob)
 
-	return URL.createObjectURL(blob)
+	isImageLoading.value = false
 }
 
-const platforms = ["youtube", "spotify", "vk", "yandex"]
+function changeMixedTrackItemStyles(event, isSelected) {
+	mixedTrackItemStyles.value = isSelected
+		? highlightedMixedTrackItemStyles
+		: baseMixedTrackItemStyles
+
+	const nextSibling = event.target.nextSibling
+	if (!nextSibling || !nextSibling.style) {
+		return
+	}
+
+	nextSibling.style.borderTopColor = isSelected
+		? "transparent"
+		: "var(--gray-700)"
+}
 
 function getPlatformLogo(platformName) {
 	switch (platformName) {
@@ -50,38 +72,41 @@ function getPlatformLogo(platformName) {
 }
 
 function getPlatformLink(platform) {
-	return mixedTracks.value[0].platformLinks[platform] || "/"
+	return props.mixedTrack.platformLinks[platform] || "/"
 }
 </script>
 
 <template>
-	<section class="track-page__mixed-tracks mixed-tracks">
-		<h3 class="mixed-tracks__title">Mixed tracks:</h3>
-		<ul class="mixed-tracks__list">
-			<li
-				class="mixed-tracks__item mixed-track"
-				v-for="mixedTrack in mixedTracks"
-				:key="mixedTrack.name"
-			>
+	<li
+		class="mixed-tracks__item mixed-track"
+		@mouseenter="changeMixedTrackItemStyles($event, true)"
+		@mouseleave="changeMixedTrackItemStyles($event, false)"
+		:style="mixedTrackItemStyles"
+	>
+		<RouterLink :to="`/tracks/${mixedTrack._id}`">
+			<article class="mixed-track__wrapper">
 				<img
 					class="mixed-track__image"
-					:src="mixedTrack.imageUrl"
+					:src="imageUrl"
 					alt="mixed track image"
 				/>
 				<div class="mixed-track__description">
 					<h4 class="mixed-track__name">{{ mixedTrack.name }}</h4>
-					<p class="mixed-track__author">{{ mixedTrack.authors.join(", ") }}</p>
+					<p class="mixed-track__author">
+						{{ mixedTrack.authors.join(", ") }}
+					</p>
 				</div>
 				<ul class="mixed-track__platform-list platform-list">
 					<li
 						class="platform-list__item platform-item"
-						v-for="platform in platforms"
+						v-for="platform in Object.keys(mixedTrack.platformLinks)"
 						:key="platform"
 					>
 						<a
 							class="platform-item__link"
 							:href="getPlatformLink(platform)"
 							target="_blank"
+							@click.stop
 						>
 							<img
 								class="platform-item__image"
@@ -91,31 +116,21 @@ function getPlatformLink(platform) {
 						</a>
 					</li>
 				</ul>
-			</li>
-		</ul>
-	</section>
+			</article>
+		</RouterLink>
+	</li>
 </template>
 
 <style scoped>
-.track-page__mixed-tracks {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	margin: 32px 152px;
-}
-
-.mixed-tracks__title {
-	font-size: 24px;
-	line-height: 33px;
-	font-weight: bold;
-	color: var(--cyan-500);
-}
-
-.mixed-tracks__list {
-	width: 100%;
-}
-
 .mixed-tracks__item {
+	border-top: solid 1px var(--gray-700);
+}
+
+.mixed-tracks__item:last-child {
+	border-bottom: solid 1px var(--gray-700);
+}
+
+.mixed-track__wrapper {
 	display: flex;
 	align-items: center;
 	gap: 32px;

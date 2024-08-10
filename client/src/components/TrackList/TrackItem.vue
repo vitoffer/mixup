@@ -1,60 +1,72 @@
 <script setup>
-import { ref, computed, onBeforeMount } from "vue"
+import { onMounted, ref } from "vue"
 
 const props = defineProps(["track"])
 
+const isImageLoading = ref(false)
 const imageUrl = ref("")
-const trackStyles = ref({})
+const trackItemStyles = ref({})
 
-onBeforeMount(() => {
+const baseTrackItemStyles = {
+	backgroundColor: "transparent",
+	borderRadius: "0",
+	borderColor: "var(--gray-700)",
+}
+
+const highlightedTrackItemStyles = {
+	backgroundColor: "var(--gray-800)",
+	borderRadius: "20px",
+	borderColor: "transparent",
+}
+
+onMounted(() => {
 	loadImage(props.track.imageName)
+
+	setTimeout(() => {
+		if (isImageLoading.value) {
+			imageUrl.value = "/image_not_loaded.png"
+		}
+	}, 3000)
 })
 
 async function loadImage(imageName) {
+	isImageLoading.value = true
+
 	const response = await fetch(`http://localhost:3000/api/images/${imageName}`)
-
 	const blob = await response.blob()
-
 	imageUrl.value = URL.createObjectURL(blob)
+
+	isImageLoading.value = false
 }
 
-function mouseEnterTrack(e) {
-	Object.assign(trackStyles.value, {
-		backgroundColor: "var(--gray-800)",
-		borderRadius: "20px",
-		borderColor: "transparent",
-	})
+function changeTrackItemStyles(event, isSelected) {
+	trackItemStyles.value = isSelected
+		? highlightedTrackItemStyles
+		: baseTrackItemStyles
 
-	if (e.target.nextSibling.style) {
-		e.target.nextSibling.style.borderTopColor = "transparent"
+	const nextSibling = event.target.nextSibling
+	if (!nextSibling || !nextSibling.style) {
+		return
 	}
+
+	nextSibling.style.borderTopColor = isSelected
+		? "transparent"
+		: "var(--gray-700)"
 }
 
-function mouseLeaveTrack(e) {
-	Object.assign(trackStyles.value, {
-		backgroundColor: "transparent",
-		borderRadius: "0",
-		borderColor: "var(--gray-700)",
-	})
-
-	if (e.target.nextSibling.style) {
-		e.target.nextSibling.style.borderColor = "var(--gray-700)"
-	}
+function hasYoutubeLink(platforms) {
+	return platforms.youtube ?? false
 }
-
-const youtubeLink = computed(() => {
-	return Object.keys(props.track.platformLinks).includes("youtube")
-})
 </script>
 
 <template>
 	<li
 		class="track-list__item track"
-		@mouseenter="mouseEnterTrack"
-		@mouseleave="mouseLeaveTrack"
-		:style="trackStyles"
+		@mouseenter="changeTrackItemStyles($event, true)"
+		@mouseleave="changeTrackItemStyles($event, false)"
+		:style="trackItemStyles"
 	>
-		<a :href="`/tracks/${track._id}`">
+		<RouterLink :to="`/tracks/${track._id}`">
 			<article class="track__wrapper">
 				<img
 					class="track__image"
@@ -75,10 +87,11 @@ const youtubeLink = computed(() => {
 					</li>
 				</ol>
 				<a
+					v-if="hasYoutubeLink(track.platformLinks)"
+					:href="hasYoutubeLink(track.platformLinks)"
 					class="track__youtube-link"
-					:href="youtubeLink"
 					target="_blank"
-					v-if="youtubeLink"
+					@click.stop
 				>
 					<img
 						class="track__youtube-logo"
@@ -87,7 +100,7 @@ const youtubeLink = computed(() => {
 					/>
 				</a>
 			</article>
-		</a>
+		</RouterLink>
 	</li>
 </template>
 

@@ -5,25 +5,42 @@ import youtubeLogo from "@/assets/images/youtube_logo.svg"
 import spotifyLogo from "@/assets/images/spotify_logo.svg"
 import vkLogo from "@/assets/images/vk_logo.svg"
 import yandexLogo from "@/assets/images/yandex_logo.svg"
-import { onBeforeMount, ref } from "vue"
+import { ref, watch } from "vue"
+import { useRoute, useRouter } from "vue-router"
 
 const props = defineProps(["track"])
 
-const imageUrl = ref()
+const route = useRoute()
 
-onBeforeMount(() => {
-	loadImage(props.track.imageName)
-})
+const imageUrl = ref("")
+const isImageLoading = ref(false)
+
+watch(
+	() => route.params.id,
+	() => {
+		loadImage(props.track.imageName)
+
+		setTimeout(() => {
+			if (isImageLoading.value) {
+				imageUrl.value = "/image_not_loaded.png"
+			}
+		}, 3000)
+	},
+	{ immediate: true },
+)
+
+const router = useRouter()
+const prevLink = ref(router.options.history.state.back)
 
 async function loadImage(imageName) {
+	isImageLoading.value = true
+
 	const response = await fetch(`http://localhost:3000/api/images/${imageName}`)
-
 	const blob = await response.blob()
-
 	imageUrl.value = URL.createObjectURL(blob)
-}
 
-const platforms = ["youtube", "spotify", "vk", "yandex"]
+	isImageLoading.value = false
+}
 
 function getPlatformLogo(platform) {
 	switch (platform) {
@@ -47,7 +64,8 @@ function getPlatformLink(platform) {
 	<section class="track-page__info track-info">
 		<a
 			class="track-info__return-link"
-			href="/"
+			:href="prevLink"
+			@click.prevent="$router.back()"
 		>
 			<Return
 				class="track-info__return-icon"
@@ -66,7 +84,7 @@ function getPlatformLink(platform) {
 			<ul class="track-description__platform-list platform-list">
 				<li
 					class="platform-list__item platform-item"
-					v-for="platform in platforms"
+					v-for="platform in Object.keys(track.platformLinks)"
 					:key="platform"
 				>
 					<a

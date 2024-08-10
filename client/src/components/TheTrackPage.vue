@@ -1,28 +1,9 @@
 <script setup>
-import { onBeforeMount, ref } from "vue"
-import MixedTracks from "./TrackPage/MixedTracks.vue"
-import TrackInfo from "./TrackPage/TrackInfo.vue"
+import { ref, watch, watchEffect } from "vue"
+import MixedTracksSection from "./TrackPage/MixedTracksSection.vue"
+import TrackInfoSection from "./TrackPage/TrackInfoSection.vue"
 import { useRoute } from "vue-router"
-// import trackList from "@/dev/trackList"
-import { trackList } from "../storage"
-
-const route = useRoute()
-
-console.log(trackList.value)
-
-const track = ref()
-
-onBeforeMount(() => {
-	loadTrack(route.params.id)
-})
-
-async function loadTrack(id) {
-	const response = await fetch(`http://localhost:3000/api/tracks/${id}`)
-
-	track.value = await response.json()
-
-	console.log(track.value)
-}
+import { trackList } from "@/storage"
 
 const appHeight = document.querySelector("#app").getBoundingClientRect().height
 const headerHeight = document
@@ -30,12 +11,44 @@ const headerHeight = document
 	.getBoundingClientRect().height
 
 const elementHeight = ref(appHeight - headerHeight - 32 * 2 + "px")
+
+const route = useRoute()
+
+const track = ref()
+const isTrackLoading = ref(false)
+
+watch(
+	() => route.params.id,
+	() => {
+		track.value = findTrack(route.params.id)
+
+		if (!track.value) {
+			loadTrack(route.params.id)
+		}
+	},
+	{ immediate: true },
+)
+
+function findTrack(id) {
+	return trackList.value.find((track) => track._id === id) ?? null
+}
+
+async function loadTrack(id) {
+	isTrackLoading.value = true
+
+	const response = await fetch(`http://localhost:3000/api/tracks/${id}`)
+	track.value = await response.json()
+
+	isTrackLoading.value = false
+}
 </script>
 
 <template>
 	<article class="container track-page">
-		<TrackInfo :track="track" />
-		<MixedTracks :track="track" />
+		<template v-if="!isTrackLoading">
+			<TrackInfoSection :track="track" />
+			<MixedTracksSection :mixed-tracks="track.mixedTracks" />
+		</template>
 	</article>
 </template>
 

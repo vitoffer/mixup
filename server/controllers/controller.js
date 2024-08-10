@@ -33,7 +33,7 @@ export async function getTrackById(req, res) {
 	try {
 		const id = req.params.id
 
-		const track = await Track.findOne({ _id: id })
+		const track = await Track.findOne({ _id: id }).populate("mixedTracks")
 
 		res.status(200).send(track)
 	} catch (err) {
