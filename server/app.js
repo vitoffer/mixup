@@ -17,7 +17,7 @@ const app = express()
 let origin
 
 if (NODE_ENV === "dev") {
-	origin = "http://localhost"
+	origin = "http://localhost:5173"
 }
 if (NODE_ENV === "prod") {
 	origin = "http://mixup.space"
