@@ -1,7 +1,5 @@
-import { ref } from "vue"
-
-export const trackList = ref([])
+export const trackList = []
 
 export function addTrackToList(track) {
-	trackList.value.push(track)
+	trackList.push(track)
 }

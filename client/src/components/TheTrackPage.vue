@@ -29,7 +29,7 @@ watch(
 )
 
 function findTrack(id) {
-	return trackList.value.find((track) => track._id === id) ?? null
+	return trackList.find((track) => track._id === id) ?? null
 }
 
 async function loadTrack(id) {

@@ -1,13 +1,20 @@
 <script setup>
-import { ref } from "vue"
+import { computed, ref } from "vue"
 import TrackItem from "@/components/TrackList/TrackItem.vue"
 import { addTrackToList, trackList } from "@/storage"
+import { filterTracks } from "../functions"
+
+const props = defineProps(["searchTrack"])
 
 const isLoading = ref(false)
 
-if (trackList.value.length === 0) {
+if (trackList.length === 0) {
 	loadAllTracks()
 }
+
+const filteredTrackList = computed(() => {
+	return filterTracks(trackList, props.searchTrack)
+})
 
 async function loadAllTracks() {
 	isLoading.value = true
@@ -30,7 +37,7 @@ async function loadAllTracks() {
 			v-if="!isLoading"
 		>
 			<TrackItem
-				v-for="track in trackList"
+				v-for="track in filteredTrackList"
 				:key="track._id"
 				:track="track"
 			/>

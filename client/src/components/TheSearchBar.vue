@@ -1,5 +1,7 @@
 <script setup>
 import { Search } from "@icon-park/vue-next"
+
+const trackModel = defineModel()
 </script>
 
 <template>
@@ -13,6 +15,7 @@ import { Search } from "@icon-park/vue-next"
 			class="search__input"
 			type="text"
 			placeholder="Поиск трека"
+			v-model="trackModel"
 		/>
 	</div>
 </template>
