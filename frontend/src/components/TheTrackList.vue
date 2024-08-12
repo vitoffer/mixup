@@ -19,7 +19,7 @@ const filteredTrackList = computed(() => {
 async function loadAllTracks() {
 	isLoading.value = true
 
-	const response = await fetch(`http://localhost:3000/api/tracks`)
+	const response = await fetch(`${import.meta.env.VITE_BASE_API_URL}/tracks`)
 	const tracks = await response.json()
 
 	tracks.forEach((track) => {

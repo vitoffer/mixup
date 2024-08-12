@@ -35,7 +35,9 @@ function findTrack(id) {
 async function loadTrack(id) {
 	isTrackLoading.value = true
 
-	const response = await fetch(`http://localhost:3000/api/tracks/${id}`)
+	const response = await fetch(
+		`${import.meta.env.VITE_BASE_API_URL}/tracks/${id}`,
+	)
 	track.value = await response.json()
 
 	isTrackLoading.value = false

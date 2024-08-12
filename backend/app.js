@@ -4,22 +4,26 @@ import express from "express"
 import { connectToDb } from "./db/db.js"
 import { router } from "./routes/router.js"
 
-dotenv.config({ path: "../.env" })
+dotenv.config()
+
+const VUE_APP_URL = process.env.VUE_APP_URL
+const MONGO_DB_URI = process.env.MONGO_DB_URI
+const PORT = process.env.PORT
 
 const app = express()
 
 app.use(
 	cors({
-		origin: "http://localhost:5173",
+		origin: VUE_APP_URL,
 	})
 )
 app.use(router)
 
 async function start() {
 	try {
-		await connectToDb("mongodb://127.0.0.1:27017/mixup")
+		await connectToDb(MONGO_DB_URI)
 
-		app.listen(3000, () => console.log("App is running on port:", 3000))
+		app.listen(PORT, () => console.log("App is running on port:", PORT))
 	} catch (err) {
 		console.error(err)
 	}
