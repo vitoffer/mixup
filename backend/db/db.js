@@ -1,8 +1,8 @@
 import { connect } from "mongoose"
 
-export async function connectToDb(url, port, db) {
+export async function connectToDb(uri) {
 	try {
-		await connect(`mongodb://${url}:${port}/${db}`, {
+		await connect(uri, {
 			serverSelectionTimeoutMS: 5000,
 		})
 

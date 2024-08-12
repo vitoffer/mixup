@@ -19,7 +19,7 @@ const filteredTrackList = computed(() => {
 async function loadAllTracks() {
 	isLoading.value = true
 
-	const response = await fetch("http://localhost:3000/api/tracks")
+	const response = await fetch(`http://localhost:3000/api/tracks`)
 	const tracks = await response.json()
 
 	tracks.forEach((track) => {

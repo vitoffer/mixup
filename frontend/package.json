@@ -1,9 +1,11 @@
 {
-	"name": "mixup-client",
-	"version": "0.0.0",
-	"type": "module",
+	"name": "mixup-frontend",
+	"version": "1.0.0",
+	"description": "client for mixup website",
+	"main": "vite.config.js",
 	"author": "vitoffer",
 	"license": "ISC",
+	"type": "module",
 	"scripts": {
 		"dev": "vite",
 		"build": "vite build",
@@ -19,12 +21,13 @@
 		"vue-router": "^4.3.3"
 	},
 	"devDependencies": {
-		"@rushstack/eslint-patch": "^1.8.0",
+		"@eslint/js": "^9.9.0",
 		"@vitejs/plugin-vue": "^5.0.5",
 		"@vue/eslint-config-prettier": "^9.0.0",
 		"@vue/test-utils": "^2.4.6",
-		"eslint": "^8.57.0",
-		"eslint-plugin-vue": "^9.23.0",
+		"eslint": "9.x",
+		"eslint-plugin-vue": "^9.27.0",
+		"globals": "^15.9.0",
 		"jsdom": "^24.1.0",
 		"prettier": "^3.3.3",
 		"vite": "^5.3.1",

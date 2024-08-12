@@ -1,6 +1,7 @@
 import { Track } from "../models/Track.js"
 import path from "path"
 import mongoose from "mongoose"
+import { log } from "console"
 
 function handleError(res, error) {
 	console.error(error.message)
