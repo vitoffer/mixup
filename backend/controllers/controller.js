@@ -1,7 +1,7 @@
 import { Track } from "../models/Track.js"
 import path from "path"
 import mongoose from "mongoose"
-import { log } from "console"
+import { ABSOLUTE_UPLOADS_FOLDER_PATH } from "../app.js"
 
 function handleError(res, error) {
 	console.error(error.message)
@@ -45,8 +45,8 @@ export async function getTrackById(req, res) {
 export async function getTrackImageByFileName(req, res) {
 	try {
 		const imagePath = path.join(
-			import.meta.dirname,
-			"../uploads/images",
+			ABSOLUTE_UPLOADS_FOLDER_PATH,
+			"images",
 			req.params.fileName
 		)
 
@@ -64,19 +64,27 @@ export async function addTrack(req, res) {
 			throw new TypeError("Request body is empty")
 		}
 
-		let uploadPath, file
+		let uploadImagePath, imageFile
 		if (!req.files) {
-			uploadPath = "uploads/images/image_not_loaded.png"
+			uploadImagePath = path.join(
+				ABSOLUTE_UPLOADS_FOLDER_PATH,
+				"images",
+				"image_not_loaded.png"
+			)
 		} else {
-			file = req.files.image
-			uploadPath = `uploads/images/${file.name}`
+			imageFile = req.files.image
+			uploadImagePath = path.join(
+				ABSOLUTE_UPLOADS_FOLDER_PATH,
+				"images",
+				imageFile.name
+			)
 		}
 
-		const track = new Track({ ...body, imageUrl: uploadPath })
+		const track = new Track({ ...body, imageUrl: uploadImagePath })
 		await track.save()
 
-		if (file) {
-			file.mv(uploadPath)
+		if (imageFile) {
+			imageFile.mv(uploadImagePath)
 		}
 
 		res.status(200).send(`Track with id '${track._id}' successfully added`)
