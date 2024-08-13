@@ -1,8 +1,11 @@
 import { connect } from "mongoose"
 
-export async function connectToDb(uri) {
+export async function connectToDb(uri, user, pass) {
 	try {
 		await connect(uri, {
+			user,
+			pass,
+			authSource: "admin",
 			serverSelectionTimeoutMS: 5000,
 		})
 
