@@ -18,8 +18,6 @@ export const ABSOLUTE_UPLOADS_FOLDER_PATH = path.resolve(
 	process.env.UPLOADS_FOLDER
 )
 
-console.log(ABSOLUTE_UPLOADS_FOLDER_PATH)
-
 const app = express()
 
 app.use(
