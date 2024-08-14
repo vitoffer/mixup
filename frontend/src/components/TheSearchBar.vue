@@ -28,7 +28,7 @@ const trackModel = defineModel()
 	width: 600px;
 	padding: 8px 16px;
 	margin: 24px auto 0;
-	background-color: var(--gray-700);
+	background-color: var(--gray-800);
 	border-radius: 10px;
 	color: var(--yellow-900);
 }
