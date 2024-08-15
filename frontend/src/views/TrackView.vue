@@ -40,7 +40,7 @@ async function loadTrack(id) {
 </script>
 
 <template>
-	<BaseLayout>
+	<BaseLayout class="track-page">
 		<template v-if="!isTrackLoading">
 			<TrackInfoSection :track="track" />
 			<MixedTracksSection :mixed-tracks="track.mixedTracks" />
