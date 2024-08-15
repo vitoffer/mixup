@@ -1,31 +1,14 @@
 <script setup>
-import { ref } from "vue"
-import { useRouter } from "vue-router"
-import { Return } from "@icon-park/vue-next"
 import { useLoadingImage } from "@/composables/loadingImage"
 import { getPlatformLink, getPlatformLogo } from "@/platforms"
 
 const props = defineProps(["track"])
 
-const router = useRouter()
-
-const prevLink = ref(router.options.history.state.back)
 const imageUrl = useLoadingImage(props.track.imageUrl, () => props.track)
 </script>
 
 <template>
 	<section class="track-page__info track-info">
-		<a
-			class="track-info__return-link"
-			:href="prevLink"
-			@click.prevent="$router.back()"
-		>
-			<Return
-				class="track-info__return-icon"
-				theme="outline"
-				size="24"
-			/>
-		</a>
 		<img
 			class="track-info__image"
 			:src="imageUrl"
@@ -60,23 +43,11 @@ const imageUrl = useLoadingImage(props.track.imageUrl, () => props.track)
 <style scoped>
 .track-page__info {
 	display: grid;
-	grid-template-columns: 24px 300px auto;
+	grid-template-columns: max-content auto;
 	gap: 64px;
 	margin: 0 64px;
-	padding-block: 32px;
+	padding: 0 80px 32px 128px;
 	border-bottom: solid 1px var(--gray-700);
-}
-
-.track-info__return-link {
-	align-self: start;
-	width: fit-content;
-	padding: 10px;
-	margin: -10px 0 -10px -10px;
-	line-height: 0;
-}
-
-.track-info__return-icon {
-	color: var(--cyan-500);
 }
 
 .track-info__image {

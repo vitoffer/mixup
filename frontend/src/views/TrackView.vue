@@ -3,13 +3,8 @@ import { ref, watch } from "vue"
 import { useRoute } from "vue-router"
 import MixedTracksSection from "@/components/TrackView/MixedTracksSection.vue"
 import TrackInfoSection from "@/components/TrackView/TrackInfoSection.vue"
+import BaseLayout from "@/components/utilities/BaseLayout.vue"
 import { trackList } from "@/storage"
-
-const appHeight = document.querySelector("#app").getBoundingClientRect().height
-const headerHeight = document
-	.querySelector(".header")
-	.getBoundingClientRect().height
-const elementHeight = ref(appHeight - headerHeight - 32 * 2 + "px")
 
 const route = useRoute()
 
@@ -45,19 +40,10 @@ async function loadTrack(id) {
 </script>
 
 <template>
-	<article class="container track-page">
+	<BaseLayout>
 		<template v-if="!isTrackLoading">
 			<TrackInfoSection :track="track" />
 			<MixedTracksSection :mixed-tracks="track.mixedTracks" />
 		</template>
-	</article>
+	</BaseLayout>
 </template>
-
-<style scoped>
-.container {
-	width: 1200px;
-	height: v-bind("elementHeight");
-	margin: 32px auto;
-	border-inline: solid 1px var(--gray-700);
-}
-</style>
