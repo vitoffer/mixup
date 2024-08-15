@@ -2,7 +2,7 @@
 import { computed, ref } from "vue"
 import TrackItem from "@/components/TrackList/TrackItem.vue"
 import { addTrackToList, trackList } from "@/storage"
-import { filterTracks } from "../functions"
+import { filterTracks } from "@/functions"
 
 const props = defineProps(["searchTrack"])
 

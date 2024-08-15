@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue"
-import TheSearchBar from "../components/TheSearchBar.vue"
-import TheTrackList from "../components/TheTrackList.vue"
+import TheSearchBar from "@/components/TheSearchBar.vue"
+import TheTrackList from "@/components/TheTrackList.vue"
 
 const searchTrack = ref("")
 </script>
