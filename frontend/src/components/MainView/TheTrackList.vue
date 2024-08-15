@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from "vue"
-import TrackItem from "@/components/TrackList/TrackItem.vue"
+import TrackItem from "@/components/MainView/TrackList/TrackItem.vue"
 import { addTrackToList, trackList } from "@/storage"
 import { filterTracks } from "@/functions"
 

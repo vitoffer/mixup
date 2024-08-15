@@ -1,8 +1,8 @@
 <script setup>
 import { ref, watch } from "vue"
 import { useRoute } from "vue-router"
-import MixedTracksSection from "@/components/TrackPage/MixedTracksSection.vue"
-import TrackInfoSection from "@/components/TrackPage/TrackInfoSection.vue"
+import MixedTracksSection from "@/components/TrackView/MixedTracksSection.vue"
+import TrackInfoSection from "@/components/TrackView/TrackInfoSection.vue"
 import { trackList } from "@/storage"
 
 const appHeight = document.querySelector("#app").getBoundingClientRect().height
