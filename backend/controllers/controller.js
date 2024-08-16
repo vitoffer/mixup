@@ -1,7 +1,7 @@
 import { Track } from "../models/Track.js"
 import path from "path"
 import mongoose from "mongoose"
-import { ABSOLUTE_UPLOADS_FOLDER_PATH } from "../app.js"
+import { ABSOLUTE_UPLOADS_FOLDER_PATH } from "../constants.js"
 
 function handleError(res, error) {
 	console.error(error.message)

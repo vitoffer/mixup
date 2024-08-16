@@ -9,22 +9,3 @@ export async function loadImage(imageName, isImageLoading, imageUrl) {
 
 	isImageLoading.value = false
 }
-
-export function filterTracks(trackList, searchText) {
-	return trackList.filter((track) => {
-		return (
-			track.name.toLowerCase().includes(searchText.toLowerCase()) ||
-			track.authors.some((author) =>
-				author.toLowerCase().includes(searchText.toLowerCase()),
-			) ||
-			track.mixedTracks.some((mixedTrack) => {
-				return (
-					mixedTrack.name.toLowerCase().includes(searchText.toLowerCase()) ||
-					mixedTrack.authors.some((author) =>
-						author.toLowerCase().includes(searchText.toLowerCase()),
-					)
-				)
-			})
-		)
-	})
-}

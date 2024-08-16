@@ -1,33 +1,20 @@
 <script setup>
 import { computed, ref } from "vue"
 import TrackItem from "@/components/MainView/TrackList/TrackItem.vue"
-import { addTrackToList, trackList } from "@/storage"
-import { filterTracks } from "@/functions"
+import { trackList } from "@/storage"
+import { filterTracks, loadAllTracks } from "@/modules/trackList"
 
 const props = defineProps(["searchTrack"])
 
 const isLoading = ref(false)
 
 if (trackList.length === 0) {
-	loadAllTracks()
+	loadAllTracks(isLoading)
 }
 
 const filteredTrackList = computed(() => {
 	return filterTracks(trackList, props.searchTrack)
 })
-
-async function loadAllTracks() {
-	isLoading.value = true
-
-	const response = await fetch(`${import.meta.env.VITE_BASE_API_URL}/tracks`)
-	const tracks = await response.json()
-
-	tracks.forEach((track) => {
-		addTrackToList(track)
-	})
-
-	isLoading.value = false
-}
 </script>
 
 <template>

@@ -1,16 +1,13 @@
 <script setup>
 import { useLoadingImage } from "@/composables/loadingImage"
 import { useTrackItem } from "@/composables/trackItem"
+import { hasYoutubeLink } from "@/modules/trackList"
 
 const props = defineProps(["track"])
 
 const { trackItemStyles, changeTrackItemStyles } = useTrackItem()
 
 const imageUrl = useLoadingImage(props.track.imageName)
-
-function hasYoutubeLink(platforms) {
-	return platforms.youtube ?? false
-}
 </script>
 
 <template>

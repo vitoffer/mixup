@@ -1,5 +1,11 @@
 <script setup>
+import { ref } from "vue"
 import BaseLayout from "@/components/utilities/BaseLayout.vue"
+import SelectTrackPlatformItem from "@/components/CreateMixView/SelectTrackPlatformItem.vue"
+import { findTrackOnPlatforms } from "../modules/createMix"
+
+const findTrackNameElement = ref()
+const findTrackAuthorsElement = ref()
 </script>
 
 <template>
@@ -11,30 +17,34 @@ import BaseLayout from "@/components/utilities/BaseLayout.vue"
 				class="input-section__item"
 				type="text"
 				placeholder="Название"
+				ref="findTrackNameElement"
 			/>
 			<input
 				class="input-section__item"
 				type="text"
 				placeholder="Авторы (через запятую)"
+				ref="findTrackAuthorsElement"
 			/>
 		</section>
 
+		<button
+			class="create-mix__button button--find"
+			@click.prevent="
+				findTrackOnPlatforms(findTrackNameElement, findTrackAuthorsElement)
+			"
+		>
+			Найти трек на площадках
+		</button>
+
 		<section class="create-mix__select-section select-section">
-			<select class="select-section__item select-item">
-				<option class="select-item__option">Youtube</option>
-			</select>
-			<select class="select-section__item">
-				<option class="select-item__option">Spotify</option>
-			</select>
-			<select class="select-section__item">
-				<option class="select-item__option">VK Музыка</option>
-			</select>
-			<select class="select-section__item">
-				<option class="select-item__option">Яндекс Музыка</option>
-			</select>
+			<SelectTrackPlatformItem
+				v-for="platform in ['youtube', 'spotify', 'vk', 'yandex']"
+				:key="platform"
+				:platform="platform"
+			/>
 		</section>
 
-		<button class="create-mix__button-next">Далее</button>
+		<button class="create-mix__button button--next">Далее</button>
 	</BaseLayout>
 </template>
 
@@ -73,27 +83,26 @@ import BaseLayout from "@/components/utilities/BaseLayout.vue"
 	grid-template-columns: 1fr 1fr;
 	grid-template-rows: 1fr 1fr;
 	gap: 36px 24px;
-	margin: 128px 100px 0;
+	margin: 80px 100px 0;
 }
 
-.select-section__item {
-	display: flex;
-	text-align: center;
-	padding-block: 10px;
-	font-size: 20px;
-	color: var(--cyan-500);
-	background-color: var(--gray-800);
-	border-radius: 10px;
-}
-
-.create-mix__button-next {
+.create-mix__button {
 	display: block;
-	margin: 160px auto;
 	padding: 5px 30px;
-	font-size: 20px;
 	font-weight: bold;
-	color: var(--yellow-900);
 	border: solid 1px var(--gray-700);
 	border-radius: 20px;
+}
+
+.button--find {
+	font-size: 18px;
+	margin: 48px auto;
+	color: var(--yellow-700);
+}
+
+.button--next {
+	font-size: 20px;
+	margin: 160px auto;
+	color: var(--yellow-900);
 }
 </style>
