@@ -5,10 +5,6 @@ import SpotifyWebApi from "spotify-web-api-node"
 export function findTrackOnYoutube(req, res) {
 	const { name, authors } = req.body
 
-	console.log(req)
-
-	console.log(name, authors)
-
 	var params = {
 		key: YOUTUBE_API_KEY,
 		maxResults: 5,
@@ -21,14 +17,12 @@ export function findTrackOnYoutube(req, res) {
 		(err, results) => {
 			if (err) return console.log(err)
 
-			console.log(results[0])
-
 			const responseArray = []
 
 			results.forEach((result) => {
 				responseArray.push({
 					name: result.title,
-					author: result.channelTitle,
+					authors: [result.channelTitle],
 					link: result.link,
 					imageUrl: result.thumbnails.medium.url,
 				})
