@@ -17,3 +17,6 @@ export const ABSOLUTE_UPLOADS_FOLDER_PATH = path.resolve(
 )
 
 export const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY
+
+export const SPOTIFY_ID = process.env.SPOTIFY_ID
+export const SPOTIFY_SECRET = process.env.SPOTIFY_SECRET
