@@ -29,7 +29,7 @@ export function findTrackOnYoutube(req, res) {
 					name: result.title,
 					author: result.channelTitle,
 					link: result.link,
-					image: result.thumbnails.medium,
+					imageUrl: result.thumbnails.medium.url,
 				})
 			})
 
