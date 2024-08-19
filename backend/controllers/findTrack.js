@@ -3,7 +3,7 @@ import { YOUTUBE_API_KEY, SPOTIFY_ID, SPOTIFY_SECRET } from "../constants.js"
 import SpotifyWebApi from "spotify-web-api-node"
 
 export function findTrackOnYoutube(req, res) {
-	const { name, authors } = req.body
+	const { searchName, searchAuthors } = req.body
 
 	var params = {
 		key: YOUTUBE_API_KEY,
@@ -12,7 +12,7 @@ export function findTrackOnYoutube(req, res) {
 	}
 
 	youtubeSearch(
-		name + (authors ? authors.join(", ") : ""),
+		searchName + (searchAuthors ? searchAuthors.join(", ") : ""),
 		params,
 		(err, results) => {
 			if (err) return console.log(err)
