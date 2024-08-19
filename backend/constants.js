@@ -20,3 +20,6 @@ export const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY
 
 export const SPOTIFY_ID = process.env.SPOTIFY_ID
 export const SPOTIFY_SECRET = process.env.SPOTIFY_SECRET
+
+export const YANDEX_TOKEN = process.env.YANDEX_TOKEN
+export const YANDEX_UID = process.env.YANDEX_UID
