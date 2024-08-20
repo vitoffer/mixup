@@ -96,6 +96,8 @@ export async function findTrackOnYandex(req, res) {
 			uid: YANDEX_UID,
 		})
 
+		console.log(searchName, searchAuthors)
+
 		const result = await api.search(
 			`${searchName} ${searchAuthors ? searchAuthors.join(", ") : ""}`,
 			{
@@ -103,13 +105,15 @@ export async function findTrackOnYandex(req, res) {
 			}
 		)
 
+		console.dir(result.tracks.results[0].albums)
+
 		const resultsArray = result.tracks.results.map((track) => {
 			return {
 				id: track.id,
 				name: track.title + (track.version ? ` (${track.version})` : ""),
 				authors: track.artists.map((artist) => artist.name),
 				link: `https://music.yandex.ru/track/${track.id}`,
-				imageUrl: track.coverUri,
+				imageUrl: `https://${track.coverUri.slice(0, -2)}300x300`,
 			}
 		})
 
