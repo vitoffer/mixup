@@ -1,11 +1,16 @@
 <script setup>
 import { ref } from "vue"
-import BaseLayout from "@/components/utilities/BaseLayout.vue"
-import SelectTrackPlatformItem from "@/components/CreateMixView/SelectTrackPlatformItem.vue"
-import { findTrackOnPlatforms } from "../modules/createMix"
+import BaseLayout from "@/components/BaseLayout.vue"
+import SelectTrackPlatformItem from "@/components/SelectTrackPlatformItem.vue"
+import {
+	findTrackOnPlatforms,
+	foundTrackListByPlatform,
+} from "../modules/createMix"
 
 const findTrackNameElement = ref()
 const findTrackAuthorsElement = ref()
+
+const platforms = ["youtube", "spotify", "yandex"]
 </script>
 
 <template>
@@ -38,9 +43,14 @@ const findTrackAuthorsElement = ref()
 
 		<section class="create-mix__select-section select-section">
 			<SelectTrackPlatformItem
-				v-for="platform in ['youtube', 'spotify', 'vk', 'yandex']"
+				v-for="platform in platforms"
 				:key="platform"
 				:platform="platform"
+				:found-tracks="foundTrackListByPlatform[platform]"
+			/>
+			<input
+				type="text"
+				placeholder="Ссылка на VK Музыку (опционально)"
 			/>
 		</section>
 

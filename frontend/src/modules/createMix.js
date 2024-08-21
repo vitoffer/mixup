@@ -1,3 +1,12 @@
+import { ref } from "vue"
+
+export const foundTrackListByPlatform = ref({
+	youtube: [],
+	spotify: [],
+	// vk: [],
+	// yandex: [],
+})
+
 export function findTrackOnPlatforms(
 	findTrackNameElement,
 	findTrackAuthorsElement,
@@ -7,7 +16,6 @@ export function findTrackOnPlatforms(
 
 	findTrackOnYoutube(trackName, trackAuthors)
 	findTrackOnSpotify(trackName, trackAuthors)
-	findTrackOnVK(trackName, trackAuthors)
 	findTrackOnYandex(trackName, trackAuthors)
 }
 
@@ -28,6 +36,8 @@ async function findTrackOnYoutube(name, authors) {
 
 	const result = await response.json()
 
+	foundTrackListByPlatform.value.youtube = result
+
 	console.log("youtube:", result)
 }
 
@@ -36,33 +46,21 @@ async function findTrackOnSpotify(name, authors) {
 		`${import.meta.env.VITE_BASE_API_URL}/find-track-on-spotify`,
 		{
 			method: "POST",
-			body: {
+			headers: {
+				"Content-Type": "application/json;charset=utf-8",
+			},
+			body: JSON.stringify({
 				name,
 				authors,
-			},
+			}),
 		},
 	)
 
 	const result = await response.json()
+
+	foundTrackListByPlatform.value.spotify = result
 
 	console.log("spotify:", result)
-}
-
-async function findTrackOnVK(name, authors) {
-	const response = await fetch(
-		`${import.meta.env.VITE_BASE_API_URL}/find-track-on-vk`,
-		{
-			method: "POST",
-			body: {
-				name,
-				authors,
-			},
-		},
-	)
-
-	const result = await response.json()
-
-	console.log("vk:", result)
 }
 
 async function findTrackOnYandex(name, authors) {
@@ -70,14 +68,19 @@ async function findTrackOnYandex(name, authors) {
 		`${import.meta.env.VITE_BASE_API_URL}/find-track-on-yandex`,
 		{
 			method: "POST",
-			body: {
+			headers: {
+				"Content-Type": "application/json;charset=utf-8",
+			},
+			body: JSON.stringify({
 				name,
 				authors,
-			},
+			}),
 		},
 	)
 
 	const result = await response.json()
+
+	foundTrackListByPlatform.value.yandex = result
 
 	console.log("yandex:", result)
 }
