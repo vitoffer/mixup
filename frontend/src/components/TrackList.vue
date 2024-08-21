@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from "vue"
-import TrackItem from "@/components/MainView/TrackList/TrackItem.vue"
+import TrackListItem from "@/components/TrackListItem.vue"
 import { trackList } from "@/storage"
 import { filterTracks, loadAllTracks } from "@/modules/trackList"
 
@@ -23,7 +23,7 @@ const filteredTrackList = computed(() => {
 			class="track-list"
 			v-if="!isLoading"
 		>
-			<TrackItem
+			<TrackListItem
 				v-for="track in filteredTrackList"
 				:key="track._id"
 				:track="track"

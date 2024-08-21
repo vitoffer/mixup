@@ -1,12 +1,12 @@
 <script setup>
-import MixedTrackItem from "@/components/TrackView/MixedTracks/MixedTrackList/MixedTrackItem.vue"
+import TrackPageMixedTrackListItem from "@/components/TrackPageMixedTrackListItem.vue"
 
 defineProps(["mixedTracks"])
 </script>
 
 <template>
 	<ul class="mixed-tracks__list">
-		<MixedTrackItem
+		<TrackPageMixedTrackListItem
 			v-for="mixedTrack in mixedTracks"
 			:key="mixedTrack._id"
 			:mixed-track="mixedTrack"

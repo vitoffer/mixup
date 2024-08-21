@@ -1,5 +1,5 @@
 <script setup>
-import MixedTrackList from "@/components/TrackView/MixedTracks/MixedTrackList.vue"
+import TrackPageMixedTrackList from "@/components/TrackPageMixedTrackList.vue"
 
 defineProps(["mixedTracks"])
 </script>
@@ -8,7 +8,7 @@ defineProps(["mixedTracks"])
 	<section class="track-page__mixed-tracks mixed-tracks">
 		<template v-if="mixedTracks.length !== 0">
 			<h3 class="mixed-tracks__title">Mixed треки:</h3>
-			<MixedTrackList :mixed-tracks="mixedTracks" />
+			<TrackPageMixedTrackList :mixed-tracks="mixedTracks" />
 		</template>
 		<h3
 			class="mixed-tracks__title"
