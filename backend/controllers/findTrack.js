@@ -96,8 +96,6 @@ export async function findTrackOnYandex(req, res) {
 			uid: YANDEX_UID,
 		})
 
-		console.log(searchName, searchAuthors)
-
 		const result = await api.search(
 			`${searchName} ${searchAuthors ? searchAuthors.join(", ") : ""}`,
 			{
@@ -105,7 +103,7 @@ export async function findTrackOnYandex(req, res) {
 			}
 		)
 
-		console.dir(result.tracks.results[0].albums)
+		console.log(result.tracks.results[0])
 
 		const resultsArray = result.tracks.results.map((track) => {
 			return {
