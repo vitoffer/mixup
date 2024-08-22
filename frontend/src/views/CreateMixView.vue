@@ -1,16 +1,11 @@
 <script setup>
 import { ref } from "vue"
 import BaseLayout from "@/components/BaseLayout.vue"
-import SelectTrackPlatformItem from "@/components/SelectTrackPlatformItem.vue"
-import {
-	findTrackOnPlatforms,
-	foundTrackListByPlatform,
-} from "../modules/createMix"
+import { findTrackOnPlatforms } from "@/modules/createMix"
+import PlatformLinkSelectList from "@/components/PlatformLinkSelectList.vue"
 
 const findTrackNameElement = ref()
 const findTrackAuthorsElement = ref()
-
-const platforms = ["youtube", "spotify", "yandex"]
 </script>
 
 <template>
@@ -41,18 +36,7 @@ const platforms = ["youtube", "spotify", "yandex"]
 			Найти трек на площадках
 		</button>
 
-		<section class="create-mix__select-section select-section">
-			<SelectTrackPlatformItem
-				v-for="platform in platforms"
-				:key="platform"
-				:platform="platform"
-				:found-tracks="foundTrackListByPlatform[platform]"
-			/>
-			<input
-				type="text"
-				placeholder="Ссылка на VK Музыку (опционально)"
-			/>
-		</section>
+		<PlatformLinkSelectList />
 
 		<button class="create-mix__button button--next">Далее</button>
 	</BaseLayout>
@@ -86,14 +70,6 @@ const platforms = ["youtube", "spotify", "yandex"]
 
 .input-section__item::placeholder {
 	color: var(--yellow-800);
-}
-
-.create-mix__select-section {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	grid-template-rows: 1fr 1fr;
-	gap: 36px 24px;
-	margin: 80px 100px 0;
 }
 
 .create-mix__button {

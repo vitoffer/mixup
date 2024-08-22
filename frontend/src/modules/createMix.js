@@ -3,8 +3,7 @@ import { ref } from "vue"
 export const foundTrackListByPlatform = ref({
 	youtube: [],
 	spotify: [],
-	// vk: [],
-	// yandex: [],
+	yandex: [],
 })
 
 export function findTrackOnPlatforms(
@@ -37,8 +36,6 @@ async function findTrackOnYoutube(name, authors) {
 	const result = await response.json()
 
 	foundTrackListByPlatform.value.youtube = result
-
-	console.log("youtube:", result)
 }
 
 async function findTrackOnSpotify(name, authors) {
@@ -59,8 +56,6 @@ async function findTrackOnSpotify(name, authors) {
 	const result = await response.json()
 
 	foundTrackListByPlatform.value.spotify = result
-
-	console.log("spotify:", result)
 }
 
 async function findTrackOnYandex(name, authors) {
@@ -81,6 +76,4 @@ async function findTrackOnYandex(name, authors) {
 	const result = await response.json()
 
 	foundTrackListByPlatform.value.yandex = result
-
-	console.log("yandex:", result)
 }
