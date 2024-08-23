@@ -1,13 +1,13 @@
 <script setup>
-import HeaderNav from "@/components/Header/HeaderNav.vue"
-import HeaderBranding from "@/components/Header/HeaderBranding.vue"
+import Branding from "@/components/header/Branding.vue"
+import Navigation from "@/components/header/Navigation.vue"
 </script>
 
 <template>
 	<header class="header">
 		<div class="header__inner">
-			<HeaderBranding />
-			<HeaderNav />
+			<Branding />
+			<Navigation />
 		</div>
 	</header>
 </template>

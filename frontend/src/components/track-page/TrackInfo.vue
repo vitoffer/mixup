@@ -1,6 +1,6 @@
 <script setup>
 import { useLoadingImage } from "@/composables/loadingImage"
-import { getPlatformLink, getPlatformLogo } from "@/platforms"
+import { getPlatformLink, getPlatformLogo } from "@/modules/platforms"
 
 const props = defineProps(["track"])
 

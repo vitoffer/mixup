@@ -7,4 +7,12 @@ export default [
 	{ languageOptions: { globals: globals.browser } },
 	pluginJs.configs.recommended,
 	...pluginVue.configs["flat/essential"],
+	{
+		"vue/multi-word-component-names": [
+			"error",
+			{
+				ignores: ["Branding", "Navigation"],
+			},
+		],
+	},
 ]

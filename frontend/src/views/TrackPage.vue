@@ -1,8 +1,9 @@
 <script setup>
 import { ref, watch } from "vue"
 import { useRoute } from "vue-router"
-import TrackPageInfoSection from "@/components/TrackPageInfoSection.vue"
-import TrackPageMixedTracksSection from "@/components/TrackPageMixedTracksSection.vue"
+import BaseLayout from "@/components/BaseLayout.vue"
+import TrackInfo from "@/components/track-page/TrackInfo.vue"
+import MixedTrackList from "@/components/track-page/MixedTrackList.vue"
 import { findTrack, loadTrack } from "@/modules/trackPage"
 
 const route = useRoute()
@@ -23,7 +24,9 @@ watch(
 )
 </script>
 
-<template v-if="!isTrackLoading">
-	<TrackPageInfoSection :track="track" />
-	<TrackPageMixedTracksSection :mixed-tracks="track.mixedTracks" />
+<template>
+	<BaseLayout class="track-page">
+		<TrackInfo :track="track" />
+		<MixedTrackList :mixed-tracks="track.mixedTracks" />
+	</BaseLayout>
 </template>

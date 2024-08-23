@@ -1,7 +1,7 @@
 <script setup>
 import { useLoadingImage } from "@/composables/loadingImage"
 import { useTrackItem } from "@/composables/trackItem"
-import { getPlatformLink, getPlatformLogo } from "@/platforms"
+import { getPlatformLink, getPlatformLogo } from "@/modules/platforms"
 
 const props = defineProps(["mixedTrack"])
 

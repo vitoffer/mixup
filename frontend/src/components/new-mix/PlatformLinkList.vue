@@ -1,9 +1,9 @@
 <script setup>
-import Select from "primevue/select"
+import { onMounted, reactive, ref, watch } from "vue"
 import { Down } from "@icon-park/vue-next"
+import Select from "primevue/select"
+import PlatformSelectItem from "@/components/new-mix/PlatformLinkListItem.vue"
 import { foundTrackListByPlatform } from "@/modules/createMix"
-import { onMounted, reactive, ref, watch, watchEffect } from "vue"
-import PlatformSelectItem from "./PlatformSelectItem.vue"
 
 const selectItemWidth = ref("0")
 

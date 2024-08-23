@@ -1,8 +1,8 @@
 <script setup>
 import { ref } from "vue"
 import BaseLayout from "@/components/BaseLayout.vue"
+import PlatformLinkSelectList from "@/components/new-mix/PlatformLinkList.vue"
 import { findTrackOnPlatforms } from "@/modules/createMix"
-import PlatformLinkSelectList from "@/components/PlatformLinkSelectList.vue"
 
 const findTrackNameElement = ref()
 const findTrackAuthorsElement = ref()

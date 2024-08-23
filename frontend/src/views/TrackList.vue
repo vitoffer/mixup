@@ -1,10 +1,11 @@
 <script setup>
-import { computed, ref } from "vue"
-import TrackListItem from "@/components/TrackListItem.vue"
-import { trackList } from "@/storage"
+import { ref, computed } from "vue"
+import SearchBar from "@/components/SearchBar.vue"
+import TrackListItem from "@/components/track-list/TrackListItem.vue"
+import { trackList } from "@/storage/storage"
 import { filterTracks, loadAllTracks } from "@/modules/trackList"
 
-const props = defineProps(["searchTrack"])
+const searchTrack = ref("")
 
 const isLoading = ref(false)
 
@@ -13,11 +14,12 @@ if (trackList.length === 0) {
 }
 
 const filteredTrackList = computed(() => {
-	return filterTracks(trackList, props.searchTrack)
+	return filterTracks(trackList, searchTrack.value)
 })
 </script>
 
 <template>
+	<SearchBar v-model="searchTrack" />
 	<main class="container">
 		<ul
 			class="track-list"

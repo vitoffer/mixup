@@ -1,5 +1,5 @@
 <script setup>
-import TrackPageMixedTrackList from "@/components/TrackPageMixedTrackList.vue"
+import MixedTrackListItem from "@/components/track-page/MixedTrackListItem.vue"
 
 defineProps(["mixedTracks"])
 </script>
@@ -8,7 +8,13 @@ defineProps(["mixedTracks"])
 	<section class="track-page__mixed-tracks mixed-tracks">
 		<template v-if="mixedTracks.length !== 0">
 			<h3 class="mixed-tracks__title">Mixed треки:</h3>
-			<TrackPageMixedTrackList :mixed-tracks="mixedTracks" />
+			<ul class="mixed-tracks__list">
+				<MixedTrackListItem
+					v-for="mixedTrack in mixedTracks"
+					:key="mixedTrack._id"
+					:mixed-track="mixedTrack"
+				/>
+			</ul>
 		</template>
 		<h3
 			class="mixed-tracks__title"
@@ -25,6 +31,10 @@ defineProps(["mixedTracks"])
 	flex-direction: column;
 	align-items: center;
 	margin: 32px 152px;
+}
+
+.mixed-tracks__list {
+	width: 100%;
 }
 
 .mixed-tracks__title {

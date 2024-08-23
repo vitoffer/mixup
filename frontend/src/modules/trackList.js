@@ -1,4 +1,4 @@
-import { addTrackToList } from "@/storage"
+import { addTrackToList } from "@/storage/storage"
 
 export async function loadAllTracks(isLoading) {
 	isLoading.value = true
