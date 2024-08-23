@@ -3,7 +3,18 @@ import { useLoadingImage } from "@/composables/loadingImage"
 import { useTrackItem } from "@/composables/trackItem"
 import { getPlatformLink, getPlatformLogo } from "@/modules/platforms"
 
-const props = defineProps(["mixedTrack"])
+const props = defineProps({
+	mixedTrack: {
+		type: Object,
+		required: true,
+		validator(track) {
+			return (
+				typeof track.name === "string" &&
+				track.authors.every((author) => typeof author === "string")
+			)
+		},
+	},
+})
 
 const { trackItemStyles, changeTrackItemStyles } = useTrackItem()
 

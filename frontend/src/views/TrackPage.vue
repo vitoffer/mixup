@@ -8,7 +8,7 @@ import { findTrack, loadTrack } from "@/modules/trackPage"
 
 const route = useRoute()
 
-const track = ref()
+const track = ref(null)
 const isTrackLoading = ref(false)
 
 watch(

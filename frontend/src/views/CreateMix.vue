@@ -4,8 +4,8 @@ import BaseLayout from "@/components/BaseLayout.vue"
 import PlatformLinkSelectList from "@/components/new-mix/PlatformLinkList.vue"
 import { findTrackOnPlatforms } from "@/modules/createMix"
 
-const findTrackNameElement = ref()
-const findTrackAuthorsElement = ref()
+const findTrackNameElement = ref(null)
+const findTrackAuthorsElement = ref(null)
 </script>
 
 <template>

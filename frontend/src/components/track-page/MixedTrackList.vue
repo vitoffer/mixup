@@ -1,7 +1,21 @@
 <script setup>
 import MixedTrackListItem from "@/components/track-page/MixedTrackListItem.vue"
 
-defineProps(["mixedTracks"])
+defineProps({
+	mixedTracks: {
+		type: Array,
+		required: true,
+		validator(mixedTracks) {
+			return mixedTracks.every(
+				(mixedTrack) =>
+					typeof mixedTrack.name === "string" &&
+					mixedTrack.authors.every(
+						(mixedTrack) => typeof mixedTrack === "string",
+					),
+			)
+		},
+	},
+})
 </script>
 
 <template>

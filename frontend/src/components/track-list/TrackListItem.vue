@@ -3,7 +3,18 @@ import { useLoadingImage } from "@/composables/loadingImage"
 import { useTrackItem } from "@/composables/trackItem"
 import { hasYoutubeLink } from "@/modules/trackList"
 
-const props = defineProps(["track"])
+const props = defineProps({
+	track: {
+		type: Object,
+		required: true,
+		validator(track) {
+			return (
+				typeof track.name === "string" &&
+				track.authors.every((author) => typeof author === "string")
+			)
+		},
+	},
+})
 
 const { trackItemStyles, changeTrackItemStyles } = useTrackItem()
 

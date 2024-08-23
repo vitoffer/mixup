@@ -19,12 +19,9 @@ const filteredTrackList = computed(() => {
 </script>
 
 <template>
-	<SearchBar v-model="searchTrack" />
+	<SearchBar v-model:search-track="searchTrack" />
 	<main class="container">
-		<ul
-			class="track-list"
-			v-if="!isLoading"
-		>
+		<ul class="track-list">
 			<TrackListItem
 				v-for="track in filteredTrackList"
 				:key="track._id"
