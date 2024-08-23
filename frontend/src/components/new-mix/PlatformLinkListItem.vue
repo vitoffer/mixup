@@ -47,18 +47,29 @@ defineProps({
 
 <style scoped>
 .select-option__wrapper {
+	width: 100%;
 	display: flex;
 	align-items: center;
 	gap: 16px;
 	padding: 8px;
 }
 
+.select-option__info {
+	max-width: calc(100% - 64px - 16px);
+}
+
 .option-info__name {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 	font-size: 18px;
 	color: var(--yellow-900);
 }
 
 .option-info__authors {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 	font-size: 16px;
 	color: var(--yellow-700);
 }

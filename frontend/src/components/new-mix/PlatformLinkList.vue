@@ -52,6 +52,7 @@ onMounted(() => {
 				<div
 					v-if="slotProps.value"
 					:style="{
+						width: '100%',
 						overflow: 'hidden',
 						textOverflow: 'ellipsis',
 						whiteSpace: 'nowrap',
@@ -99,7 +100,7 @@ onMounted(() => {
 
 <style>
 .select-section .p-select {
-	width: 100%;
+	min-width: 0;
 	font-size: 20px;
 	text-align: center;
 	background-color: var(--gray-800);
@@ -107,7 +108,7 @@ onMounted(() => {
 	border-radius: 10px;
 
 	.p-select-label {
-		padding: 10px 0;
+		padding: 10px 40px 10px 16px;
 		color: var(--cyan-500) !important;
 	}
 
@@ -160,18 +161,5 @@ onMounted(() => {
 .select-section__input::placeholder {
 	font-size: 20px;
 	color: var(--gray-500);
-}
-
-.select-option__wrapper {
-	width: 100%;
-	display: flex;
-}
-
-.select-option__text {
-	width: calc(100% - 50px);
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	font-size: 16px;
 }
 </style>
