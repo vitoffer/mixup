@@ -1,6 +1,6 @@
 import { ref } from "vue"
 
-export function useTrackItem() {
+export function useTrackItemStyles() {
 	const trackItemStyles = ref({})
 
 	const baseTrackItemStyles = {

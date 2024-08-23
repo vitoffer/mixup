@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from "vue"
 import SearchBar from "@/components/SearchBar.vue"
-import TrackListItem from "@/components/track-list/TrackListItem.vue"
+import BaseTrackItem from "@/components/BaseTrackItem.vue"
 import { trackList } from "@/storage/storage"
 import { filterTracks, loadAllTracks } from "@/modules/trackList"
 
@@ -22,9 +22,10 @@ const filteredTrackList = computed(() => {
 	<SearchBar v-model:search-track="searchTrack" />
 	<main class="container">
 		<ul class="track-list">
-			<TrackListItem
+			<BaseTrackItem
 				v-for="track in filteredTrackList"
 				:key="track._id"
+				type="default"
 				:track="track"
 			/>
 		</ul>

@@ -1,5 +1,5 @@
 <script setup>
-import MixedTrackListItem from "@/components/track-page/MixedTrackListItem.vue"
+import BaseTrackItem from "@/components/BaseTrackItem.vue"
 
 defineProps({
 	mixedTracks: {
@@ -23,10 +23,11 @@ defineProps({
 		<template v-if="mixedTracks.length !== 0">
 			<h3 class="mixed-tracks__title">Mixed треки:</h3>
 			<ul class="mixed-tracks__list">
-				<MixedTrackListItem
+				<BaseTrackItem
 					v-for="mixedTrack in mixedTracks"
 					:key="mixedTrack._id"
-					:mixed-track="mixedTrack"
+					type="mix"
+					:track="mixedTrack"
 				/>
 			</ul>
 		</template>
