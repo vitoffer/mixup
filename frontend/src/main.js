@@ -8,6 +8,7 @@ import { router } from "@/router/router"
 import "@/assets/fonts/CarterOne/stylesheet.css"
 import "@/assets/fonts/Nunito/stylesheet.css"
 
+import "primeicons/primeicons.css"
 import "@/assets/styles/reset.css"
 import "@/assets/styles/main.css"
 

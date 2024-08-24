@@ -6,7 +6,7 @@ const navItems = [
 	},
 	{
 		name: "Добавить микс",
-		link: "/create-mix",
+		link: "/create-mix/1",
 	},
 ]
 </script>

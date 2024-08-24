@@ -3,28 +3,19 @@ import { onMounted, reactive, ref, watch } from "vue"
 import { Down } from "@icon-park/vue-next"
 import Select from "primevue/select"
 import PlatformSelectItem from "@/components/new-mix/PlatformLinkListItem.vue"
-import { foundTrackListByPlatform } from "@/modules/createMix"
+import {
+	selectedTrackIdByPlatform,
+	foundTrackListByPlatform,
+	selectedTrackVkLink,
+} from "@/modules/createMix"
 
 const selectItemWidth = ref("0")
-
-const selectedTrackByPlatform = reactive({
-	youtube: null,
-	spotify: null,
-	yandex: null,
-})
-const trackVKLink = ref(null)
 
 const platforms = {
 	youtube: "Youtube",
 	spotify: "Spotify",
 	yandex: "Яндекс Музыка",
 }
-
-watch([selectedTrackByPlatform], () => {
-	console.log(selectedTrackByPlatform)
-
-	console.log(trackVKLink)
-})
 
 onMounted(() => {
 	selectItemWidth.value = getComputedStyle(
@@ -41,7 +32,7 @@ onMounted(() => {
 			:key="platform"
 			:options="foundTrackListByPlatform[platform].slice(0, 5)"
 			:placeholder="platforms[platform]"
-			v-model="selectedTrackByPlatform[platform]"
+			v-model="selectedTrackIdByPlatform[platform]"
 			optionLabel="name"
 			optionValue="id"
 			:pt:overlay:style="{
@@ -93,7 +84,7 @@ onMounted(() => {
 			class="select-section__input"
 			type="text"
 			placeholder="Ссылка на VK Музыку (если есть)"
-			v-model="trackVKLink"
+			v-model="selectedTrackVkLink"
 		/>
 	</section>
 </template>
