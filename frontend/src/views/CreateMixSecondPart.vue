@@ -6,6 +6,11 @@ import { trackList } from "@/storage/storage"
 import MixedTrackForNewMix from "../components/MixedTrackForNewMix.vue"
 import Chip from "primevue/chip"
 import { filterTracks } from "@/modules/trackList"
+import {
+	selectedTrackIdByPlatform,
+	selectedTrackVkLink,
+} from "@/modules/createMix"
+import { foundTrackListByPlatform } from "../modules/createMix"
 
 const filteredTrackList = ref([])
 const selectedMixedTracksForNewMix = ref([])
@@ -16,6 +21,35 @@ function search(event) {
 	} else {
 		filteredTrackList.value = filterTracks(trackList, event.query)
 	}
+}
+
+async function createMix() {
+	const response = await fetch(
+		`${import.meta.env.VITE_BASE_API_URL}/add-track/by-platforms`,
+		{
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json;charset=utf-8",
+			},
+			body: JSON.stringify({
+				youtube: foundTrackListByPlatform.value.youtube.find(
+					(track) => track.id === selectedTrackIdByPlatform.youtube,
+				),
+				spotify: foundTrackListByPlatform.value.spotify.find(
+					(track) => track.id === selectedTrackIdByPlatform.spotify,
+				),
+				yandex: foundTrackListByPlatform.value.yandex.find(
+					(track) => track.id === selectedTrackIdByPlatform.yandex,
+				),
+				vkLink: selectedTrackVkLink.value,
+				mixedTrackIds: selectedMixedTracksForNewMix.value.map(
+					(track) => track._id,
+				),
+			}),
+		},
+	)
+
+	const result = await response.json()
 }
 </script>
 
@@ -60,7 +94,12 @@ function search(event) {
 			</AutoComplete>
 		</div>
 
-		<button class="create-mix__button button--complete">Добавить</button>
+		<button
+			class="create-mix__button button--complete"
+			@click="createMix"
+		>
+			Добавить
+		</button>
 	</BaseLayout>
 </template>
 

@@ -1,14 +1,23 @@
 <script setup>
 import { ref } from "vue"
+import { useRouter } from "vue-router"
 import BaseLayout from "@/components/BaseLayout.vue"
 import SearchBar from "@/components/SearchBar.vue"
 import PlatformLinkSelectList from "@/components/new-mix/PlatformLinkList.vue"
-import {
-	selectedTrackIdByPlatform,
-	findTrackOnPlatforms,
-} from "@/modules/createMix"
+import { findTrackOnPlatforms } from "@/modules/createMix"
 
 const searchTrack = ref("")
+
+const router = useRouter()
+
+function toSecondPart() {
+	router.replace({
+		path: "/create-mix/2",
+		params: {
+			vkLink: "",
+		},
+	})
+}
 </script>
 
 <template>
@@ -29,7 +38,12 @@ const searchTrack = ref("")
 
 		<PlatformLinkSelectList />
 
-		<button class="create-mix__button button--next">Далее</button>
+		<button
+			class="create-mix__button button--next"
+			@click="toSecondPart"
+		>
+			Далее
+		</button>
 	</BaseLayout>
 </template>
 

@@ -57,6 +57,7 @@ function changeTrackItemStyles(event, isSelected) {
 		? "transparent"
 		: "var(--gray-700)"
 }
+
 </script>
 
 <template>
