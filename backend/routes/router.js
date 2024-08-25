@@ -1,6 +1,7 @@
 import { Router, default as express } from "express"
 import {
 	addTrack,
+	addTrackByPlatforms,
 	getTrackById,
 	getTrackImageByFileName,
 	getTrackList,
@@ -23,6 +24,7 @@ router.get("/api/tracks/:id", getTrackById)
 router.get("/api/images/:fileName", getTrackImageByFileName)
 
 router.post("/api/add-track", addTrack)
+router.post("/api/add-track/by-platforms", addTrackByPlatforms)
 
 router.post("/api/find-track-on-youtube", findTrackOnYoutube)
 router.post("/api/find-track-on-spotify", findTrackOnSpotify)
