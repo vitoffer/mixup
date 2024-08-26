@@ -20,7 +20,7 @@ export const trackSchema = new Schema({
 			message: "should have at least one item",
 		},
 	},
-	imageName: String,
+	thumbnailName: String,
 	mixedTracks: [
 		{
 			type: Schema.Types.ObjectId,
