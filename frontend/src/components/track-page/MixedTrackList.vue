@@ -1,14 +1,35 @@
 <script setup>
-import TrackPageMixedTrackList from "@/components/TrackPageMixedTrackList.vue"
+import BaseTrackItem from "@/components/BaseTrackItem.vue"
 
-defineProps(["mixedTracks"])
+defineProps({
+	mixedTracks: {
+		type: Array,
+		required: true,
+		validator(mixedTracks) {
+			return mixedTracks.every(
+				(mixedTrack) =>
+					typeof mixedTrack.name === "string" &&
+					mixedTrack.authors.every(
+						(mixedTrack) => typeof mixedTrack === "string",
+					),
+			)
+		},
+	},
+})
 </script>
 
 <template>
 	<section class="track-page__mixed-tracks mixed-tracks">
 		<template v-if="mixedTracks.length !== 0">
 			<h3 class="mixed-tracks__title">Mixed треки:</h3>
-			<TrackPageMixedTrackList :mixed-tracks="mixedTracks" />
+			<ul class="mixed-tracks__list">
+				<BaseTrackItem
+					v-for="mixedTrack in mixedTracks"
+					:key="mixedTrack._id"
+					type="mix"
+					:track="mixedTrack"
+				/>
+			</ul>
 		</template>
 		<h3
 			class="mixed-tracks__title"
@@ -25,6 +46,10 @@ defineProps(["mixedTracks"])
 	flex-direction: column;
 	align-items: center;
 	margin: 32px 152px;
+}
+
+.mixed-tracks__list {
+	width: 100%;
 }
 
 .mixed-tracks__title {

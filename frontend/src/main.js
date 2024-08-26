@@ -1,13 +1,14 @@
 import { createApp } from "vue"
-import App from "./App.vue"
 import PrimeVue from "primevue/config"
-import Aura from "@primevue/themes/aura"
 import Tooltip from "primevue/tooltip"
-import { router } from "./router"
+import Aura from "@primevue/themes/aura"
+import App from "./App.vue"
+import { router } from "@/router/router"
 
 import "@/assets/fonts/CarterOne/stylesheet.css"
 import "@/assets/fonts/Nunito/stylesheet.css"
 
+import "primeicons/primeicons.css"
 import "@/assets/styles/reset.css"
 import "@/assets/styles/main.css"
 

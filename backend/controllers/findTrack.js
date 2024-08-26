@@ -10,7 +10,7 @@ import {
 } from "../constants.js"
 
 export function findTrackOnYoutube(req, res) {
-	const { name: searchName, authors: searchAuthors } = req.body
+	const { searchText } = req.body
 
 	var params = {
 		key: YOUTUBE_API_KEY,
@@ -18,31 +18,27 @@ export function findTrackOnYoutube(req, res) {
 		type: "video",
 	}
 
-	youtubeSearch(
-		searchName + (searchAuthors ? searchAuthors.join(", ") : ""),
-		params,
-		(err, results) => {
-			if (err) return console.log(err)
+	youtubeSearch(searchText, params, (err, results) => {
+		if (err) return console.log(err)
 
-			const responseArray = []
+		const responseArray = []
 
-			results.forEach((result) => {
-				responseArray.push({
-					id: result.id,
-					name: result.title,
-					authors: [result.channelTitle],
-					link: result.link,
-					imageUrl: result.thumbnails.medium.url,
-				})
+		results.forEach((result) => {
+			responseArray.push({
+				id: result.id,
+				name: result.title,
+				authors: [result.channelTitle],
+				link: result.link,
+				imageUrl: result.thumbnails.medium.url,
 			})
+		})
 
-			res.send(responseArray)
-		}
-	)
+		res.send(responseArray)
+	})
 }
 
 export async function findTrackOnSpotify(req, res) {
-	const { name: searchName, authors: searchAuthors } = req.body
+	const { searchText } = req.body
 
 	const spotifyApi = new SpotifyWebApi({
 		clientId: SPOTIFY_ID,
@@ -63,10 +59,7 @@ export async function findTrackOnSpotify(req, res) {
 		console.log("Something went wrong when retrieving an access token", err)
 	}
 
-	const results = await spotifyApi.searchTracks(
-		`${searchName} ${searchAuthors ? searchAuthors.join(", ") : ""}`,
-		{ limit: 5 }
-	)
+	const results = await spotifyApi.searchTracks(searchText, { limit: 5 })
 
 	const tracks = results.body.tracks.items
 
@@ -86,7 +79,7 @@ export async function findTrackOnSpotify(req, res) {
 export function findTrackOnVK(req, res) {}
 
 export async function findTrackOnYandex(req, res) {
-	const { name: searchName, authors: searchAuthors } = req.body
+	const { searchText } = req.body
 
 	const api = new YMApi()
 
@@ -96,14 +89,9 @@ export async function findTrackOnYandex(req, res) {
 			uid: YANDEX_UID,
 		})
 
-		const result = await api.search(
-			`${searchName} ${searchAuthors ? searchAuthors.join(", ") : ""}`,
-			{
-				type: "track",
-			}
-		)
-
-		console.log(result.tracks.results[0])
+		const result = await api.search(searchText, {
+			type: "track",
+		})
 
 		const resultsArray = result.tracks.results.map((track) => {
 			return {
@@ -114,8 +102,6 @@ export async function findTrackOnYandex(req, res) {
 				imageUrl: `https://${track.coverUri.slice(0, -2)}300x300`,
 			}
 		})
-
-		console.log(resultsArray)
 
 		res.send(resultsArray)
 	} catch (e) {

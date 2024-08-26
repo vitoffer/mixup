@@ -1,30 +1,21 @@
 <script setup>
-import Select from "primevue/select"
+import { onMounted, reactive, ref, watch } from "vue"
 import { Down } from "@icon-park/vue-next"
-import { foundTrackListByPlatform } from "@/modules/createMix"
-import { onMounted, reactive, ref, watch, watchEffect } from "vue"
-import PlatformSelectItem from "./PlatformSelectItem.vue"
+import Select from "primevue/select"
+import PlatformSelectItem from "@/components/new-mix/PlatformLinkListItem.vue"
+import {
+	selectedTrackIdByPlatform,
+	foundTrackListByPlatform,
+	selectedTrackVkLink,
+} from "@/modules/createMix"
 
 const selectItemWidth = ref("0")
-
-const selectedTrackByPlatform = reactive({
-	youtube: null,
-	spotify: null,
-	yandex: null,
-})
-const trackVKLink = ref(null)
 
 const platforms = {
 	youtube: "Youtube",
 	spotify: "Spotify",
 	yandex: "Яндекс Музыка",
 }
-
-watch([selectedTrackByPlatform], () => {
-	console.log(selectedTrackByPlatform)
-
-	console.log(trackVKLink)
-})
 
 onMounted(() => {
 	selectItemWidth.value = getComputedStyle(
@@ -41,7 +32,7 @@ onMounted(() => {
 			:key="platform"
 			:options="foundTrackListByPlatform[platform].slice(0, 5)"
 			:placeholder="platforms[platform]"
-			v-model="selectedTrackByPlatform[platform]"
+			v-model="selectedTrackIdByPlatform[platform]"
 			optionLabel="name"
 			optionValue="id"
 			:pt:overlay:style="{
@@ -52,6 +43,7 @@ onMounted(() => {
 				<div
 					v-if="slotProps.value"
 					:style="{
+						width: '100%',
 						overflow: 'hidden',
 						textOverflow: 'ellipsis',
 						whiteSpace: 'nowrap',
@@ -92,14 +84,14 @@ onMounted(() => {
 			class="select-section__input"
 			type="text"
 			placeholder="Ссылка на VK Музыку (если есть)"
-			v-model="trackVKLink"
+			v-model="selectedTrackVkLink"
 		/>
 	</section>
 </template>
 
 <style>
 .select-section .p-select {
-	width: 100%;
+	min-width: 0;
 	font-size: 20px;
 	text-align: center;
 	background-color: var(--gray-800);
@@ -107,7 +99,7 @@ onMounted(() => {
 	border-radius: 10px;
 
 	.p-select-label {
-		padding: 10px 0;
+		padding: 10px 40px 10px 16px;
 		color: var(--cyan-500) !important;
 	}
 
@@ -160,18 +152,5 @@ onMounted(() => {
 .select-section__input::placeholder {
 	font-size: 20px;
 	color: var(--gray-500);
-}
-
-.select-option__wrapper {
-	width: 100%;
-	display: flex;
-}
-
-.select-option__text {
-	width: calc(100% - 50px);
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	font-size: 16px;
 }
 </style>

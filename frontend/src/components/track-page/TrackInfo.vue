@@ -1,8 +1,19 @@
 <script setup>
 import { useLoadingImage } from "@/composables/loadingImage"
-import { getPlatformLink, getPlatformLogo } from "@/platforms"
+import { getPlatformLink, getPlatformLogo } from "@/modules/platforms"
 
-const props = defineProps(["track"])
+const props = defineProps({
+	track: {
+		type: Object,
+		required: true,
+		validator(track) {
+			return (
+				typeof track.name === "string" &&
+				track.authors.every((author) => typeof author === "string")
+			)
+		},
+	},
+})
 
 const imageUrl = useLoadingImage(props.track.imageUrl, () => props.track)
 </script>

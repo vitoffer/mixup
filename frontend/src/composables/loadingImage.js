@@ -1,5 +1,5 @@
 import { ref, watch } from "vue"
-import { loadImage } from "@/functions"
+import { loadImage } from "@/modules/functions"
 
 export function useLoadingImage(imageName, track = () => null) {
 	const isImageLoading = ref(false)

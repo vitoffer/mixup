@@ -1,4 +1,4 @@
-import { trackList } from "@/storage"
+import { trackList } from "@/storage/storage"
 
 export function findTrack(id) {
 	return trackList.find((track) => track._id === id) ?? null

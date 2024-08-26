@@ -1,4 +1,4 @@
-import { addTrackToList } from "@/storage"
+import { addTrackToList } from "@/storage/storage"
 
 export async function loadAllTracks(isLoading) {
 	isLoading.value = true
@@ -20,7 +20,7 @@ export function filterTracks(trackList, searchText) {
 			track.authors.some((author) =>
 				author.toLowerCase().includes(searchText.toLowerCase()),
 			) ||
-			track.mixedTracks.some((mixedTrack) => {
+			track.mixedTracks?.some((mixedTrack) => {
 				return (
 					mixedTrack.name.toLowerCase().includes(searchText.toLowerCase()) ||
 					mixedTrack.authors.some((author) =>
