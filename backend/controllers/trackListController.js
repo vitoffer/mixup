@@ -3,12 +3,10 @@ import trackListService from "../services/trackListService.js"
 
 export default {
 	async getFullTrackList(req, res) {
-		let response
 		try {
 			const trackList = await trackListService.getFullTrackList()
 
-			response = { status: httpStatus.OK, responseData: trackList }
-			res.status(response.status).send(response)
+			res.status(httpStatus.OK).send(trackList)
 		} catch (err) {
 			console.error("Error in getFullTrackListController: ", { err })
 
@@ -20,12 +18,10 @@ export default {
 	},
 
 	async getTrackById(req, res) {
-		let response
 		try {
 			const track = await trackListService.getTrackById(req.params.track_id)
 
-			response = { status: httpStatus.OK, responseData: track }
-			res.status(response.status).send(response)
+			res.status(httpStatus.OK).send(track)
 		} catch (err) {
 			console.error("Error in getTrackByIdController: ", { err })
 
