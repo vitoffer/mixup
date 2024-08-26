@@ -1,4 +1,4 @@
-import { Track } from "../models/track.js"
+import { Track } from "../database/models/track.js"
 import path from "path"
 import mongoose from "mongoose"
 import { ABSOLUTE_UPLOADS_FOLDER_PATH } from "../constants.js"
@@ -7,18 +7,6 @@ import { promises as fs } from "fs"
 function handleError(res, error) {
 	console.error(error.message)
 	res.status(500).json({ error })
-}
-
-export async function getTrackByName(req, res) {
-	try {
-		const name = req.params.name
-
-		const track = await Track.findOne({ name: name })
-
-		res.status(200).send(track)
-	} catch (err) {
-		handleError(res, err)
-	}
 }
 
 export async function getTrackImageByFileName(req, res) {

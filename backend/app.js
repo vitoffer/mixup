@@ -1,6 +1,5 @@
 import cors from "cors"
 import express from "express"
-import { connectToDb } from "./db/db.js"
 import { router } from "./routes/router.js"
 import {
 	PORT,
@@ -9,6 +8,7 @@ import {
 	MONGO_DB_USER,
 	MONGO_DB_PASS,
 } from "./constants.js"
+import { connectToDb } from "./database/dbConnect.js"
 
 const app = express()
 

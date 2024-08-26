@@ -20,6 +20,11 @@ router.use(fileUpload())
 
 router.get("/api/tracks", trackListController.getFullTrackList)
 router.get("/api/tracks/:track_id", trackListController.getTrackById)
+router.get(
+	"/api/thumbnails/:track_id",
+	trackListController.getTrackThumbnailById
+)
+
 router.get("/api/images/:fileName", getTrackImageByFileName)
 
 router.post("/api/add-track", addTrack)

@@ -5,26 +5,43 @@ export default {
 	async getFullTrackList(req, res) {
 		let response
 		try {
-			response = await trackListService.getFullTrackList()
+			const trackList = await trackListService.getFullTrackList()
 
-			res.status(response.httpStatus).send(response)
+			response = { status: httpStatus.OK, responseData: trackList }
+			res.status(response.status).send(response)
 		} catch (err) {
 			console.error("Error in getFullTrackListController: ", { err })
 
-			res
-				.status(httpStatus.INTERNAL_SERVER_ERROR)
-				.send({ status: httpStatus.INTERNAL_SERVER_ERROR, errorDetails: err })
+			res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+				status: httpStatus.INTERNAL_SERVER_ERROR,
+				errorDetails: err,
+			})
 		}
 	},
 
 	async getTrackById(req, res) {
 		let response
 		try {
-			response = await trackListService.getTrackById(req.params.track_id)
+			const track = await trackListService.getTrackById(req.params.track_id)
 
-			res.status(response.httpStatus).send(response)
+			response = { status: httpStatus.OK, responseData: track }
+			res.status(response.status).send(response)
 		} catch (err) {
 			console.error("Error in getTrackByIdController: ", { err })
+
+			res
+				.status(httpStatus.INTERNAL_SERVER_ERROR)
+				.send({ status: httpStatus.INTERNAL_SERVER_ERROR, errorDetails: err })
+		}
+	},
+	async getTrackThumbnailById(req, res) {
+		try {
+			const track = await trackListService.getTrackById(req.params.track_id)
+			const trackThumbnailPath = trackListService.getTrackThumbnailPath(track)
+
+			res.status(httpStatus.OK).sendFile(trackThumbnailPath)
+		} catch (err) {
+			console.error("Error in getThumbnailByTrackIdController: ", { err })
 
 			res
 				.status(httpStatus.INTERNAL_SERVER_ERROR)
