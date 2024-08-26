@@ -1,4 +1,4 @@
-import { Track } from "../models/Track.js"
+import { Track } from "../models/track.js"
 import path from "path"
 import mongoose from "mongoose"
 import { ABSOLUTE_UPLOADS_FOLDER_PATH } from "../constants.js"
@@ -9,33 +9,11 @@ function handleError(res, error) {
 	res.status(500).json({ error })
 }
 
-export async function getTrackList(req, res) {
-	try {
-		const tracks = await Track.find().populate("mixedTracks")
-
-		res.status(200).send(tracks)
-	} catch (err) {
-		handleError(res, err)
-	}
-}
-
 export async function getTrackByName(req, res) {
 	try {
 		const name = req.params.name
 
 		const track = await Track.findOne({ name: name })
-
-		res.status(200).send(track)
-	} catch (err) {
-		handleError(res, err)
-	}
-}
-
-export async function getTrackById(req, res) {
-	try {
-		const id = req.params.id
-
-		const track = await Track.findOne({ _id: id }).populate("mixedTracks")
 
 		res.status(200).send(track)
 	} catch (err) {

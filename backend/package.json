@@ -16,6 +16,7 @@
 		"dotenv": "^16.4.5",
 		"express": "^4.19.2",
 		"express-fileupload": "^1.5.1",
+		"http-status-codes": "^2.3.0",
 		"mongoose": "^8.5.2",
 		"spotify-web-api-node": "^5.0.2",
 		"ym-api": "^1.2.1",
