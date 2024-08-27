@@ -15,14 +15,14 @@ const props = defineProps({
 	},
 })
 
-const imageUrl = useLoadingImage(props.track.imageUrl, () => props.track)
+const thumbnailUrl = useLoadingImage(() => props.track._id)
 </script>
 
 <template>
 	<section class="track-page__info track-info">
 		<img
-			class="track-info__image"
-			:src="imageUrl"
+			class="track-info__thumbnail"
+			:src="thumbnailUrl"
 			alt="Track image"
 		/>
 		<div class="track-info__description track-description">
@@ -61,7 +61,7 @@ const imageUrl = useLoadingImage(props.track.imageUrl, () => props.track)
 	border-bottom: solid 1px var(--gray-700);
 }
 
-.track-info__image {
+.track-info__thumbnail {
 	width: 300px;
 	aspect-ratio: 1;
 	border-radius: 20px;

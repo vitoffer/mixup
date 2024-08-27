@@ -1,16 +1,14 @@
 <script setup>
 import { ref, computed } from "vue"
-import SearchBar from "@/components/SearchBar.vue"
-import BaseTrackItem from "@/components/BaseTrackItem.vue"
+import SearchBar from "@/components/track-list/SearchBar.vue"
 import { trackList } from "@/storage/storage"
 import { filterTracks, loadAllTracks } from "@/modules/trackList"
+import TrackItem from "@/components/track-list/TrackItem.vue"
 
 const searchTrack = ref("")
 
-const isLoading = ref(false)
-
 if (trackList.length === 0) {
-	loadAllTracks(isLoading)
+	loadAllTracks()
 }
 
 const filteredTrackList = computed(() => {
@@ -22,10 +20,9 @@ const filteredTrackList = computed(() => {
 	<SearchBar v-model:search-track="searchTrack" />
 	<main class="container">
 		<ul class="track-list">
-			<BaseTrackItem
+			<TrackItem
 				v-for="track in filteredTrackList"
 				:key="track._id"
-				type="default"
 				:track="track"
 			/>
 		</ul>

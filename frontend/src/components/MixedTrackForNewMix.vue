@@ -8,14 +8,14 @@ const props = defineProps({
 	},
 })
 
-const imageUrl = useLoadingImage(props.track.imageName)
+const thumbnailUrl = useLoadingImage(() => props.track._id)
 </script>
 
 <template>
 	<div class="item">
 		<img
-			class="image"
-			:src="imageUrl"
+			class="thumbnail"
+			:src="thumbnailUrl"
 			alt="Картинка трека"
 			width="60"
 		/>
@@ -33,7 +33,7 @@ const imageUrl = useLoadingImage(props.track.imageName)
 	gap: 16px;
 }
 
-.image {
+.thumbnail {
 	border-radius: 10px;
 }
 

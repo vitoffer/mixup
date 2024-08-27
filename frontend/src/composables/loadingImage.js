@@ -1,14 +1,14 @@
-import { ref, watch } from "vue"
+import { ref, toValue, watch } from "vue"
 import { loadImage } from "@/modules/functions"
 
-export function useLoadingImage(imageName, track = () => null) {
+export function useLoadingImage(trackId) {
 	const isImageLoading = ref(false)
 	const imageUrl = ref("")
 
 	watch(
-		track,
+		trackId,
 		() => {
-			loadImage(imageName || track().imageName, isImageLoading, imageUrl)
+			loadImage(toValue(trackId), isImageLoading, imageUrl)
 
 			setTimeout(() => {
 				if (isImageLoading.value) {

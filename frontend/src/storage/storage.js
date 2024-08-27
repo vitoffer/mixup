@@ -14,7 +14,3 @@ export const trackList = reactive([
 	// 	imageName: "66b6213fcd5def40e1fdf248.jpeg",
 	// },
 ])
-
-export function addTrackToList(track) {
-	trackList.push(track)
-}

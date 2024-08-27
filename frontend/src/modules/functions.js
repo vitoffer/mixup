@@ -1,8 +1,8 @@
-export async function loadImage(imageName, isImageLoading, imageUrl) {
+export async function loadImage(trackId, isImageLoading, imageUrl) {
 	isImageLoading.value = true
 
 	const response = await fetch(
-		`${import.meta.env.VITE_BASE_API_URL}/images/${imageName}`,
+		`${import.meta.env.VITE_BASE_API_URL}/thumbnails/${trackId}`,
 	)
 	const blob = await response.blob()
 	imageUrl.value = URL.createObjectURL(blob)
@@ -18,7 +18,7 @@ export function generateTrackItemStyles(type) {
 				gridTemplateColumns: "64px 1fr 1fr 52px",
 				padding: "8px 16px",
 			},
-			track__image: {
+			track__thumbnail: {
 				width: "64px",
 			},
 			track__info: {
@@ -45,7 +45,7 @@ export function generateTrackItemStyles(type) {
 			gap: "32px",
 			padding: "16px 32px",
 		},
-		track__image: {
+		track__thumbnail: {
 			width: "100px",
 		},
 		track__info: {

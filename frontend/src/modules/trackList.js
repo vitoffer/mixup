@@ -1,16 +1,16 @@
-import { addTrackToList } from "@/storage/storage"
+import { trackList } from "@/storage/storage"
 
-export async function loadAllTracks(isLoading) {
-	isLoading.value = true
+export async function loadAllTracks() {
+	try {
+		const response = await fetch(`${import.meta.env.VITE_BASE_API_URL}/tracks`)
+		const tracks = await response.json()
 
-	const response = await fetch(`${import.meta.env.VITE_BASE_API_URL}/tracks`)
-	const tracks = await response.json()
-
-	tracks.forEach((track) => {
-		addTrackToList(track)
-	})
-
-	isLoading.value = false
+		tracks.forEach((track) => {
+			trackList.push(track)
+		})
+	} catch (err) {
+		console.error(err)
+	}
 }
 
 export function filterTracks(trackList, searchText) {

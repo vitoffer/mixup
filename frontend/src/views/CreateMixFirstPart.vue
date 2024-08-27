@@ -2,7 +2,7 @@
 import { ref } from "vue"
 import { useRouter } from "vue-router"
 import BaseLayout from "@/components/BaseLayout.vue"
-import SearchBar from "@/components/SearchBar.vue"
+import SearchBar from "@/components/track-list/SearchBar.vue"
 import PlatformLinkSelectList from "@/components/new-mix/PlatformLinkList.vue"
 import { findTrackOnPlatforms } from "@/modules/createMix"
 

@@ -40,7 +40,7 @@ const trackItemStyles = reactive({
 	...generateTrackItemStyles(props.type),
 })
 
-const imageUrl = useLoadingImage(props.track.imageName)
+const thumbnailUrl = useLoadingImage(() => props.track._id)
 
 function changeTrackItemStyles(event, isSelected) {
 	trackItemStyles["track-item"] = isSelected
@@ -57,7 +57,6 @@ function changeTrackItemStyles(event, isSelected) {
 		? "transparent"
 		: "var(--gray-700)"
 }
-
 </script>
 
 <template>
@@ -73,10 +72,10 @@ function changeTrackItemStyles(event, isSelected) {
 				:style="trackItemStyles['track-item__content']"
 			>
 				<img
-					class="track__image"
-					:src="imageUrl"
-					:style="trackItemStyles['track__image']"
-					alt="Track image"
+					class="track__thumbnail"
+					:src="thumbnailUrl"
+					:style="trackItemStyles['track__thumbnail']"
+					alt="Track thumbnail"
 				/>
 				<div
 					class="track__info"
@@ -159,7 +158,7 @@ function changeTrackItemStyles(event, isSelected) {
 	gap: 32px;
 }
 
-.track__image {
+.track__thumbnail {
 	aspect-ratio: 1;
 	border-radius: 10px;
 }
