@@ -21,7 +21,7 @@ const filteredTrackList = computed(() =>
 </script>
 
 <template>
-	<SearchBar v-model:search-track="searchTrack" />
+	<SearchBar v-model="searchTrack" />
 	<main class="container">
 		<ul class="track-list">
 			<BaseTrackItem

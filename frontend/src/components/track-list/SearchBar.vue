@@ -1,7 +1,7 @@
 <script setup>
 import { Search } from "@icon-park/vue-next"
 
-const searchTrackModel = defineModel("searchTrack", {
+const searchTrackModel = defineModel({
 	type: String,
 	required: true,
 })
@@ -18,7 +18,7 @@ const searchTrackModel = defineModel("searchTrack", {
 			class="search__input"
 			type="text"
 			placeholder="Поиск трека"
-			v-model="searchTrackModel"
+			v-model.trim="searchTrackModel"
 		/>
 	</div>
 </template>
