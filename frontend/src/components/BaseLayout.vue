@@ -1,6 +1,6 @@
 <script setup>
 import { Return } from "@icon-park/vue-next"
-import { ref } from "vue"
+import { ref, watch } from "vue"
 import { useRouter } from "vue-router"
 
 const appHeight = document.querySelector("#app").getBoundingClientRect().height
@@ -10,7 +10,17 @@ const headerHeight = document
 const elementHeight = ref(appHeight - headerHeight - 48 * 2 + "px")
 
 const router = useRouter()
-const prevLink = ref(router.options.history.state.back)
+const prevLink = ref(null)
+
+watch(
+	router.currentRoute,
+	() => {
+		console.log(router.options.history)
+
+		prevLink.value = router.options.history.state.back
+	},
+	{ immediate: true },
+)
 </script>
 
 <template>

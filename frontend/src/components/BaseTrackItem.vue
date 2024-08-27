@@ -72,12 +72,6 @@ const thumbnailUrl = useLoadingImage(() => props.track._id)
 	border-top-color: transparent;
 }
 
-/* .track-list__item.highlighted {
-	background-color: var(--gray-800);
-	border-radius: 20px;
-	border-color: transparent;
-} */
-
 .track-item__content {
 	gap: 32px;
 }
