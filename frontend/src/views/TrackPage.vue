@@ -6,18 +6,20 @@ import TrackInfo from "@/components/track-page/TrackInfo.vue"
 import MixedTrackList from "@/components/track-page/MixedTrackList.vue"
 import { findTrack, loadTrack } from "@/modules/trackPage"
 
-const route = useRoute()
-
 const track = ref(null)
 const isTrackLoading = ref(false)
 
+const route = useRoute()
+
 watch(
 	() => route.params.id,
-	() => {
+	async () => {
 		track.value = findTrack(route.params.id)
 
 		if (!track.value) {
-			loadTrack(route.params.id, track, isTrackLoading)
+			isTrackLoading.value = true
+			track.value = await loadTrack(route.params.id)
+			isTrackLoading.value = false
 		}
 	},
 	{ immediate: true },
@@ -26,7 +28,9 @@ watch(
 
 <template>
 	<BaseLayout class="track-page">
-		<TrackInfo :track="track" />
-		<MixedTrackList :mixed-tracks="track.mixedTracks" />
+		<template v-if="!isTrackLoading">
+			<TrackInfo :track="track" />
+			<MixedTrackList :mixed-tracks="track.mixedTracks" />
+		</template>
 	</BaseLayout>
 </template>

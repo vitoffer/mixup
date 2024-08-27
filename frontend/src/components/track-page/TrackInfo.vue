@@ -1,17 +1,13 @@
 <script setup>
 import { useLoadingImage } from "@/composables/loadingImage"
 import { getPlatformLink, getPlatformLogo } from "@/modules/platforms"
+import { isTrackValid } from "@/modules/validators"
 
 const props = defineProps({
 	track: {
 		type: Object,
 		required: true,
-		validator(track) {
-			return (
-				typeof track.name === "string" &&
-				track.authors.every((author) => typeof author === "string")
-			)
-		},
+		validator: isTrackValid,
 	},
 })
 

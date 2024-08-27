@@ -1,14 +1,11 @@
 <script setup>
+import { isTrackValid } from "@/modules/validators"
+
 defineProps({
 	track: {
 		type: Object,
 		required: true,
-		validator(track) {
-			return (
-				typeof track.name === "string" &&
-				track.authors.every((author) => typeof author === "string")
-			)
-		},
+		validator: isTrackValid,
 	},
 })
 </script>
