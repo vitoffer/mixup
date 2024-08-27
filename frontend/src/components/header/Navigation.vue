@@ -1,14 +1,5 @@
 <script setup>
-const navItems = [
-	{
-		name: "Все треки",
-		link: "/",
-	},
-	{
-		name: "Добавить микс",
-		link: "/create-mix/1",
-	},
-]
+import { navItems } from "@/modules/navigation"
 </script>
 
 <template>
@@ -37,6 +28,7 @@ const navItems = [
 	left: 50%;
 	translate: -50% -50%;
 }
+
 .nav__list {
 	display: flex;
 	gap: 50px;
