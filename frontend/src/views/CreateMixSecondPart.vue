@@ -5,7 +5,7 @@ import BaseLayout from "@/components/BaseLayout.vue"
 import { trackList } from "@/storage/storage"
 import MixedTrackForNewMix from "../components/MixedTrackForNewMix.vue"
 import Chip from "primevue/chip"
-import { filterTracks } from "@/modules/trackList"
+import { getFilteredTrackList } from "@/modules/trackList"
 import {
 	selectedTrackIdByPlatform,
 	selectedTrackVkLink,
@@ -19,7 +19,7 @@ function search(event) {
 	if (!event.query.trim().length) {
 		filteredTrackList.value = [...trackList]
 	} else {
-		filteredTrackList.value = filterTracks(trackList, event.query)
+		filteredTrackList.value = getFilteredTrackList(trackList, event.query)
 	}
 }
 

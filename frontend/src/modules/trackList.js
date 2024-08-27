@@ -13,23 +13,24 @@ export async function loadAllTracks() {
 	}
 }
 
-export function filterTracks(trackList, searchText) {
+export function getFilteredTrackList(trackList, searchText) {
 	return trackList.filter((track) => {
 		return (
-			track.name.toLowerCase().includes(searchText.toLowerCase()) ||
-			track.authors.some((author) =>
-				author.toLowerCase().includes(searchText.toLowerCase()),
-			) ||
+			trackContainsText(track, searchText) ||
 			track.mixedTracks?.some((mixedTrack) => {
-				return (
-					mixedTrack.name.toLowerCase().includes(searchText.toLowerCase()) ||
-					mixedTrack.authors.some((author) =>
-						author.toLowerCase().includes(searchText.toLowerCase()),
-					)
-				)
+				return trackContainsText(mixedTrack, searchText)
 			})
 		)
 	})
+}
+
+function trackContainsText(track, text) {
+	return (
+		track.name.toLowerCase().includes(text.toLowerCase()) ||
+		track.authors.some((author) =>
+			author.toLowerCase().includes(text.toLowerCase()),
+		)
+	)
 }
 
 export function hasYoutubeLink(platforms) {

@@ -3,7 +3,7 @@ import { ref, computed } from "vue"
 import SearchBar from "@/components/track-list/SearchBar.vue"
 import { trackList } from "@/storage/storage"
 import {
-	filterTracks,
+	getFilteredTrackList,
 	hasYoutubeLink,
 	loadAllTracks,
 } from "@/modules/trackList"
@@ -15,9 +15,9 @@ if (trackList.length === 0) {
 	loadAllTracks()
 }
 
-const filteredTrackList = computed(() => {
-	return filterTracks(trackList, searchTrack.value)
-})
+const filteredTrackList = computed(() =>
+	getFilteredTrackList(trackList, searchTrack.value),
+)
 </script>
 
 <template>
