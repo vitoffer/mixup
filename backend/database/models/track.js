@@ -10,29 +10,32 @@ const platformLinksValidators = [
 	{ validator: isAllPlatformLinksString, message: "link must be string type" },
 ]
 
-export const trackSchema = new Schema({
-	name: { type: String, required: true },
-	authors: {
-		type: [{ type: String, required: true }],
+export const trackSchema = new Schema(
+	{
+		name: { type: String, required: true },
+		authors: {
+			type: [{ type: String, required: true }],
 
-		validate: {
-			validator: (array) => array.length > 0,
-			message: "should have at least one item",
+			validate: {
+				validator: (array) => array.length > 0,
+				message: "should have at least one item",
+			},
+		},
+		thumbnailName: String,
+		mixedTracks: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: "Track",
+			},
+		],
+		platformLinks: {
+			type: Map,
+			required: true,
+			validate: platformLinksValidators,
 		},
 	},
-	thumbnailName: String,
-	mixedTracks: [
-		{
-			type: Schema.Types.ObjectId,
-			ref: "Track",
-		},
-	],
-	platformLinks: {
-		type: Map,
-		required: true,
-		validate: platformLinksValidators,
-	},
-})
+	{ timestamps: true, versionKey: false }
+)
 
 export const Track = model("Track", trackSchema)
 

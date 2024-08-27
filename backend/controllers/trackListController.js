@@ -30,10 +30,12 @@ export default {
 				.send({ status: httpStatus.INTERNAL_SERVER_ERROR, errorDetails: err })
 		}
 	},
+
 	async getTrackThumbnailById(req, res) {
 		try {
-			const track = await trackListService.getTrackById(req.params.track_id)
-			const trackThumbnailPath = trackListService.getTrackThumbnailPath(track)
+			const trackThumbnailPath = await trackListService.getTrackThumbnailPath(
+				req.params.track_id
+			)
 
 			res.status(httpStatus.OK).sendFile(trackThumbnailPath)
 		} catch (err) {
