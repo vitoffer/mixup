@@ -2,18 +2,18 @@
 import { ref } from "vue"
 import AutoComplete from "primevue/autocomplete"
 import BaseLayout from "@/components/BaseLayout.vue"
-import { trackList } from "@/storage/storage"
+import {
+	foundTrackListByPlatform,
+	selectedMixedTracksForNewMix,
+	selectedTrackIdByPlatform,
+	selectedTrackVkLink,
+	trackList,
+} from "@/storage/storage"
 import MixedTrackForNewMix from "../components/MixedTrackForNewMix.vue"
 import Chip from "primevue/chip"
 import { getFilteredTrackList } from "@/modules/trackList"
-import {
-	selectedTrackIdByPlatform,
-	selectedTrackVkLink,
-} from "@/modules/createMix"
-import { foundTrackListByPlatform } from "../modules/createMix"
 
 const filteredTrackList = ref([])
-const selectedMixedTracksForNewMix = ref([])
 
 function search(event) {
 	if (!event.query.trim().length) {
@@ -32,14 +32,17 @@ async function createMix() {
 				"Content-Type": "application/json;charset=utf-8",
 			},
 			body: JSON.stringify({
-				youtube: foundTrackListByPlatform.value.youtube.find(
-					(track) => track.id === selectedTrackIdByPlatform.youtube,
+				youtube: findTrackInFoundTrackListById(
+					selectedTrackIdByPlatform.value.youtube,
+					"youtube",
 				),
-				spotify: foundTrackListByPlatform.value.spotify.find(
-					(track) => track.id === selectedTrackIdByPlatform.spotify,
+				spotify: findTrackInFoundTrackListById(
+					selectedTrackIdByPlatform.value.spotify,
+					"spotify",
 				),
-				yandex: foundTrackListByPlatform.value.yandex.find(
-					(track) => track.id === selectedTrackIdByPlatform.yandex,
+				yandex: findTrackInFoundTrackListById(
+					selectedTrackIdByPlatform.value.yandex,
+					"yandex",
 				),
 				vkLink: selectedTrackVkLink.value,
 				mixedTrackIds: selectedMixedTracksForNewMix.value.map(
@@ -50,6 +53,10 @@ async function createMix() {
 	)
 
 	const result = await response.json()
+}
+
+function findTrackInFoundTrackListById(id, platform) {
+	return foundTrackListByPlatform[platform].find((track) => track._id === id)
 }
 </script>
 

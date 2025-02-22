@@ -1,23 +1,13 @@
 <script setup>
 import { ref } from "vue"
-import { useRouter } from "vue-router"
 import BaseLayout from "@/components/BaseLayout.vue"
 import SearchBar from "@/components/track-list/SearchBar.vue"
-import PlatformLinkSelectList from "@/components/new-mix/PlatformLinkList.vue"
-import { findTrackOnPlatforms } from "@/modules/createMix"
+import PlatformLinkList from "@/components/new-mix/PlatformLinkList.vue"
+import { useSearchPlatforms } from "@/composables/searchPlatforms"
 
 const searchTrack = ref("")
 
-const router = useRouter()
-
-function toSecondPart() {
-	router.replace({
-		path: "/create-mix/2",
-		params: {
-			vkLink: "",
-		},
-	})
-}
+const { foundTrackListByPlatform, findTrackOnPlatforms } = useSearchPlatforms()
 </script>
 
 <template>
@@ -26,21 +16,23 @@ function toSecondPart() {
 
 		<SearchBar
 			class="create-mix__search-platforms"
-			v-model:search-track="searchTrack"
+			v-model="searchTrack"
 		/>
 
 		<button
 			class="create-mix__button button--find"
-			@click.prevent="findTrackOnPlatforms(searchTrack)"
+			@click="findTrackOnPlatforms(searchTrack)"
 		>
 			Найти
 		</button>
 
-		<PlatformLinkSelectList />
+		<PlatformLinkList
+			:found-track-list-by-platform="foundTrackListByPlatform"
+		/>
 
 		<button
 			class="create-mix__button button--next"
-			@click="toSecondPart"
+			@click="$router.replace({ name: 'createMixSecondPage' })"
 		>
 			Далее
 		</button>

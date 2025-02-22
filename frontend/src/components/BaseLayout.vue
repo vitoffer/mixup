@@ -15,8 +15,6 @@ const prevLink = ref(null)
 watch(
 	router.currentRoute,
 	() => {
-		console.log(router.options.history)
-
 		prevLink.value = router.options.history.state.back
 	},
 	{ immediate: true },

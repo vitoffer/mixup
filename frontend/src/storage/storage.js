@@ -1,4 +1,4 @@
-import { reactive } from "vue"
+import { reactive, ref } from "vue"
 
 export const trackList = reactive([
 	// {
@@ -14,3 +14,11 @@ export const trackList = reactive([
 	// 	imageName: "66b6213fcd5def40e1fdf248.jpeg",
 	// },
 ])
+
+export const foundTrackListByPlatform = ref({})
+
+export const selectedTrackIdByPlatform = ref({})
+
+export const selectedTrackVkLink = ref("")
+
+export const selectedMixedTracksForNewMix = ref([])

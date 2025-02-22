@@ -10,7 +10,12 @@ const routes = [
 	{ path: "/", component: TrackListView },
 	{ path: "/tracks/:id", component: TrackPageView },
 	{ path: "/create-mix/1", component: CreateMixFirstPartView },
-	{ path: "/create-mix/2", component: CreateMixSecondPartView },
+	{
+		path: "/create-mix/2",
+		name: "createMixSecondPage",
+		component: CreateMixSecondPartView,
+		props: true,
+	},
 	{ path: "/:pathMatch(.*)*", component: NotFoundView },
 ]
 

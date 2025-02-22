@@ -5,9 +5,14 @@ import Select from "primevue/select"
 import PlatformSelectItem from "@/components/new-mix/PlatformLinkListItem.vue"
 import {
 	selectedTrackIdByPlatform,
-	foundTrackListByPlatform,
 	selectedTrackVkLink,
-} from "@/modules/createMix"
+} from "@/storage/storage"
+
+const props = defineProps({
+	foundTrackListByPlatform: {
+		type: Object,
+	},
+})
 
 const selectItemWidth = ref("0")
 
