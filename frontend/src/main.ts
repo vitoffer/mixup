@@ -1,7 +1,7 @@
 import { createApp } from "vue"
 import PrimeVue from "primevue/config"
 import Tooltip from "primevue/tooltip"
-import Aura from "@primevue/themes/aura"
+import Aura from "@primeuix/themes/aura"
 import App from "./App.vue"
 import { router } from "@/router/router"
 
@@ -12,7 +12,7 @@ import "primeicons/primeicons.css"
 import "@/assets/styles/reset.css"
 import "@/assets/styles/main.css"
 
-export const app = createApp(App)
+const app = createApp(App)
 
 app.use(router)
 
