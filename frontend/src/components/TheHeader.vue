@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import Branding from "@/components/header/Branding.vue"
 import Navigation from "@/components/header/Navigation.vue"
 </script>

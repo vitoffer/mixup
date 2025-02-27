@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { Return } from "@icon-park/vue-next"
 import { ref, watch } from "vue"
 import { useRouter } from "vue-router"

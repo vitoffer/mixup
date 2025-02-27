@@ -1,5 +1,3 @@
-<script setup></script>
-
 <template>
 	<RouterLink
 		class="header__branding branding"

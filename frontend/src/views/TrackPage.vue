@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import BaseLayout from "@/components/BaseLayout.vue"
 import TrackInfo from "@/components/track-page/TrackInfo.vue"
 import MixedTrackList from "@/components/track-page/MixedTrackList.vue"

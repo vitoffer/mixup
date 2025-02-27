@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted, reactive, ref, watch } from "vue"
 import { Down } from "@icon-park/vue-next"
 import Select from "primevue/select"

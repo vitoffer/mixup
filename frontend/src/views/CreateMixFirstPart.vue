@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue"
 import BaseLayout from "@/components/BaseLayout.vue"
 import SearchBar from "@/components/track-list/SearchBar.vue"
