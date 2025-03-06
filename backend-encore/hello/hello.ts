@@ -1,4 +1,4 @@
-import { api } from "encore.dev/api";
+import { api } from "encore.dev/api"
 
 // Welcome to Encore!
 // This is a simple "Hello World" project to get you started.
@@ -13,15 +13,15 @@ import { api } from "encore.dev/api";
 //	curl http://localhost:4000/hello/World
 //
 export const get = api(
-  { expose: true, method: "GET", path: "/hello/:name" },
-  async ({ name }: { name: string }): Promise<Response> => {
-    const msg = `Hello ${name}!`;
-    return { message: msg };
-  }
-);
+	{ expose: true, method: "GET", path: "/hello/:name" },
+	async ({ name }: { name: string }): Promise<Response> => {
+		const msg = `Hello ${name} 1!`
+		return { message: msg }
+	}
+)
 
 interface Response {
-  message: string;
+	message: string
 }
 
 // ==================================================================
