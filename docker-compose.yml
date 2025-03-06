@@ -1,0 +1,22 @@
+services:
+  frontend:
+    build: "./frontend"
+    container_name: mixup-frontend
+    volumes:
+      - ./frontend/dist:/app/dist
+  nginx:
+    build: "./nginx"
+    container_name: mixup-nginx
+    volumes:
+      - ./certs:/etc/nginx/certs
+      - ./dist:/etc/nginx/html
+    networks:
+      - mixup-net
+    depends_on:
+      - frontend
+    ports:
+      - "80:80"
+      - "443:443"
+
+networks:
+  mixup-net:
