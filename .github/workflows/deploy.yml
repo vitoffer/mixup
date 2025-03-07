@@ -24,3 +24,4 @@ jobs:
       - name: Build and run Docker Compose
         run: |
           docker compose up -d
+    needs: prepare-environment
