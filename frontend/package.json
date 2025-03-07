@@ -16,7 +16,7 @@
 	},
 	"dependencies": {
 		"@icon-park/vue-next": "^1.4.2",
-		"@primevue/themes": "^4.0.4",
+		"@primeuix/themes": "^1.0.0",
 		"pinia": "^2.1.7",
 		"primeicons": "^7.0.0",
 		"primevue": "^4.0.4",
