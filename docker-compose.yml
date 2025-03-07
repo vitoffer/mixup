@@ -4,7 +4,6 @@ services:
     container_name: mixup-frontend
     volumes:
       - ./certs:/etc/nginx/certs
-      - ./certs:./certs
     networks:
       - mixup-net
     ports:
