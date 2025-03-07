@@ -3,7 +3,7 @@ services:
     build: ./frontend
     container_name: mixup-frontend
     volumes:
-      - ./certs:/etc/nginx/certs
+      - /home/runner/certs:/etc/nginx/certs
     networks:
       - mixup-net
     ports:
