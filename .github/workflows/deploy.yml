@@ -6,7 +6,15 @@ on:
       - main
 
 jobs:
-  build:
+  prepare-environment:
+      runs-on: self-hosted
+      steps:
+        - name: Stop and remove containers, networks
+          run: docker-compose down
+        - name: Remove unused data
+          run: docker system prune -a -f
+
+  deploy:
     runs-on: self-hosted
 
     steps:
@@ -15,4 +23,4 @@ jobs:
 
       - name: Build and run Docker Compose
         run: |
-          docker compose up -d --build
+          docker compose up -d
