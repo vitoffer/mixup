@@ -8,7 +8,6 @@ on:
 jobs:
   deploy:
     runs-on: self-hosted
-    needs: prepare-environment
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
