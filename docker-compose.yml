@@ -1,0 +1,23 @@
+services:
+  frontend:
+    build: ./frontend
+    container_name: mixup-frontend
+    volumes:
+      - ./certs:/etc/nginx/certs
+    networks:
+      - mixup-net
+    ports:
+      - 80:80
+      - 443:443
+  backend:
+    build: ./backend-hono
+    container_name: mixup-backend
+    networks:
+      - mixup-net
+    ports:
+      - 4000:4000
+    environment:
+      - NODE_ENV=production
+
+networks:
+  mixup-net:
