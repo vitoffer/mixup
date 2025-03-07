@@ -7,16 +7,19 @@ on:
 
 jobs:
   prepare-environment:
-      runs-on: self-hosted
-      steps:
-        - name: Stop and remove containers, networks
-          run: docker compose down
-        - name: Remove unused data
-          run: docker system prune -a -f
+    runs-on: self-hosted
+    steps:
+      - name: Stop and remove containers, networks
+        run: docker compose down
+
+      - name: Remove unused Docker data (excluding certs)
+        run: |
+          docker system prune -f --volumes
+          docker volume ls -q | grep -v 'certs' | xargs docker volume rm
 
   deploy:
     runs-on: self-hosted
-
+    needs: prepare-environment
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -24,4 +27,3 @@ jobs:
       - name: Build and run Docker Compose
         run: |
           docker compose up -d
-    needs: prepare-environment
