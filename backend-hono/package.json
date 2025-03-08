@@ -12,6 +12,7 @@
 		"@scalar/hono-api-reference": "^0.5.183",
 		"hono": "^4.7.4",
 		"mongoose": "^8.12.1",
+		"stoker": "^1.4.2",
 		"zod": "^3.24.2"
 	},
 	"devDependencies": {
