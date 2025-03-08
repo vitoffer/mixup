@@ -16,13 +16,4 @@ routes.forEach((route) => {
 	app.route("/", route)
 })
 
-app.get(
-	"/reference",
-	apiReference({
-		spec: {
-			url: "/doc",
-		},
-	})
-)
-
 export default app
