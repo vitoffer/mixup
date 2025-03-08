@@ -3,9 +3,9 @@ import { z } from "zod"
 
 export const ZodTrackSchema = z.object({
 	_id: z.string(),
+	__v: z.number(),
 	title: z.string(),
 	createdAt: z.number().default(() => Date.now().valueOf()),
-	__v: z.number(),
 })
 
 const trackSchema = new Schema<z.infer<typeof ZodTrackSchema>>({
