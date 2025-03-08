@@ -1,10 +1,14 @@
 {
 	"name": "backend-hono",
 	"scripts": {
-		"dev": "bun run --hot src/index.ts"
+		"dev": "bun --env-file=../.env run --hot src/index.ts",
+		"serve": "bun run src/index.ts"
 	},
 	"dependencies": {
-		"hono": "^4.7.4"
+		"@hono/zod-openapi": "^0.19.2",
+		"@scalar/hono-api-reference": "^0.5.183",
+		"hono": "^4.7.4",
+		"zod": "^3.24.2"
 	},
 	"devDependencies": {
 		"@types/bun": "latest"
