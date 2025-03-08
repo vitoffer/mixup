@@ -17,7 +17,7 @@ const Track = model("Track", trackSchema)
 
 export default Track
 
-export const selectTracksSchema = ZodTrackSchema.omit({ __v: true })
+export const selectTracksSchema = ZodTrackSchema
 export const insertTracksSchema = ZodTrackSchema.omit({
 	__v: true,
 	_id: true,

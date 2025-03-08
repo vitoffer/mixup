@@ -12,7 +12,7 @@ export const list: RouteHandler<ListRoute> = async (c) => {
 export const create: RouteHandler<CreateRoute> = async (c) => {
 	const track = c.req.valid("json")
 
-	const { __v, ...inserted } = (await Track.create(track)).toObject()
+	const inserted = (await Track.create(track)).toObject()
 
 	return c.json(inserted, HttpStatusCodes.CREATED)
 }
