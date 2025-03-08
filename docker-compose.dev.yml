@@ -1,35 +1,35 @@
 services:
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.dev
-    container_name: mixup-frontend
-    environment:
-      - NODE_ENV=development
-      - VITE_BASE_API_URL=${VITE_BASE_API_URL}
-      - BACKEND_PORT=${BACKEND_PORT}
-      - FRONTEND_PORT=${FRONTEND_PORT}
-    networks:
-      - mixup-net
-    ports:
-      - ${FRONTEND_PORT}:${FRONTEND_PORT}
-  backend:
-    build: ./backend-hono
-    container_name: mixup-backend
-    environment:
-      - NODE_ENV=development
-      - BACKEND_PORT=${BACKEND_PORT}
-      - DB_HOST=${DB_HOST}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
-      - DB_PORT=${DB_PORT}
-    networks:
-      - mixup-net
-    ports:
-      - ${BACKEND_PORT}:${BACKEND_PORT}
-    depends_on:
-      - mongodb
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile.dev
+  #   container_name: mixup-frontend
+  #   environment:
+  #     - NODE_ENV=development
+  #     - VITE_BASE_API_URL=${VITE_BASE_API_URL}
+  #     - BACKEND_PORT=${BACKEND_PORT}
+  #     - FRONTEND_PORT=${FRONTEND_PORT}
+  #   networks:
+  #     - mixup-net
+  #   ports:
+  #     - ${FRONTEND_PORT}:${FRONTEND_PORT}
+  # backend:
+  #   build: ./backend-hono
+  #   container_name: mixup-backend
+  #   environment:
+  #     - NODE_ENV=development
+  #     - BACKEND_PORT=${BACKEND_PORT}
+  #     - DB_HOST=${DB_HOST}
+  #     - DB_USER=${DB_USER}
+  #     - DB_PASSWORD=${DB_PASSWORD}
+  #     - DB_NAME=${DB_NAME}
+  #     - DB_PORT=${DB_PORT}
+  #   networks:
+  #     - mixup-net
+  #   ports:
+  #     - ${BACKEND_PORT}:${BACKEND_PORT}
+  #   depends_on:
+  #     - mongodb
   mongodb:
     image: mongo:latest
     container_name: mongodb
