@@ -8,6 +8,7 @@ import { createMessageObjectSchema } from "stoker/openapi/schemas"
 const router = createRouter()
 	.openapi(
 		createRoute({
+			tags: ["Index"],
 			method: "get",
 			path: "/",
 			responses: {
@@ -28,6 +29,7 @@ const router = createRouter()
 	)
 	.openapi(
 		createRoute({
+			tags: ["Tracks"],
 			method: "get",
 			path: "/tracks",
 			responses: {
