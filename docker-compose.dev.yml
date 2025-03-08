@@ -44,7 +44,6 @@ services:
       - dbdata:/data/db
     networks:
       - mixup-net
-    command: mongod
 
 networks:
   mixup-net:

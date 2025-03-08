@@ -19,10 +19,34 @@ services:
     environment:
       - NODE_ENV=production
       - BACKEND_PORT=${BACKEND_PORT}
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_PORT=${DB_PORT}
     networks:
       - mixup-net
     ports:
       - ${BACKEND_PORT}:${BACKEND_PORT}
+    depends_on:
+      - mongodb
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+      MONGO_INITDB_DATABASE: ${DB_NAME}
+    ports:
+      - 27017:27017
+    volumes:
+      - dbdata:/data/db
+    networks:
+      - mixup-net
 
 networks:
   mixup-net:
+
+volumes:
+  dbdata:
