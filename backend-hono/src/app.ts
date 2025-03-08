@@ -11,9 +11,7 @@ dbConnect()
 
 app.use(logger())
 
-if (process.env.NODE_ENV !== "production") {
-	app.use("*", cors())
-}
+app.use("*", cors())
 
 app.get("/", (c) => {
 	return c.text("Hello Hono!")
