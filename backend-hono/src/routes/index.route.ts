@@ -3,6 +3,7 @@ import { createRouter } from "../lib/createApp"
 import Track from "../models/Track"
 import { jsonContent } from "stoker/openapi/helpers"
 import * as HttpStatusCodes from "stoker/http-status-codes"
+import { createMessageObjectSchema } from "stoker/openapi/schemas"
 
 const router = createRouter()
 	.openapi(
@@ -11,9 +12,7 @@ const router = createRouter()
 			path: "/",
 			responses: {
 				[HttpStatusCodes.OK]: jsonContent(
-					z.object({
-						message: z.string(),
-					}),
+					createMessageObjectSchema("Mixup API"),
 					"Mixup API Index"
 				),
 			},
