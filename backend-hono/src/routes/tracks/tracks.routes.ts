@@ -2,6 +2,7 @@ import { createRoute, z } from "@hono/zod-openapi"
 import * as HttpStatusCodes from "stoker/http-status-codes"
 import { jsonContent, jsonContentRequired } from "stoker/openapi/helpers"
 import { insertTracksSchema, selectTracksSchema } from "../../models/Track"
+import { createErrorSchema } from "stoker/openapi/schemas"
 
 const tags = ["Tracks"]
 
@@ -26,6 +27,10 @@ export const create = createRoute({
 	},
 	responses: {
 		[HttpStatusCodes.CREATED]: jsonContent(selectTracksSchema, "Created track"),
+		[HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
+			createErrorSchema(insertTracksSchema),
+			"Validation error(s)"
+		),
 	},
 })
 
