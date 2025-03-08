@@ -1,6 +1,8 @@
 import { createRoute, z } from "@hono/zod-openapi"
 import { createRouter } from "../lib/createApp"
 import Track from "../models/Track"
+import { jsonContent } from "stoker/openapi/helpers"
+import * as HttpStatusCodes from "stoker/http-status-codes"
 
 const router = createRouter()
 	.openapi(
@@ -8,22 +10,21 @@ const router = createRouter()
 			method: "get",
 			path: "/",
 			responses: {
-				200: {
-					content: {
-						"application/json": {
-							schema: z.object({
-								message: z.string(),
-							}),
-						},
-					},
-					description: "Mixup API Index",
-				},
+				[HttpStatusCodes.OK]: jsonContent(
+					z.object({
+						message: z.string(),
+					}),
+					"Mixup API Index"
+				),
 			},
 		}),
 		(c) => {
-			return c.json({
-				message: "Mixup API",
-			})
+			return c.json(
+				{
+					message: "Mixup API",
+				},
+				HttpStatusCodes.OK
+			)
 		}
 	)
 	.openapi(
@@ -31,26 +32,22 @@ const router = createRouter()
 			method: "get",
 			path: "/tracks",
 			responses: {
-				200: {
-					content: {
-						"application/json": {
-							schema: z.array(
-								z.object({
-									_id: z.string(),
-									title: z.string(),
-									__v: z.number(),
-								})
-							),
-						},
-					},
-					description: "List of tracks",
-				},
+				[HttpStatusCodes.OK]: jsonContent(
+					z.array(
+						z.object({
+							_id: z.string(),
+							title: z.string(),
+							__v: z.number(),
+						})
+					),
+					"List of tracks"
+				),
 			},
 		}),
 		async (c) => {
 			const tracks = await Track.find()
 
-			return c.json(tracks)
+			return c.json(tracks, HttpStatusCodes.OK)
 		}
 	)
 
