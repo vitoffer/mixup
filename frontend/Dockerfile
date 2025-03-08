@@ -16,12 +16,7 @@ RUN pnpm build
 
 FROM nginx:alpine
 
-RUN apk add --no-cache gettext
-
 COPY --from=build /app/dist /etc/nginx/html
 COPY nginx.conf /etc/nginx/nginx.template.conf
 
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-CMD ["nginx", "-g", "daemon off;"]
+CMD /bin/sh -c "envsubst '\$BACKEND_PORT' < /etc/nginx/nginx.template.conf > /etc/nginx/nginx.conf" && nginx -g 'daemon off;'
