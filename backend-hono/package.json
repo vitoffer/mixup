@@ -1,5 +1,6 @@
 {
 	"name": "backend-hono",
+	"version": "1.0.0",
 	"module": "esnext",
 	"scripts": {
 		"dev": "bun --env-file=../.env run --hot src/index.ts",

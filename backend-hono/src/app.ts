@@ -1,40 +1,19 @@
-import { logger } from "hono/logger"
 import { apiReference } from "@scalar/hono-api-reference"
-import { OpenAPIHono } from "@hono/zod-openapi"
-import { cors } from "hono/cors"
 import dbConnect from "./db/connect"
-import Track from "./models/Track"
-
-const app = new OpenAPIHono()
+import createApp from "./lib/createApp"
+import configOpenApi from "./lib/configOpenApi"
+import indexRoute from "./routes/index.route"
 
 dbConnect()
 
-app.use(logger())
+const app = createApp()
 
-app.use("*", cors())
+const routes = [indexRoute]
 
-app.get("/", (c) => {
-	return c.text("Hello Hono!")
-})
+configOpenApi(app)
 
-app.get("/ping", (c) => {
-	return c.text("pong!")
-})
-
-app.get("/tracks", async (c) => {
-	const tracks = await Track.find()
-
-	return c.json(tracks)
-})
-
-app.post("/tracks", async (c) => {
-	const data = await c.req.json()
-
-	if (!data.title) return c.text("error")
-
-	const track = await Track.create(data)
-
-	return c.json(track)
+routes.forEach((route) => {
+	app.route("/", route)
 })
 
 app.get(
@@ -45,13 +24,5 @@ app.get(
 		},
 	})
 )
-
-app.doc("/doc", {
-	openapi: "3.0.0",
-	info: {
-		version: "1.0.0",
-		title: "My API",
-	},
-})
 
 export default app
