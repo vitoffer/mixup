@@ -1,15 +1,33 @@
 import { createRoute, z } from "@hono/zod-openapi"
 import * as HttpStatusCodes from "stoker/http-status-codes"
-import { jsonContent } from "stoker/openapi/helpers"
-import { ZTrackSchema } from "../../models/Track"
+import { jsonContent, jsonContentRequired } from "stoker/openapi/helpers"
+import { insertTracksSchema, selectTracksSchema } from "../../models/Track"
+
+const tags = ["Tracks"]
 
 export const list = createRoute({
-	tags: ["Tracks"],
+	tags,
 	method: "get",
 	path: "/tracks",
 	responses: {
-		[HttpStatusCodes.OK]: jsonContent(z.array(ZTrackSchema), "List of tracks"),
+		[HttpStatusCodes.OK]: jsonContent(
+			z.array(selectTracksSchema),
+			"List of tracks"
+		),
+	},
+})
+
+export const create = createRoute({
+	tags,
+	method: "post",
+	path: "/tracks",
+	request: {
+		body: jsonContentRequired(insertTracksSchema, "Track to create"),
+	},
+	responses: {
+		[HttpStatusCodes.CREATED]: jsonContent(selectTracksSchema, "Created track"),
 	},
 })
 
 export type ListRoute = typeof list
+export type CreateRoute = typeof create
