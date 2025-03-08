@@ -1,14 +1,14 @@
-import { apiReference } from "@scalar/hono-api-reference"
 import dbConnect from "./db/connect"
 import createApp from "./lib/createApp"
 import configOpenApi from "./lib/configOpenApi"
 import indexRoute from "./routes/index.route"
+import tracksRoute from "./routes/tracks/tracks.index"
 
 dbConnect()
 
 const app = createApp()
 
-const routes = [indexRoute]
+const routes = [indexRoute, tracksRoute]
 
 configOpenApi(app)
 
