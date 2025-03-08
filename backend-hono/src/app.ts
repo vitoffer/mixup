@@ -4,14 +4,12 @@ import configOpenApi from "./lib/configOpenApi"
 import indexRoute from "./routes/index.route"
 import tracksRoute from "./routes/tracks/tracks.index"
 
-dbConnect()
-
 const app = createApp()
-
-const routes = [indexRoute, tracksRoute]
-
 configOpenApi(app)
 
+await dbConnect()
+
+const routes = [indexRoute, tracksRoute]
 routes.forEach((route) => {
 	app.route("/", route)
 })

@@ -3,7 +3,8 @@
 		"strict": true,
 		"jsx": "react-jsx",
 		"jsxImportSource": "hono/jsx",
-		"resolveJsonModule": true,
-		"esModuleInterop": true
+		"module": "ESNext",
+		"target": "ES2017",
+		"moduleResolution": "bundler"
 	}
 }
