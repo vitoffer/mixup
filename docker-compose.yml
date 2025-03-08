@@ -3,7 +3,10 @@ services:
     build: ./frontend
     container_name: mixup-frontend
     volumes:
-      - /home/runner/certs:/etc/nginx/certs
+      - ./certs:/etc/nginx/certs
+    environment:
+      - VITE_BASE_API_URL=${VITE_BASE_API_URL}
+      - BACKEND_PORT=${BACKEND_PORT}
     networks:
       - mixup-net
     ports:
@@ -12,12 +15,13 @@ services:
   backend:
     build: ./backend-hono
     container_name: mixup-backend
+    environment:
+      - NODE_ENV=production
+      - BACKEND_PORT=${BACKEND_PORT}
     networks:
       - mixup-net
     ports:
-      - 4000:4000
-    environment:
-      - NODE_ENV=production
+      - ${BACKEND_PORT}:${BACKEND_PORT}
 
 networks:
   mixup-net:

@@ -1,4 +1,5 @@
 .cursorrules
 
-certs/
+certs
 dist
+.env
