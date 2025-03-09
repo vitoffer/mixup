@@ -16,7 +16,7 @@ export default function configOpenApi(app: OpenAPIHono) {
 		apiReference({
 			pageTitle: "Mixup API Reference",
 			spec: {
-				url: "/doc",
+				url: "doc",
 			},
 			theme: "deepSpace",
 			defaultHttpClient: {
