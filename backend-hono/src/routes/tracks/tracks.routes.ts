@@ -36,11 +36,11 @@ export const getOne = createRoute({
 	},
 	responses: {
 		[HttpStatusCodes.OK]: jsonContent(selectTracksSchema, "Found track"),
-		[HttpStatusCodes.NOT_FOUND]: jsonContent(notFoundSchema, "Track not found"),
 		[HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
 			createErrorSchema(paramsIdSchema),
 			"Incorrect track Id"
 		),
+		[HttpStatusCodes.NOT_FOUND]: jsonContent(notFoundSchema, "Track not found"),
 	},
 	tags,
 })
@@ -79,7 +79,27 @@ export const patch = createRoute({
 	tags,
 })
 
+export const remove = createRoute({
+	path: "/tracks/{id}",
+	method: "delete",
+	request: {
+		params: paramsIdSchema,
+	},
+	responses: {
+		[HttpStatusCodes.NO_CONTENT]: {
+			description: "Track deleted",
+		},
+		[HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
+			createErrorSchema(paramsIdSchema),
+			"Incorrect track Id"
+		),
+		[HttpStatusCodes.NOT_FOUND]: jsonContent(notFoundSchema, "Track not found"),
+	},
+	tags,
+})
+
 export type ListRoute = typeof list
 export type GetOneRoute = typeof getOne
 export type CreateRoute = typeof create
 export type PatchRoute = typeof patch
+export type RemoveRoute = typeof remove

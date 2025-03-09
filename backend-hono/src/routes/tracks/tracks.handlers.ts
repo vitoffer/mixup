@@ -4,6 +4,7 @@ import {
 	GetOneRoute,
 	ListRoute,
 	PatchRoute,
+	RemoveRoute,
 } from "./tracks.routes"
 import Track from "../../models/Track"
 import * as HttpStatusCodes from "stoker/http-status-codes"
@@ -54,4 +55,19 @@ export const patch: RouteHandler<PatchRoute> = async (c) => {
 	}
 
 	return c.json(track.toObject(), HttpStatusCodes.OK)
+}
+
+export const remove: RouteHandler<RemoveRoute> = async (c) => {
+	const { id } = c.req.valid("param")
+
+	const result = await Track.deleteOne({ _id: id })
+
+	if (result.deletedCount === 0) {
+		return c.json(
+			{ message: HttpStatusPhrases.NOT_FOUND },
+			HttpStatusCodes.NOT_FOUND
+		)
+	}
+
+	return c.body(null, HttpStatusCodes.NO_CONTENT)
 }
