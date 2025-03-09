@@ -1,12 +1,14 @@
 services:
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        - VITE_BASE_API_URL=${VITE_BASE_API_URL}
     container_name: mixup-frontend
     volumes:
       - ./certs:/etc/nginx/certs
     environment:
       - NODE_ENV=production
-      - VITE_BASE_API_URL=${VITE_BASE_API_URL}
       - BACKEND_PORT=${BACKEND_PORT}
     networks:
       - mixup-net

@@ -6,6 +6,9 @@ RUN corepack enable
 
 WORKDIR /app
 
+ARG VITE_BASE_API_URL
+ENV VITE_BASE_API_URL=${VITE_BASE_API_URL}
+
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm i --frozen-lockfile
 
