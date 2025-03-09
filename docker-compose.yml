@@ -19,6 +19,7 @@ services:
     environment:
       - NODE_ENV=production
       - BACKEND_PORT=${BACKEND_PORT}
+      - BASE_API_URL=${BASE_API_URL}
       - DB_HOST=${DB_HOST}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
@@ -28,7 +29,6 @@ services:
       - SPOTIFY_CLIENT_ID=${SPOTIFY_CLIENT_ID}
       - SPOTIFY_CLIENT_SECRET=${SPOTIFY_CLIENT_SECRET}
       - YOUTUBE_KEY=${YOUTUBE_KEY}
-
     networks:
       - mixup-net
     ports:
