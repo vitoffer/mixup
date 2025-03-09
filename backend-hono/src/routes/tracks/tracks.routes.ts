@@ -1,49 +1,53 @@
 import { createRoute, z } from "@hono/zod-openapi"
 import * as HttpStatusCodes from "stoker/http-status-codes"
-import { jsonContent, jsonContentRequired } from "stoker/openapi/helpers"
-import { insertTracksSchema, selectTracksSchema } from "../../models/Track"
 import {
-	createErrorSchema,
-	createMessageObjectSchema,
-} from "stoker/openapi/schemas"
+	jsonContent,
+	jsonContentOneOf,
+	jsonContentRequired,
+} from "stoker/openapi/helpers"
+import {
+	insertTracksSchema,
+	patchTracksSchema,
+	selectTracksSchema,
+} from "../../models/Track"
+import { createErrorSchema } from "stoker/openapi/schemas"
 import { notFoundSchema } from "../../lib/constants"
-import { routeParamsIdSchema } from "../../schemas/tracks"
+import { paramsIdSchema } from "../../schemas/tracks"
 
 const tags = ["Tracks"]
 
 export const list = createRoute({
-	tags,
-	method: "get",
 	path: "/tracks",
+	method: "get",
 	responses: {
 		[HttpStatusCodes.OK]: jsonContent(
 			z.array(selectTracksSchema),
 			"List of tracks"
 		),
 	},
+	tags,
 })
 
 export const getOne = createRoute({
-	tags,
-	method: "get",
 	path: "/tracks/{id}",
+	method: "get",
 	request: {
-		params: routeParamsIdSchema,
+		params: paramsIdSchema,
 	},
 	responses: {
 		[HttpStatusCodes.OK]: jsonContent(selectTracksSchema, "Found track"),
 		[HttpStatusCodes.NOT_FOUND]: jsonContent(notFoundSchema, "Track not found"),
 		[HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
-			createErrorSchema(routeParamsIdSchema),
+			createErrorSchema(paramsIdSchema),
 			"Incorrect track Id"
 		),
 	},
+	tags,
 })
 
 export const create = createRoute({
-	tags,
-	method: "post",
 	path: "/tracks",
+	method: "post",
 	request: {
 		body: jsonContentRequired(insertTracksSchema, "Track to create"),
 	},
@@ -54,8 +58,28 @@ export const create = createRoute({
 			"Validation error(s)"
 		),
 	},
+	tags,
+})
+
+export const patch = createRoute({
+	path: "/tracks/{id}",
+	method: "patch",
+	request: {
+		params: paramsIdSchema,
+		body: jsonContentRequired(patchTracksSchema, "Track to update"),
+	},
+	responses: {
+		[HttpStatusCodes.OK]: jsonContent(selectTracksSchema, "Updated track"),
+		[HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContentOneOf(
+			[createErrorSchema(patchTracksSchema), createErrorSchema(paramsIdSchema)],
+			"Validation error(s)"
+		),
+		[HttpStatusCodes.NOT_FOUND]: jsonContent(notFoundSchema, "Track not found"),
+	},
+	tags,
 })
 
 export type ListRoute = typeof list
 export type GetOneRoute = typeof getOne
 export type CreateRoute = typeof create
+export type PatchRoute = typeof patch

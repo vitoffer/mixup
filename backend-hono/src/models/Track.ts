@@ -23,3 +23,6 @@ export const insertTracksSchema = ZodTrackSchema.omit({
 	_id: true,
 	createdAt: true,
 })
+export const patchTracksSchema = ZodTrackSchema.partial().openapi({
+	example: {},
+})

@@ -7,4 +7,4 @@ const objectIdSchema = z
 		message: "Invalid ObjectId",
 	})
 
-export const routeParamsIdSchema = z.object({ id: objectIdSchema })
+export const paramsIdSchema = z.object({ id: objectIdSchema })
