@@ -4,7 +4,7 @@ import { z } from "zod"
 export const ZodTrackSchema = z.object({
 	_id: z.string(),
 	__v: z.number(),
-	title: z.string(),
+	title: z.string().min(1, "Title is required"),
 	createdAt: z.number().default(() => Date.now().valueOf()),
 })
 

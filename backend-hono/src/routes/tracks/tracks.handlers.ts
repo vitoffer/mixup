@@ -2,7 +2,6 @@ import { RouteHandler } from "@hono/zod-openapi"
 import { CreateRoute, GetOneRoute, ListRoute } from "./tracks.routes"
 import Track from "../../models/Track"
 import * as HttpStatusCodes from "stoker/http-status-codes"
-import mongoose from "mongoose"
 import * as HttpStatusPhrases from "stoker/http-status-phrases"
 
 export const list: RouteHandler<ListRoute> = async (c) => {
