@@ -26,28 +26,4 @@ const router = createRouter().openapi(
 	}
 )
 
-// app.get("/", (c) => {
-// 	return c.text("Hello Hono!")
-// })
-
-// app.get("/ping", (c) => {
-// 	return c.text("pong!")
-// })
-
-// app.get("/tracks", async (c) => {
-// 	const tracks = await Track.find()
-
-// 	return c.json(tracks)
-// })
-
-// app.post("/tracks", async (c) => {
-// 	const data = await c.req.json()
-
-// 	if (!data.title) return c.text("error")
-
-// 	const track = await Track.create(data)
-
-// 	return c.json(track)
-// })
-
 export default router
