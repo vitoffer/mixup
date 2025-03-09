@@ -82,6 +82,62 @@ export const searchYandexMusic = createRoute({
 	},
 	tags,
 })
+export const searchYoutube = createRoute({
+	path: "/search-youtube",
+	method: "get",
+	request: {
+		query: z.object({
+			q: z.string(),
+		}),
+	},
+	responses: {
+		[HttpStatusCodes.OK]: jsonContent(
+			z.object({
+				pageInfo: z.object({
+					totalResults: z.number(),
+					resultsPerPage: z.number(),
+				}),
+				items: z.array(
+					z.object({
+						id: z.object({
+							kind: z.string(),
+							videoId: z.string(),
+						}),
+						snippet: z.object({
+							title: z.string(),
+							thumbnails: z.object({
+								default: z
+									.object({
+										url: z.string(),
+										width: z.number(),
+										height: z.number(),
+									})
+									.optional(),
+								medium: z
+									.object({
+										url: z.string(),
+										width: z.number(),
+										height: z.number(),
+									})
+									.optional(),
+								high: z
+									.object({
+										url: z.string(),
+										width: z.number(),
+										height: z.number(),
+									})
+									.optional(),
+							}),
+						}),
+					})
+				),
+			}),
+			"Youtube search results"
+		),
+	},
+	tags,
+})
 
 export type SearchSpotifyRoute = typeof searchSpotify
 export type SearchYandexMusicRoute = typeof searchYandexMusic
+export type SearchYoutubeRoute = typeof searchYoutube
