@@ -18,11 +18,11 @@ export default function configOpenApi(app: OpenAPIHono) {
 			spec: {
 				url: "doc",
 			},
-			baseServerURL: process.env.BASE_API_URL,
+			servers: [{ url: process.env.BASE_API_URL }],
 			theme: "deepSpace",
 			defaultHttpClient: {
 				targetKey: "js",
-				clientKey: "fetch",
+				clientKey: "axios",
 			},
 		})
 	)
