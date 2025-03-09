@@ -14,13 +14,6 @@ export const list: RouteHandler<ListRoute> = async (c) => {
 export const getOne: RouteHandler<GetOneRoute> = async (c) => {
 	const { id } = c.req.valid("param")
 
-	if (!mongoose.Types.ObjectId.isValid(id)) {
-		return c.json(
-			{ message: "Incorrect Id" },
-			HttpStatusCodes.UNPROCESSABLE_ENTITY
-		)
-	}
-
 	const track = await Track.findById(id).exec()
 
 	if (!track) {

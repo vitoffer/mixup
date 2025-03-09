@@ -7,6 +7,7 @@ import {
 	createMessageObjectSchema,
 } from "stoker/openapi/schemas"
 import { notFoundSchema } from "../../lib/constants"
+import { routeParamsIdSchema } from "../../schemas/tracks"
 
 const tags = ["Tracks"]
 
@@ -27,15 +28,13 @@ export const getOne = createRoute({
 	method: "get",
 	path: "/tracks/{id}",
 	request: {
-		params: z.object({
-			id: z.string(),
-		}),
+		params: routeParamsIdSchema,
 	},
 	responses: {
 		[HttpStatusCodes.OK]: jsonContent(selectTracksSchema, "Found track"),
 		[HttpStatusCodes.NOT_FOUND]: jsonContent(notFoundSchema, "Track not found"),
 		[HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
-			createMessageObjectSchema("Incorrect Id"),
+			createErrorSchema(routeParamsIdSchema),
 			"Incorrect track Id"
 		),
 	},
