@@ -10,6 +10,7 @@
 	"dependencies": {
 		"@hono/zod-openapi": "^0.19.2",
 		"@scalar/hono-api-reference": "^0.5.183",
+		"axios": "^1.8.2",
 		"hono": "^4.7.4",
 		"mongoose": "^8.12.1",
 		"stoker": "^1.4.2",
