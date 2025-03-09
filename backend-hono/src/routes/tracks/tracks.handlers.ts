@@ -43,9 +43,13 @@ export const patch: RouteHandler<PatchRoute> = async (c) => {
 	const { id } = c.req.valid("param")
 	const updates = c.req.valid("json")
 
-	const track = await Track.findByIdAndUpdate(id, updates, {
-		new: true,
-	})
+	const track = await Track.findByIdAndUpdate(
+		id,
+		{ ...updates, updatedAt: new Date() },
+		{
+			new: true,
+		}
+	)
 
 	if (!track) {
 		return c.json(
