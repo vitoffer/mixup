@@ -6,6 +6,6 @@ import * as routes from "./apis.routes"
 const router = createRouter()
 	.openapi(routes.searchSpotify, handlers.searchSpotify)
 	.openapi(routes.searchYandexMusic, handlers.searchYandexMusic)
-	.openapi(routes.searchYoutube, handlers.searchYoutube)
+	.openapi(routes.searchYoutubeVideos, handlers.searchYoutubeVideos)
 
 export default router

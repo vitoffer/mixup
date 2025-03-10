@@ -1,6 +1,7 @@
 import { createRoute, z } from "@hono/zod-openapi"
 import * as HttpStatusCodes from "stoker/http-status-codes"
 import { jsonContent } from "stoker/openapi/helpers"
+import { youtubeVideoSearchResult } from "../../schemas/youtube"
 
 const tags = ["Apis"]
 
@@ -9,7 +10,7 @@ export const searchSpotify = createRoute({
 	method: "get",
 	request: {
 		query: z.object({
-			q: z.string(),
+			q: z.string().min(1),
 		}),
 	},
 	responses: {
@@ -42,7 +43,7 @@ export const searchYandexMusic = createRoute({
 	method: "get",
 	request: {
 		query: z.object({
-			q: z.string(),
+			q: z.string().min(1),
 		}),
 	},
 	responses: {
@@ -82,57 +83,22 @@ export const searchYandexMusic = createRoute({
 	},
 	tags,
 })
-export const searchYoutube = createRoute({
-	path: "/search-youtube",
+export const searchYoutubeVideos = createRoute({
+	path: "/search-youtube-videos",
 	method: "get",
 	request: {
 		query: z.object({
-			q: z.string(),
+			q: z.string().min(1),
 		}),
 	},
 	responses: {
 		[HttpStatusCodes.OK]: jsonContent(
-			z.object({
-				pageInfo: z.object({
-					totalResults: z.number(),
-					resultsPerPage: z.number(),
-				}),
-				items: z.array(
-					z.object({
-						id: z.object({
-							kind: z.string(),
-							videoId: z.string(),
-						}),
-						snippet: z.object({
-							title: z.string(),
-							thumbnails: z.object({
-								default: z
-									.object({
-										url: z.string(),
-										width: z.number(),
-										height: z.number(),
-									})
-									.optional(),
-								medium: z
-									.object({
-										url: z.string(),
-										width: z.number(),
-										height: z.number(),
-									})
-									.optional(),
-								high: z
-									.object({
-										url: z.string(),
-										width: z.number(),
-										height: z.number(),
-									})
-									.optional(),
-							}),
-						}),
-					})
-				),
-			}),
-			"Youtube search results"
+			z.array(youtubeVideoSearchResult),
+			"Youtube videos search results"
+		),
+		[HttpStatusCodes.INTERNAL_SERVER_ERROR]: jsonContent(
+			z.object({ message: z.string() }),
+			"Error on get results"
 		),
 	},
 	tags,
@@ -140,4 +106,4 @@ export const searchYoutube = createRoute({
 
 export type SearchSpotifyRoute = typeof searchSpotify
 export type SearchYandexMusicRoute = typeof searchYandexMusic
-export type SearchYoutubeRoute = typeof searchYoutube
+export type SearchYoutubeVideosRoute = typeof searchYoutubeVideos

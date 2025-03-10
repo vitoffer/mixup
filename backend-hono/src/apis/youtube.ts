@@ -1,12 +1,19 @@
-import axios from "axios"
+import YTMusic from "ytmusic-api"
 
-export async function getYoutubeSearchResults(query: string) {
+const api = new YTMusic()
+await api.initialize()
+
+export async function getYoutubeVideosSearchResults(query: string) {
 	try {
-		const response = await axios.get(
-			`https://www.googleapis.com/youtube/v3/search?q=${query}&part=snippet&key=${process.env.YOUTUBE_KEY}`
-		)
+		const videos = await api.searchVideos(query)
 
-		return response.data
+		const cleanedVideos = videos.map((video) => {
+			const { type, ...cleanedVideo } = video
+
+			return cleanedVideo
+		})
+
+		return cleanedVideos
 	} catch (e) {
 		console.error(e)
 		return null
