@@ -18,7 +18,7 @@ export default function configOpenApi(app: OpenAPIHono) {
 			spec: {
 				url: "doc",
 			},
-			servers: [{ url: process.env.BASE_API_URL }],
+			servers: [{ url: process.env.VITE_BASE_API_URL }],
 			theme: "deepSpace",
 			defaultHttpClient: {
 				targetKey: "js",
