@@ -1,6 +1,9 @@
 import axios from "axios"
+import { HttpProxyAgent } from "http-proxy-agent"
 
-const proxyUrl = process.env.PROXY_URL
+const agent = new HttpProxyAgent(
+	`http://${process.env.PROXY_USERNAME}:${process.env.PROXY_PASSWORD}@${process.env.PROXY_HOST}:${process.env.PROXY_PORT}`
+)
 
 export async function getSpotifySearchResults(query: string): Promise<{
 	tracks: object
@@ -25,17 +28,20 @@ export async function getSpotifySearchResults(query: string): Promise<{
 
 	try {
 		const response = await axios.get(
-			`${proxyUrl}/v1/search?q=${query}&type=track&limit=3`,
+			`https://api.spotify.com/v1/search?q=${query}&type=track&limit=3`,
 			{
 				headers: {
 					Authorization: `Bearer ${token}`,
 				},
+				httpAgent: agent,
+				httpsAgent: agent,
 			}
 		)
 
 		return response.data
 	} catch (e) {
 		console.error(e)
+
 		return { tracks: {} }
 	}
 }
