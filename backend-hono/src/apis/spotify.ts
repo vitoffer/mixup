@@ -57,15 +57,13 @@ export async function getSpotifySearchResults(query: string): Promise<{}> {
 		const rawTracks = data.tracks.items
 
 		const cleanedTracks: z.infer<typeof CleanedSpotifySearchResult>[] =
-			rawTracks.map((track) => {
-				return {
-					title: track.name,
-					url: track.external_urls.spotify,
-					artistsNames: track.artists.map(
-						(artist: { name: string }) => artist.name
-					),
-				}
-			})
+			rawTracks.map((track) => ({
+				title: track.name,
+				url: track.external_urls.spotify,
+				artistsNames: track.artists.map(
+					(artist: { name: string }) => artist.name
+				),
+			}))
 
 		return cleanedTracks
 	} catch (e) {
