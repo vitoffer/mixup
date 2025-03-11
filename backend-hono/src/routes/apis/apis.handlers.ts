@@ -1,14 +1,14 @@
 import { RouteHandler } from "@hono/zod-openapi"
 import { SearchTracksRoute } from "./apis.routes"
 import { getSpotifySearchResults } from "../../apis/spotify"
-import { getYandexMusicSearchResults } from "../../apis/yandexMusic"
-import { getYoutubeVideosSearchResults } from "../../apis/youtubeMusic"
+import { getYandexMusicSearchResults } from "../../apis/yandex"
+import { getYoutubeVideosSearchResults } from "../../apis/youtube"
 import * as HttpStatusCodes from "stoker/http-status-codes"
 
 const providerHandlers = {
 	spotify: getSpotifySearchResults,
-	"yandex-music": getYandexMusicSearchResults,
-	"youtube-videos": getYoutubeVideosSearchResults,
+	yandex: getYandexMusicSearchResults,
+	youtube: getYoutubeVideosSearchResults,
 }
 
 export const searchTracks: RouteHandler<SearchTracksRoute> = async (c) => {

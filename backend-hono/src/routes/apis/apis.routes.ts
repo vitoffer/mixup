@@ -10,7 +10,7 @@ export const searchTracks = createRoute({
 	method: "get",
 	request: {
 		params: z.object({
-			provider: z.enum(["spotify", "yandex-music", "youtube-videos"]),
+			provider: z.enum(["spotify", "yandex", "youtube"]),
 		}),
 		query: z.object({
 			q: z.string().min(1),
