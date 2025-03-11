@@ -42,7 +42,7 @@ async function getSpotifyToken(): Promise<string> {
 	return tokenCache.accessToken
 }
 
-export async function getSpotifySearchResults(query: string): Promise<{}> {
+export async function getSpotifySearchResults(query: string) {
 	try {
 		const token = await getSpotifyToken()
 		const { data }: { data: SearchResults<["track"]> } = await axios.get(
@@ -68,6 +68,6 @@ export async function getSpotifySearchResults(query: string): Promise<{}> {
 		return cleanedTracks
 	} catch (e) {
 		console.error(e)
-		return {}
+		return null
 	}
 }

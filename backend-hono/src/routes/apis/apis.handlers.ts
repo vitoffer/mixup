@@ -1,43 +1,37 @@
 import { RouteHandler } from "@hono/zod-openapi"
-import {
-	SearchSpotifyRoute,
-	SearchYandexMusicRoute,
-	SearchYoutubeVideosRoute,
-} from "./apis.routes"
+import { SearchTracksRoute } from "./apis.routes"
 import { getSpotifySearchResults } from "../../apis/spotify"
-import * as HttpStatusCodes from "stoker/http-status-codes"
 import { getYandexMusicSearchResults } from "../../apis/yandexMusic"
 import { getYoutubeVideosSearchResults } from "../../apis/youtubeMusic"
+import * as HttpStatusCodes from "stoker/http-status-codes"
 
-export const searchSpotify: RouteHandler<SearchSpotifyRoute> = async (c) => {
-	const { q } = c.req.valid("query")
-
-	const results = await getSpotifySearchResults(q)
-	return c.json(results, HttpStatusCodes.OK) as any
+const providerHandlers = {
+	spotify: getSpotifySearchResults,
+	"yandex-music": getYandexMusicSearchResults,
+	"youtube-videos": getYoutubeVideosSearchResults,
 }
 
-export const searchYandexMusic: RouteHandler<SearchYandexMusicRoute> = async (
-	c
-) => {
+export const searchTracks: RouteHandler<SearchTracksRoute> = async (c) => {
+	const { provider } = c.req.valid("param")
 	const { q } = c.req.valid("query")
 
-	const results = await getYandexMusicSearchResults(q)
-	return c.json(results, HttpStatusCodes.OK) as any
-}
+	const handler = providerHandlers[provider]
 
-export const searchYoutubeVideos: RouteHandler<
-	SearchYoutubeVideosRoute
-> = async (c) => {
-	const { q } = c.req.valid("query")
+	try {
+		const results = await handler(q)
 
-	const results = await getYoutubeVideosSearchResults(q)
+		if (!results) {
+			return c.json(
+				{ message: `Error fetching ${provider} search results` },
+				HttpStatusCodes.INTERNAL_SERVER_ERROR
+			)
+		}
 
-	if (!results) {
+		return c.json(results, HttpStatusCodes.OK)
+	} catch (error) {
 		return c.json(
-			{ message: "Error on youtube search" },
+			{ message: `Error fetching ${provider} search results` },
 			HttpStatusCodes.INTERNAL_SERVER_ERROR
 		)
 	}
-
-	return c.json(results, HttpStatusCodes.OK)
 }

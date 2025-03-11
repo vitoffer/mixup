@@ -5,10 +5,13 @@ import { CleanedApiSearchResult } from "../../schemas/apis"
 
 const tags = ["Apis"]
 
-export const searchSpotify = createRoute({
-	path: "/search-spotify",
+export const searchTracks = createRoute({
+	path: "/search/:provider",
 	method: "get",
 	request: {
+		params: z.object({
+			provider: z.enum(["spotify", "yandex-music", "youtube-videos"]),
+		}),
 		query: z.object({
 			q: z.string().min(1),
 		}),
@@ -16,40 +19,7 @@ export const searchSpotify = createRoute({
 	responses: {
 		[HttpStatusCodes.OK]: jsonContent(
 			z.array(CleanedApiSearchResult),
-			"Spotify search results"
-		),
-	},
-	tags,
-})
-
-export const searchYandexMusic = createRoute({
-	path: "/search-yandex-music",
-	method: "get",
-	request: {
-		query: z.object({
-			q: z.string().min(1),
-		}),
-	},
-	responses: {
-		[HttpStatusCodes.OK]: jsonContent(
-			z.array(CleanedApiSearchResult),
-			"Yandex music search results"
-		),
-	},
-	tags,
-})
-export const searchYoutubeVideos = createRoute({
-	path: "/search-youtube-videos",
-	method: "get",
-	request: {
-		query: z.object({
-			q: z.string().min(1),
-		}),
-	},
-	responses: {
-		[HttpStatusCodes.OK]: jsonContent(
-			z.array(CleanedApiSearchResult),
-			"Youtube videos search results"
+			"Search results"
 		),
 		[HttpStatusCodes.INTERNAL_SERVER_ERROR]: jsonContent(
 			z.object({ message: z.string() }),
@@ -59,6 +29,4 @@ export const searchYoutubeVideos = createRoute({
 	tags,
 })
 
-export type SearchSpotifyRoute = typeof searchSpotify
-export type SearchYandexMusicRoute = typeof searchYandexMusic
-export type SearchYoutubeVideosRoute = typeof searchYoutubeVideos
+export type SearchTracksRoute = typeof searchTracks
