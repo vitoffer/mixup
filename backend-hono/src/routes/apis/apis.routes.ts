@@ -1,9 +1,7 @@
 import { createRoute, z } from "@hono/zod-openapi"
 import * as HttpStatusCodes from "stoker/http-status-codes"
 import { jsonContent } from "stoker/openapi/helpers"
-import { CleanedSpotifySearchResult } from "../../schemas/spotify"
-import { CleanedYoutubeVideoSearchResult } from "../../schemas/youtubeMusic"
-import { CleanedYandexMusicSearchResult } from "../../schemas/yandexMusic"
+import { CleanedApiSearchResult } from "../../schemas/apis"
 
 const tags = ["Apis"]
 
@@ -17,7 +15,7 @@ export const searchSpotify = createRoute({
 	},
 	responses: {
 		[HttpStatusCodes.OK]: jsonContent(
-			z.array(CleanedSpotifySearchResult),
+			z.array(CleanedApiSearchResult),
 			"Spotify search results"
 		),
 	},
@@ -34,7 +32,7 @@ export const searchYandexMusic = createRoute({
 	},
 	responses: {
 		[HttpStatusCodes.OK]: jsonContent(
-			z.array(CleanedYandexMusicSearchResult),
+			z.array(CleanedApiSearchResult),
 			"Yandex music search results"
 		),
 	},
@@ -50,7 +48,7 @@ export const searchYoutubeVideos = createRoute({
 	},
 	responses: {
 		[HttpStatusCodes.OK]: jsonContent(
-			z.array(CleanedYoutubeVideoSearchResult),
+			z.array(CleanedApiSearchResult),
 			"Youtube videos search results"
 		),
 		[HttpStatusCodes.INTERNAL_SERVER_ERROR]: jsonContent(

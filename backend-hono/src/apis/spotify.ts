@@ -1,8 +1,8 @@
 import axios from "axios"
 import { HttpProxyAgent } from "http-proxy-agent"
 import { SearchResults } from "@spotify/web-api-ts-sdk"
-import { CleanedSpotifySearchResult } from "../schemas/spotify"
 import { z } from "zod"
+import { CleanedApiSearchResult } from "../schemas/apis"
 
 const agent = new HttpProxyAgent(
 	`http://${process.env.PROXY_USERNAME}:${process.env.PROXY_PASSWORD}@${process.env.PROXY_HOST}:${process.env.PROXY_PORT}`
@@ -56,7 +56,7 @@ export async function getSpotifySearchResults(query: string): Promise<{}> {
 
 		const rawTracks = data.tracks.items
 
-		const cleanedTracks: z.infer<typeof CleanedSpotifySearchResult>[] =
+		const cleanedTracks: z.infer<typeof CleanedApiSearchResult>[] =
 			rawTracks.map((track) => ({
 				title: track.name,
 				url: track.external_urls.spotify,
