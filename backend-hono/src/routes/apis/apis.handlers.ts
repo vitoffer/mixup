@@ -21,10 +21,7 @@ export const searchTracks: RouteHandler<SearchTracksRoute> = async (c) => {
 		const results = await handler(q)
 
 		if (!results) {
-			return c.json(
-				{ message: `Error fetching ${provider} search results` },
-				HttpStatusCodes.INTERNAL_SERVER_ERROR
-			)
+			throw new Error("Results list is null")
 		}
 
 		return c.json(results, HttpStatusCodes.OK)
