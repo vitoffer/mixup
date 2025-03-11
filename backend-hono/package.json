@@ -4,12 +4,13 @@
 	"type": "module",
 	"module": "esnext",
 	"scripts": {
-		"dev": "bun --env-file=../.env run --hot src/index.ts",
+		"dev": "bun --env-file=../.env run --watch src/index.ts",
 		"serve": "bun run src/index.ts"
 	},
 	"dependencies": {
 		"@hono/zod-openapi": "^0.19.2",
 		"@scalar/hono-api-reference": "^0.5.183",
+		"@zodyac/zod-mongoose": "^3.2.0",
 		"axios": "^1.8.2",
 		"hono": "^4.7.4",
 		"http-proxy-agent": "^7.0.2",
