@@ -7,7 +7,7 @@ import {
 import { getSpotifySearchResults } from "../../apis/spotify"
 import * as HttpStatusCodes from "stoker/http-status-codes"
 import { getYandexMusicSearchResults } from "../../apis/yandexMusic"
-import { getYoutubeVideosSearchResults } from "../../apis/youtube"
+import { getYoutubeVideosSearchResults } from "../../apis/youtubeMusic"
 
 export const searchSpotify: RouteHandler<SearchSpotifyRoute> = async (c) => {
 	const { q } = c.req.valid("query")

@@ -1,5 +1,5 @@
 import YTMusic, { VideoDetailed } from "ytmusic-api"
-import { CleanedYoutubeVideoSearchResult } from "../schemas/youtube"
+import { CleanedYoutubeVideoSearchResult } from "../schemas/youtubeMusic"
 import { z } from "zod"
 
 const api = new YTMusic()
