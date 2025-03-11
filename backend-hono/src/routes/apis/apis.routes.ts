@@ -3,6 +3,7 @@ import * as HttpStatusCodes from "stoker/http-status-codes"
 import { jsonContent } from "stoker/openapi/helpers"
 import { CleanedSpotifySearchResult } from "../../schemas/spotify"
 import { CleanedYoutubeVideoSearchResult } from "../../schemas/youtubeMusic"
+import { CleanedYandexMusicSearchResult } from "../../schemas/yandexMusic"
 
 const tags = ["Apis"]
 
@@ -33,36 +34,7 @@ export const searchYandexMusic = createRoute({
 	},
 	responses: {
 		[HttpStatusCodes.OK]: jsonContent(
-			z.object({
-				page: z.number(),
-				perPage: z.number(),
-				tracks: z.object({
-					total: z.number(),
-					perPage: z.number(),
-					results: z.array(
-						z.object({
-							id: z.number(),
-							title: z.string(),
-							artists: z.array(
-								z.object({
-									id: z.number(),
-									name: z.string(),
-									cover: z.object({
-										uri: z.string(),
-									}),
-								})
-							),
-							albums: z.array(
-								z.object({
-									id: z.number(),
-									title: z.string(),
-								})
-							),
-							coverUri: z.string(),
-						})
-					),
-				}),
-			}),
+			z.array(CleanedYandexMusicSearchResult),
 			"Yandex music search results"
 		),
 	},

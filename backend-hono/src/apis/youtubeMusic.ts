@@ -11,7 +11,7 @@ export async function getYoutubeVideosSearchResults(query: string) {
 
 		const cleanedVideos: z.infer<typeof CleanedYoutubeVideoSearchResult>[] =
 			videos.map((video) => ({
-				name: video.name,
+				title: video.name,
 				url: `https://youtu.be/${video.videoId}`,
 				artist: video.artist.name,
 			}))
