@@ -1,5 +1,8 @@
 import axios from "axios"
 import { HttpProxyAgent } from "http-proxy-agent"
+import { SearchResults } from "@spotify/web-api-ts-sdk"
+import { CleanedSpotifySearchResult } from "../schemas/spotify"
+import { z } from "zod"
 
 const agent = new HttpProxyAgent(
 	`http://${process.env.PROXY_USERNAME}:${process.env.PROXY_PASSWORD}@${process.env.PROXY_HOST}:${process.env.PROXY_PORT}`
@@ -39,22 +42,34 @@ async function getSpotifyToken(): Promise<string> {
 	return tokenCache.accessToken
 }
 
-export async function getSpotifySearchResults(
-	query: string
-): Promise<{ tracks: object }> {
+export async function getSpotifySearchResults(query: string): Promise<{}> {
 	try {
 		const token = await getSpotifyToken()
-		const response = await axios.get(
-			`https://api.spotify.com/v1/search?q=${query}&type=track&limit=3`,
+		const { data }: { data: SearchResults<["track"]> } = await axios.get(
+			`https://api.spotify.com/v1/search?q=${query}&type=track&limit=5`,
 			{
 				headers: { Authorization: `Bearer ${token}` },
 				httpAgent: agent,
 				httpsAgent: agent,
 			}
 		)
-		return response.data
+
+		const rawTracks = data.tracks.items
+
+		const cleanedTracks: z.infer<typeof CleanedSpotifySearchResult>[] =
+			rawTracks.map((track) => {
+				return {
+					title: track.name,
+					url: track.external_urls.spotify,
+					artistsNames: track.artists.map(
+						(artist: { name: string }) => artist.name
+					),
+				}
+			})
+
+		return cleanedTracks
 	} catch (e) {
 		console.error(e)
-		return { tracks: {} }
+		return {}
 	}
 }

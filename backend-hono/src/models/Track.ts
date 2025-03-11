@@ -29,7 +29,7 @@ export const DefaultTrackSchema = z.object({
 			"Provide at least one music service link"
 		),
 	thumbnailUrl: z.string().nullable().default(null),
-	artistNames: z
+	artistsNames: z
 		.array(z.string().min(1, "Artist name length must be more than 0"))
 		.default([]),
 	tags: z
