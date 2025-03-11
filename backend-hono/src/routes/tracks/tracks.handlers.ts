@@ -5,12 +5,12 @@ import {
 	ListRoute,
 	RemoveRoute,
 } from "./tracks.routes"
-import Track, { TrackSchema } from "../../models/Track"
+import Track, { TrackSchemaPopulated } from "../../models/Track"
 import * as HttpStatusCodes from "stoker/http-status-codes"
 import * as HttpStatusPhrases from "stoker/http-status-phrases"
 
 export const list: RouteHandler<ListRoute> = async (c) => {
-	const tracks = await Track.find()
+	const tracks = await Track.find().populate("mixedTracks")
 
 	return c.json(tracks, HttpStatusCodes.OK)
 }
@@ -33,11 +33,12 @@ export const getOne: RouteHandler<GetOneRoute> = async (c) => {
 export const create: RouteHandler<CreateRoute> = async (c) => {
 	const track = c.req.valid("json")
 
-	const inserted = (await Track.create(track)).toObject() as z.infer<
-		typeof TrackSchema
-	>
+	const rawInsertedTrack = await Track.create(track)
+	const populatedInsertedTrack = (await rawInsertedTrack.populate(
+		"mixedTracks"
+	)) as z.infer<typeof TrackSchemaPopulated>
 
-	return c.json(inserted, HttpStatusCodes.CREATED)
+	return c.json(populatedInsertedTrack, HttpStatusCodes.CREATED)
 }
 
 // export const patch: RouteHandler<PatchRoute> = async (c) => {

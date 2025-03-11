@@ -1,13 +1,9 @@
 import { createRoute, z } from "@hono/zod-openapi"
 import * as HttpStatusCodes from "stoker/http-status-codes"
-import {
-	jsonContent,
-	jsonContentOneOf,
-	jsonContentRequired,
-} from "stoker/openapi/helpers"
+import { jsonContent, jsonContentRequired } from "stoker/openapi/helpers"
 import { createErrorSchema } from "stoker/openapi/schemas"
 import { notFoundSchema } from "../../lib/constants"
-import { InsertTrackSchema, TrackSchema } from "../../models/Track"
+import { InsertTrackSchema, TrackSchemaPopulated } from "../../models/Track"
 import { paramsIdSchema } from "../../schemas/tracks"
 
 const tags = ["Tracks"]
@@ -16,7 +12,10 @@ export const list = createRoute({
 	path: "/tracks",
 	method: "get",
 	responses: {
-		[HttpStatusCodes.OK]: jsonContent(z.array(TrackSchema), "List of tracks"),
+		[HttpStatusCodes.OK]: jsonContent(
+			z.array(TrackSchemaPopulated),
+			"List of tracks"
+		),
 	},
 	tags,
 })
@@ -28,7 +27,7 @@ export const getOne = createRoute({
 		params: paramsIdSchema,
 	},
 	responses: {
-		[HttpStatusCodes.OK]: jsonContent(TrackSchema, "Found track"),
+		[HttpStatusCodes.OK]: jsonContent(TrackSchemaPopulated, "Found track"),
 		[HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
 			createErrorSchema(paramsIdSchema),
 			"Incorrect track Id"
@@ -45,7 +44,10 @@ export const create = createRoute({
 		body: jsonContentRequired(InsertTrackSchema, "Track to create"),
 	},
 	responses: {
-		[HttpStatusCodes.CREATED]: jsonContent(TrackSchema, "Created track"),
+		[HttpStatusCodes.CREATED]: jsonContent(
+			TrackSchemaPopulated,
+			"Created track"
+		),
 		[HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
 			createErrorSchema(InsertTrackSchema),
 			"Validation error(s)"

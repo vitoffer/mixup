@@ -57,6 +57,10 @@ export const TrackSchema = DefaultTrackSchema.extend({
 	__v: z.number(),
 })
 
+export const TrackSchemaPopulated = TrackSchema.extend({
+	mixedTracks: z.array(TrackSchema),
+})
+
 export const InsertTrackSchema = DefaultTrackSchema.omit({
 	isMix: true,
 })
