@@ -16,7 +16,7 @@ services:
       - 80:80
       - 443:443
   backend:
-    build: ./backend-hono
+    build: ./backend
     container_name: mixup-backend
     environment:
       - NODE_ENV=production
