@@ -1,9 +1,17 @@
 import { createRoute, z } from "@hono/zod-openapi"
 import * as HttpStatusCodes from "stoker/http-status-codes"
-import { jsonContent, jsonContentRequired } from "stoker/openapi/helpers"
+import {
+	jsonContent,
+	jsonContentOneOf,
+	jsonContentRequired,
+} from "stoker/openapi/helpers"
 import { createErrorSchema } from "stoker/openapi/schemas"
 import { notFoundSchema } from "../../lib/constants"
-import { InsertTrackSchema, TrackSchemaPopulated } from "../../models/Track"
+import {
+	InsertTrackSchema,
+	PatchTrackSchema,
+	TrackSchemaPopulated,
+} from "../../models/Track"
 import { paramsIdSchema } from "../../schemas/tracks"
 
 const tags = ["Tracks"]
@@ -56,23 +64,23 @@ export const create = createRoute({
 	tags,
 })
 
-// export const patch = createRoute({
-// 	path: "/tracks/{id}",
-// 	method: "patch",
-// 	request: {
-// 		params: paramsIdSchema,
-// 		body: jsonContentRequired(patchTracksSchema, "Track to update"),
-// 	},
-// 	responses: {
-// 		[HttpStatusCodes.OK]: jsonContent(selectTracksSchema, "Updated track"),
-// 		[HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContentOneOf(
-// 			[createErrorSchema(patchTracksSchema), createErrorSchema(paramsIdSchema)],
-// 			"Validation error(s)"
-// 		),
-// 		[HttpStatusCodes.NOT_FOUND]: jsonContent(notFoundSchema, "Track not found"),
-// 	},
-// 	tags,
-// })
+export const patch = createRoute({
+	path: "/tracks/{id}",
+	method: "patch",
+	request: {
+		params: paramsIdSchema,
+		body: jsonContentRequired(PatchTrackSchema, "Track to update"),
+	},
+	responses: {
+		[HttpStatusCodes.OK]: jsonContent(TrackSchemaPopulated, "Updated track"),
+		[HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContentOneOf(
+			[createErrorSchema(PatchTrackSchema), createErrorSchema(paramsIdSchema)],
+			"Validation error(s)"
+		),
+		[HttpStatusCodes.NOT_FOUND]: jsonContent(notFoundSchema, "Track not found"),
+	},
+	tags,
+})
 
 export const remove = createRoute({
 	path: "/tracks/{id}",
@@ -96,5 +104,5 @@ export const remove = createRoute({
 export type ListRoute = typeof list
 export type GetOneRoute = typeof getOne
 export type CreateRoute = typeof create
-// export type PatchRoute = typeof patch
+export type PatchRoute = typeof patch
 export type RemoveRoute = typeof remove

@@ -65,6 +65,4 @@ export const InsertTrackSchema = DefaultTrackSchema.omit({
 	isMix: true,
 })
 
-// export const patchTracksSchema = insertTracksSchema.partial().openapi({
-// 	example: {},
-// })
+export const PatchTrackSchema = InsertTrackSchema.partial()

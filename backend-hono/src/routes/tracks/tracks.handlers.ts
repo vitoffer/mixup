@@ -3,6 +3,7 @@ import {
 	CreateRoute,
 	GetOneRoute,
 	ListRoute,
+	PatchRoute,
 	RemoveRoute,
 } from "./tracks.routes"
 import Track, { TrackSchemaPopulated } from "../../models/Track"
@@ -41,27 +42,31 @@ export const create: RouteHandler<CreateRoute> = async (c) => {
 	return c.json(populatedInsertedTrack, HttpStatusCodes.CREATED)
 }
 
-// export const patch: RouteHandler<PatchRoute> = async (c) => {
-// 	const { id } = c.req.valid("param")
-// 	const updates = c.req.valid("json")
+export const patch: RouteHandler<PatchRoute> = async (c) => {
+	const { id } = c.req.valid("param")
+	const updates = c.req.valid("json")
 
-// 	const track = await Track.findByIdAndUpdate(
-// 		id,
-// 		{ ...updates, updatedAt: new Date() },
-// 		{
-// 			new: true,
-// 		}
-// 	)
+	const rawUpdatedTrack = await Track.findByIdAndUpdate(
+		id,
+		{ ...updates, updatedAt: new Date() },
+		{
+			new: true,
+		}
+	)
 
-// 	if (!track) {
-// 		return c.json(
-// 			{ message: HttpStatusPhrases.NOT_FOUND },
-// 			HttpStatusCodes.NOT_FOUND
-// 		)
-// 	}
+	if (!rawUpdatedTrack) {
+		return c.json(
+			{ message: HttpStatusPhrases.NOT_FOUND },
+			HttpStatusCodes.NOT_FOUND
+		)
+	}
 
-// 	return c.json(track.toObject(), HttpStatusCodes.OK)
-// }
+	const populatedUpdatedTrack = (await rawUpdatedTrack.populate(
+		"mixedTracks"
+	)) as z.infer<typeof TrackSchemaPopulated>
+
+	return c.json(populatedUpdatedTrack, HttpStatusCodes.OK)
+}
 
 export const remove: RouteHandler<RemoveRoute> = async (c) => {
 	const { id } = c.req.valid("param")
