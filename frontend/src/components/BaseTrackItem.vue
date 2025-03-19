@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue"
 import { useLoadingImage } from "@/composables/loadingImage"
 import { isTrackValid } from "@/modules/validators"

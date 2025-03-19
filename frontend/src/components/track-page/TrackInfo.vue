@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { useLoadingImage } from "@/composables/loadingImage"
 import { getPlatformLink, getPlatformLogo } from "@/modules/platforms"
 import { isTrackValid } from "@/modules/validators"

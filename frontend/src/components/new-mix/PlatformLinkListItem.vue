@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { isTrackValid } from "@/modules/validators"
 
 defineProps({

@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { Search } from "@icon-park/vue-next"
 
 const searchTrackModel = defineModel({

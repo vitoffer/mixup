@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue"
 import AutoComplete from "primevue/autocomplete"
 import BaseLayout from "@/components/BaseLayout.vue"

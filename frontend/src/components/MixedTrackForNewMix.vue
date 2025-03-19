@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { useLoadingImage } from "@/composables/loadingImage"
 
 const props = defineProps({

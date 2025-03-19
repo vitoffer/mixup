@@ -15,12 +15,12 @@ export function useTrackItemStyles() {
 		borderColor: "transparent",
 	}
 
-	function changeTrackItemStyles(event, isSelected) {
+	function changeTrackItemStyles(event: Event, isSelected: boolean) {
 		trackItemStyles.value = isSelected
 			? highlightedTrackItemStyles
 			: baseTrackItemStyles
 
-		const nextSibling = event.target.nextSibling
+		const nextSibling = (event.target as HTMLElement).nextSibling as HTMLElement
 		if (!nextSibling || !nextSibling.style) {
 			return
 		}

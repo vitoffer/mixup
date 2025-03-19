@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import BaseTrackItem from "@/components/BaseTrackItem.vue"
 import { getPlatformLink, getPlatformLogo } from "@/modules/platforms"
 import { isTrackListValid } from "@/modules/validators"

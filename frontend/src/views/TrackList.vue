@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from "vue"
 import SearchBar from "@/components/track-list/SearchBar.vue"
 import { trackList } from "@/storage/storage"
