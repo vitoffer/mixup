@@ -1,4 +1,5 @@
 import { trackList } from "@/storage/storage"
+import { MixTrack } from "@/types"
 
 export async function loadAllTracks() {
 	try {
@@ -13,25 +14,23 @@ export async function loadAllTracks() {
 	}
 }
 
-export function getFilteredTrackList(trackList, searchText) {
+export function getFilteredTrackList(
+	trackList: MixTrack[],
+	searchText: string,
+) {
 	return trackList.filter((track) => {
-		return (
-			trackContainsText(track, searchText) ||
-			track.mixedTracks?.some((mixedTrack) => {
-				return trackContainsText(mixedTrack, searchText)
-			})
-		)
+		return track.title.toLowerCase().includes(searchText.toLowerCase())
 	})
 }
 
-function trackContainsText(track, text) {
-	return (
-		track.name.toLowerCase().includes(text.toLowerCase()) ||
-		track.authors.some((author) =>
-			author.toLowerCase().includes(text.toLowerCase()),
-		)
-	)
-}
+// function trackContainsText(track, text) {
+// 	return (
+// 		track.name.toLowerCase().includes(text.toLowerCase()) ||
+// 		track.authors.some((author) =>
+// 			author.toLowerCase().includes(text.toLowerCase()),
+// 		)
+// 	)
+// }
 
 export function hasYoutubeLink(platforms) {
 	return platforms.youtube ?? false

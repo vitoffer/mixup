@@ -1,30 +1,38 @@
 <script setup lang="ts">
-import { ref, computed } from "vue"
+import { ref, computed, watchEffect } from "vue"
 import SearchBar from "@/components/track-list/SearchBar.vue"
-import { trackList } from "@/storage/storage"
-import {
-	getFilteredTrackList,
-	hasYoutubeLink,
-	loadAllTracks,
-} from "@/modules/trackList"
-import BaseTrackItem from "@/components/BaseTrackItem.vue"
+import { getFilteredTrackList } from "@/modules/trackList"
+import axios from "axios"
+import TrackItem from "@/components/TrackItem.vue"
 
 const searchTrack = ref("")
 
-if (trackList.length === 0) {
-	loadAllTracks()
-}
+const trackList = ref([])
 
 const filteredTrackList = computed(() =>
-	getFilteredTrackList(trackList, searchTrack.value),
+	getFilteredTrackList(trackList.value, searchTrack.value),
 )
+
+loadTracks()
+
+async function loadTracks() {
+	const { data } = await axios.get(
+		`${import.meta.env.VITE_BASE_API_URL}/tracks`,
+	)
+
+	trackList.value = data
+}
 </script>
 
 <template>
 	<SearchBar v-model="searchTrack" />
-	<main class="container">
+	{{ searchTrack }}
+	<main class="">
 		<ul class="track-list">
-			<BaseTrackItem
+			<li v-for="track in filteredTrackList">
+				<TrackItem :track="track" />
+			</li>
+			<!-- <BaseTrackItem
 				v-for="track in filteredTrackList"
 				:key="track._id"
 				:track="track"
@@ -55,7 +63,7 @@ const filteredTrackList = computed(() =>
 						/>
 					</a>
 				</template>
-			</BaseTrackItem>
+			</BaseTrackItem> -->
 		</ul>
 	</main>
 </template>

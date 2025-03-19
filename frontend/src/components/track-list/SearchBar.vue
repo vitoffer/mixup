@@ -1,50 +1,17 @@
 <script setup lang="ts">
-import { Search } from "@icon-park/vue-next"
-
-const searchTrackModel = defineModel({
-	type: String,
-	required: true,
-})
+const searchTrackModel = defineModel<string>()
 </script>
 
 <template>
-	<div class="search__wrapper">
-		<Search
-			class="search__icon"
-			theme="outline"
-			size="20"
-		/>
+	<div class="flex items-center gap-2 rounded-[10px] bg-gray-800 px-4 py-3">
+		<i class="pi pi-search text-yellow-900"></i>
 		<input
-			class="search__input"
+			class="w-full text-yellow-900 placeholder:text-yellow-800"
 			type="text"
-			placeholder="Поиск трека"
+			placeholder="Поиск микса"
 			v-model.trim="searchTrackModel"
 		/>
 	</div>
 </template>
 
-<style scoped>
-.search__wrapper {
-	display: flex;
-	align-items: center;
-	gap: 16px;
-	width: 600px;
-	padding: 8px 16px;
-	margin: 24px auto 0;
-	background-color: var(--gray-800);
-	border-radius: 10px;
-	color: var(--yellow-900);
-}
-
-.search__icon {
-	margin-left: 16px;
-}
-
-.search__input {
-	width: 100%;
-}
-
-.search__input::placeholder {
-	color: var(--yellow-800);
-}
-</style>
+<style scoped></style>
