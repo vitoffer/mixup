@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, ref } from "vue"
+import { computed, nextTick, ref } from "vue"
 import youtubeMusicIcon from "../assets/icons/youtube_logo.svg?url"
 import spotifyIcon from "../assets/icons/spotify_logo.svg?url"
 import yandexMusicIcon from "../assets/icons/yandex_logo.svg?url"
@@ -7,7 +7,7 @@ import { trackList } from "@/storage/storage"
 import { OriginalTrack, Platform } from "@/types"
 import markIcon from "../assets/icons/mark.svg?url"
 import crossIcon from "../assets/icons/cross.svg?url"
-import { useConfirm } from "primevue"
+import { AutoCompleteCompleteEvent, useConfirm } from "primevue"
 import TrackItem from "@/components/TrackItem.vue"
 
 const confirm = useConfirm()
@@ -50,7 +50,7 @@ const originalTracks = ref<OriginalTrack[]>([])
 
 // originalTracks.value = trackList.value
 
-const searchTrack = ref<string>("")
+// const searchOriginalTrack = ref<string>("")
 
 function clearSavedLink(platform: Platform) {
 	savedLinks.value[platform] = ""
@@ -85,6 +85,30 @@ function confirmClearSavedLink(event: Event, platform: Platform) {
 		},
 	})
 }
+
+// const filteredOriginalTracks = computed(() => {
+// 	return trackList.value.filter((track) => {
+// 		return (
+// 			!track.isMix &&
+// 			track.title
+// 				.toLowerCase()
+// 				.includes(searchOriginalTrack.value.toLowerCase())
+// 		)
+// 	})
+// })
+
+const originalTracksSuggestions = ref<OriginalTrack[]>([])
+
+function searchOriginalTrack(event: AutoCompleteCompleteEvent) {
+	originalTracksSuggestions.value = trackList.value.filter((track) => {
+		return (
+			!track.isMix &&
+			track.title.toLowerCase().includes(event.query.toLowerCase())
+		)
+	})
+}
+
+const originalTracksSearchInputRounded = ref(true)
 </script>
 
 <template>
@@ -188,29 +212,50 @@ function confirmClearSavedLink(event: Event, platform: Platform) {
 			<p class="text-bold mb-1 text-lg leading-none text-yellow-700">
 				Оригиналы:
 			</p>
-			<ul v-if="originalTracks.length">
-				<li
-					v-for="track in originalTracks"
-					:key="track.id"
-					class="not-first:-translate-y-[1px]"
-				>
-					<TrackItem
-						:track="track"
-						:with-links="false"
-					/>
-				</li>
-			</ul>
-			<p
-				v-else
-				class="text-[0.875rem] text-cyan-700"
-			>
-				Пусто... Добавьте первый трек (если нужно) ниже
-			</p>
-			<input
-				type="text"
+			<AutoComplete
+				v-model="originalTracks"
 				placeholder="Поиск трека по базе"
-				class="mt-1 w-full px-3 py-2.5 text-cyan-700 placeholder:text-cyan-800"
-			/>
+				multiple
+				:suggestions="originalTracksSuggestions"
+				@complete="searchOriginalTrack"
+				@show="originalTracksSearchInputRounded = false"
+				@hide="originalTracksSearchInputRounded = true"
+				:input-class="{ '!rounded-b-none': !originalTracksSearchInputRounded }"
+			>
+				<template #chip="slotProps">
+					<div class="relative">
+						<TrackItem
+							:track="slotProps.value"
+							:with-links="false"
+						/>
+						<button
+							class="absolute top-1/2 right-2 flex aspect-square -translate-y-1/2 cursor-pointer items-center justify-center rounded-lg bg-gray-800 p-2 text-red-900"
+							@click="slotProps.removeCallback"
+						>
+							<span class="hidden">Удалить оригинальный трек</span>
+							<i class="pi pi-times leading-none"></i>
+						</button>
+					</div>
+				</template>
+				<template #option="slotProps">
+					<TrackItem
+						:track="slotProps.option"
+						:with-links="false"
+						unbordered
+					/>
+				</template>
+				<template #footer>
+					<div class="mt-1 flex flex-col items-center leading-[1.25rem]">
+						<p class="text-cyan-700">Не нашли, что искали?</p>
+						<a
+							class="text-yellow-700"
+							href="/create-original"
+						>
+							Добавьте трек сами!
+						</a>
+					</div>
+				</template>
+			</AutoComplete>
 		</div>
 		<button
 			class="mb-[52px] flex cursor-pointer items-center justify-center rounded-[10px] bg-yellow-800 px-16 py-4 text-2xl leading-none font-bold"
@@ -265,5 +310,29 @@ function confirmClearSavedLink(event: Event, platform: Platform) {
 
 .p-confirmpopup-footer {
 	@apply flex gap-2;
+}
+
+.p-autocomplete-input-multiple {
+	@apply flex flex-col;
+}
+
+.p-autocomplete-chip-item {
+	@apply not-first:-translate-y-[1px];
+}
+
+.p-autocomplete-input-chip {
+	@apply mt-3;
+
+	input {
+		@apply w-full px-3 py-2.5 text-cyan-700;
+	}
+}
+
+.p-autocomplete-overlay {
+	@apply rounded-b-[10px] bg-gray-800 px-3 pb-2.5;
+}
+
+.p-autocomplete-list {
+	@apply border-b border-b-gray-700 pb-2;
 }
 </style>

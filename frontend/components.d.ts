@@ -9,6 +9,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AppNav: typeof import('./src/components/AppNav.vue')['default']
+    AutoComplete: typeof import('primevue/autocomplete')['default']
     BackButton: typeof import('./src/components/BackButton.vue')['default']
     Chip: typeof import('primevue/chip')['default']
     ConfirmPopup: typeof import('primevue/confirmpopup')['default']

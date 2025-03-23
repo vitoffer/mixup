@@ -32,7 +32,7 @@ export const trackList: Ref<Track[]> = ref([
 			youtubeMusic: null,
 		},
 		tags: ["Tag1"],
-		isMix: true,
+		isMix: false,
 		originalTracks: [
 			{
 				id: "1",

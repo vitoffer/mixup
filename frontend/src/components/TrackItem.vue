@@ -2,14 +2,23 @@
 import { MixTrack, OriginalTrack } from "@/types"
 import { RouterLink } from "vue-router"
 
-defineProps<{
-	track: MixTrack | OriginalTrack
-	withLinks: boolean
-}>()
+withDefaults(
+	defineProps<{
+		track: MixTrack | OriginalTrack
+		withLinks: boolean
+		unbordered?: boolean
+	}>(),
+	{
+		unbordered: false,
+	},
+)
 </script>
 
 <template>
-	<article class="w-full border-y border-gray-700">
+	<article
+		class="w-full"
+		:class="{ 'border-y border-gray-700': !unbordered }"
+	>
 		<component
 			:is="withLinks ? RouterLink : 'div'"
 			:to="{ name: 'trackPage', params: { id: track.id } }"
