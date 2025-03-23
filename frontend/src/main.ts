@@ -15,11 +15,7 @@ const app = createApp(App)
 
 app.use(router)
 
-app.use(PrimeVue, {
-	theme: {
-		preset: Aura,
-	},
-})
+app.use(PrimeVue, { theme: "none" })
 
 app.directive("tooltip", Tooltip)
 

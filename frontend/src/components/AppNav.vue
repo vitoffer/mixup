@@ -27,7 +27,7 @@ function isActive(linkName: string) {
 </script>
 
 <template>
-	<nav class="absolute bottom-0 left-0 w-full rounded-t-xl bg-gray-800 py-2">
+	<nav class="fixed bottom-0 left-0 w-full rounded-t-xl bg-gray-800 py-2">
 		<ul class="flex justify-center gap-[48px]">
 			<li v-for="link in links">
 				<RouterLink
