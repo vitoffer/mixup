@@ -11,6 +11,7 @@ declare module 'vue' {
     AppNav: typeof import('./src/components/AppNav.vue')['default']
     BackButton: typeof import('./src/components/BackButton.vue')['default']
     Chip: typeof import('primevue/chip')['default']
+    ConfirmPopup: typeof import('primevue/confirmpopup')['default']
     PlatformLinkList: typeof import('./src/components/PlatformLinkList.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

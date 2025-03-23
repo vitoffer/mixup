@@ -4,6 +4,7 @@ import Tooltip from "primevue/tooltip"
 import Aura from "@primeuix/themes/aura"
 import App from "./App.vue"
 import { router } from "@/router/router"
+import ConfirmationService from "primevue/confirmationservice"
 
 import "@/assets/fonts/CarterOne/stylesheet.css"
 import "@/assets/fonts/Nunito/stylesheet.css"
@@ -16,6 +17,7 @@ const app = createApp(App)
 app.use(router)
 
 app.use(PrimeVue, { theme: "none" })
+app.use(ConfirmationService)
 
 app.directive("tooltip", Tooltip)
 
