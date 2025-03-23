@@ -1,18 +1,55 @@
-import { reactive, ref } from "vue"
+import { Track } from "@/types"
+import { Ref, ref } from "vue"
 
-export const trackList = reactive([
-	// {
-	// 	_id: "66b60e3a4d942807aaa50898",
-	// 	name: "Название",
-	// 	authors: ["author1", "author2"],
-	// 	imageName: "66b60e3a4d942807aaa50898.jpeg",
-	// },
-	// {
-	// 	_id: "66b6213fcd5def40e1fdf248",
-	// 	name: "title",
-	// 	authors: ["au22", "bb123"],
-	// 	imageName: "66b6213fcd5def40e1fdf248.jpeg",
-	// },
+export const trackList: Ref<Track[]> = ref([
+	{
+		id: "1",
+		title: "Track 1 super class",
+		artistsNames: ["author1"],
+		thumbnailUrl:
+			"https://image.winudf.com/v2/image/Y29tLnRyYWNrLm11c2ljdHJhY2ttdXNpY19zY3JlZW5fMV9zcnc3eDF0Mg/screen-1.jpg?fakeurl=1&amp;type=.jpg",
+		urls: {
+			spotify: "123",
+			yandexMusic: null,
+			youtubeMusic: null,
+		},
+		tags: ["Tag1"],
+		isMix: false,
+	},
+	{
+		id: "2",
+		title: "Track 2",
+		artistsNames: [
+			"author2",
+			"1231421",
+			"pupuasfffffffffffffasfffasfafffffffff",
+		],
+		thumbnailUrl:
+			"https://i.pinimg.com/originals/96/05/59/960559700cb774386fadf0d4284a728f.jpg",
+		urls: {
+			spotify: "123",
+			yandexMusic: null,
+			youtubeMusic: null,
+		},
+		tags: ["Tag1"],
+		isMix: true,
+		originalTracks: [
+			{
+				id: "1",
+				title: "Track 1 super class",
+				artistsNames: ["author1"],
+				thumbnailUrl:
+					"https://image.winudf.com/v2/image/Y29tLnRyYWNrLm11c2ljdHJhY2ttdXNpY19zY3JlZW5fMV9zcnc3eDF0Mg/screen-1.jpg?fakeurl=1&amp;type=.jpg",
+				urls: {
+					spotify: "123",
+					yandexMusic: null,
+					youtubeMusic: null,
+				},
+				tags: ["Tag1"],
+				isMix: false,
+			},
+		],
+	},
 ])
 
 export const foundTrackListByPlatform = ref({})

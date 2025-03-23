@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { ref, computed, Ref } from "vue"
-import SearchBar from "@/components/track-list/SearchBar.vue"
+import SearchBar from "@/components/SearchBar.vue"
 import { getFilteredTrackList } from "@/modules/trackList"
 import axios from "axios"
 import TrackItem from "@/components/TrackItem.vue"
-import { MixTrack, OriginalTrack } from "@/types"
+import { MixTrack, OriginalTrack, Track } from "@/types"
 
 const searchTrack = ref("")
 
-const trackList: Ref<(MixTrack | OriginalTrack)[]> = ref([])
+const trackList: Ref<Track[]> = ref([])
 
 const filteredTrackList = computed(() =>
 	getFilteredTrackList(trackList.value, searchTrack.value),
@@ -21,7 +21,7 @@ async function loadTracks() {
 	// 	`${import.meta.env.VITE_BASE_API_URL}/tracks`,
 	// )
 
-	const data: Partial<MixTrack | OriginalTrack>[] = [
+	const data: Partial<Track>[] = [
 		{
 			id: "1",
 			title: "Track 1 super class",
@@ -42,7 +42,7 @@ async function loadTracks() {
 		},
 	]
 
-	trackList.value = data as (MixTrack | OriginalTrack)[]
+	trackList.value = data as Track[]
 }
 </script>
 

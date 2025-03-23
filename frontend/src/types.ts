@@ -15,3 +15,5 @@ export interface OriginalTrack {
 export type MixTrack = OriginalTrack & {
 	originalTracks: OriginalTrack[]
 }
+
+export type Track = OriginalTrack | MixTrack

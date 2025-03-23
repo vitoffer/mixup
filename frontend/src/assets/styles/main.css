@@ -22,6 +22,10 @@
 	--font-nunito: "Nunito", sans-serif;
 }
 
+body {
+	font-weight: 600;
+}
+
 input {
-	@apply outline-none ;
+	@apply outline-none;
 }
