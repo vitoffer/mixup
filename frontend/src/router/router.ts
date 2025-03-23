@@ -7,8 +7,8 @@ import CreateMixSecondPartView from "@/views/CreateMixSecondPart.vue"
 import NotFoundView from "@/views/NotFound.vue"
 
 const routes = [
-	{ path: "/", component: TrackListView },
-	{ path: "/tracks/:id", component: TrackPageView },
+	{ name: "trackList", path: "/", component: TrackListView },
+	{ name: "trackPage", path: "/tracks/:id", component: TrackPageView },
 	{ path: "/create-mix/1", component: CreateMixFirstPartView },
 	{
 		path: "/create-mix/2",
