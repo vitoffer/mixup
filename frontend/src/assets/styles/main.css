@@ -29,3 +29,9 @@ body {
 input {
 	@apply outline-none;
 }
+
+@media (max-width: 700px) {
+	input {
+		font-size: 1rem;
+	}
+}
