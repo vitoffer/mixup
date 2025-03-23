@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import BaseTrackItem from "@/components/BaseTrackItem.vue"
 import { getPlatformLink, getPlatformLogo } from "@/modules/platforms"
 import { isTrackListValid } from "@/modules/validators"
 
@@ -17,7 +16,7 @@ defineProps({
 		<template v-if="mixedTracks.length !== 0">
 			<h3 class="mixed-tracks__title">Mixed треки:</h3>
 			<ul class="mixed-tracks__list">
-				<BaseTrackItem
+				<!-- <BaseTrackItem
 					v-for="track in mixedTracks"
 					:key="track._id"
 					type="mix"
@@ -45,7 +44,7 @@ defineProps({
 							</li>
 						</ul>
 					</template>
-				</BaseTrackItem>
+				</BaseTrackItem> -->
 			</ul>
 		</template>
 		<h3
