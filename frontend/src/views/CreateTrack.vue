@@ -8,6 +8,7 @@ import { OriginalTrack, Platform } from "@/types"
 import markIcon from "../assets/icons/mark.svg?url"
 import crossIcon from "../assets/icons/cross.svg?url"
 import { useConfirm } from "primevue"
+import TrackItem from "@/components/TrackItem.vue"
 
 const confirm = useConfirm()
 
@@ -44,8 +45,11 @@ const savedLinks = ref({
 })
 const title = ref<string>("")
 const artistsNames = ref<string>("")
-const tags = ref<string[]>(["Tag 1"])
+const tags = ref<string[]>([])
 const originalTracks = ref<OriginalTrack[]>([])
+
+// originalTracks.value = trackList.value
+
 const searchTrack = ref<string>("")
 
 function clearSavedLink(platform: Platform) {
@@ -148,19 +152,31 @@ function confirmClearSavedLink(event: Event, platform: Platform) {
 		</div>
 		<div class="flex w-full flex-col gap-2">
 			<p class="text-bold mb-1 text-lg leading-none text-yellow-700">Теги:</p>
-			<ul class="flex flex-wrap gap-1">
+			<ul
+				v-if="tags.length"
+				class="flex flex-wrap gap-1"
+			>
 				<li v-for="tag in tags">
 					<div
 						class="flex items-center justify-center gap-1.5 rounded-full bg-gray-800 px-3 py-2.5 text-cyan-700"
 					>
 						<span>{{ tag }}</span>
-						<button @click="removeTag(tag)">
+						<button
+							@click="removeTag(tag)"
+							class="cursor-pointer"
+						>
 							<span class="hidden">Удалить тег</span>
 							<i class="pi pi-times"></i>
 						</button>
 					</div>
 				</li>
 			</ul>
+			<p
+				v-else
+				class="text-[0.875rem] text-cyan-700"
+			>
+				Пусто... Добавьте первый тег (если нужно) ниже
+			</p>
 			<input
 				type="text"
 				placeholder="+ Тег"
@@ -172,15 +188,24 @@ function confirmClearSavedLink(event: Event, platform: Platform) {
 			<p class="text-bold mb-1 text-lg leading-none text-yellow-700">
 				Оригиналы:
 			</p>
-			<ul>
+			<ul v-if="originalTracks.length">
 				<li
-					v-for="track in trackList"
+					v-for="track in originalTracks"
 					:key="track.id"
 					class="not-first:-translate-y-[1px]"
 				>
-					<TrackItem :track="track" />
+					<TrackItem
+						:track="track"
+						:with-links="false"
+					/>
 				</li>
 			</ul>
+			<p
+				v-else
+				class="text-[0.875rem] text-cyan-700"
+			>
+				Пусто... Добавьте первый трек (если нужно) ниже
+			</p>
 			<input
 				type="text"
 				placeholder="Поиск трека по базе"
@@ -188,7 +213,7 @@ function confirmClearSavedLink(event: Event, platform: Platform) {
 			/>
 		</div>
 		<button
-			class="mb-[52px] flex items-center justify-center rounded-[10px] bg-yellow-800 px-16 py-4 text-2xl leading-none font-bold"
+			class="mb-[52px] flex cursor-pointer items-center justify-center rounded-[10px] bg-yellow-800 px-16 py-4 text-2xl leading-none font-bold"
 		>
 			OK
 		</button>

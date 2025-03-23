@@ -55,7 +55,10 @@ async function loadTracks() {
 				:key="track.id"
 				class="not-first:-translate-y-[1px]"
 			>
-				<TrackItem :track="track" />
+				<TrackItem
+					:track="track"
+					with-links
+				/>
 			</li>
 		</ul>
 	</main>

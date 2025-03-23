@@ -1,7 +1,6 @@
 import { createApp } from "vue"
 import PrimeVue from "primevue/config"
 import Tooltip from "primevue/tooltip"
-import Aura from "@primeuix/themes/aura"
 import App from "./App.vue"
 import { router } from "@/router/router"
 import ConfirmationService from "primevue/confirmationservice"

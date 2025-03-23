@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import { MixTrack, OriginalTrack } from "@/types"
+import { RouterLink } from "vue-router"
 
 defineProps<{
 	track: MixTrack | OriginalTrack
+	withLinks: boolean
 }>()
 </script>
 
 <template>
 	<article class="w-full border-y border-gray-700">
-		<RouterLink
+		<component
+			:is="withLinks ? RouterLink : 'div'"
 			:to="{ name: 'trackPage', params: { id: track.id } }"
 			class="flex items-center gap-3 py-2"
 		>
@@ -27,7 +30,7 @@ defineProps<{
 					{{ track.artistsNames.join(", ") }}
 				</p>
 			</div>
-		</RouterLink>
+		</component>
 	</article>
 </template>
 
