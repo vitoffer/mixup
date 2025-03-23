@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, ref } from "vue"
+import { ref } from "vue"
 import youtubeMusicIcon from "../assets/icons/youtube_logo.svg?url"
 import spotifyIcon from "../assets/icons/spotify_logo.svg?url"
 import yandexMusicIcon from "../assets/icons/yandex_logo.svg?url"
@@ -48,10 +48,6 @@ const artistsNames = ref<string>("")
 const tags = ref<string[]>([])
 const originalTracks = ref<OriginalTrack[]>([])
 
-// originalTracks.value = trackList.value
-
-// const searchOriginalTrack = ref<string>("")
-
 function clearSavedLink(platform: Platform) {
 	savedLinks.value[platform] = ""
 	iconStates.value[platform] = markIcon
@@ -85,17 +81,6 @@ function confirmClearSavedLink(event: Event, platform: Platform) {
 		},
 	})
 }
-
-// const filteredOriginalTracks = computed(() => {
-// 	return trackList.value.filter((track) => {
-// 		return (
-// 			!track.isMix &&
-// 			track.title
-// 				.toLowerCase()
-// 				.includes(searchOriginalTrack.value.toLowerCase())
-// 		)
-// 	})
-// })
 
 const originalTracksSuggestions = ref<OriginalTrack[]>([])
 
@@ -221,6 +206,7 @@ const originalTracksSearchInputRounded = ref(true)
 				@show="originalTracksSearchInputRounded = false"
 				@hide="originalTracksSearchInputRounded = true"
 				:input-class="{ '!rounded-b-none': !originalTracksSearchInputRounded }"
+				empty-search-message="Оригиналов по запросу не найдено"
 			>
 				<template #chip="slotProps">
 					<div class="relative">
@@ -258,7 +244,7 @@ const originalTracksSearchInputRounded = ref(true)
 			</AutoComplete>
 		</div>
 		<button
-			class="mb-[52px] flex cursor-pointer items-center justify-center rounded-[10px] bg-yellow-800 px-16 py-4 text-2xl leading-none font-bold"
+			class="mb-[52px] flex cursor-pointer items-center justify-center rounded-[10px] bg-yellow-800 px-16 py-4 text-2xl leading-none font-bold text-gray-900"
 		>
 			OK
 		</button>
@@ -329,10 +315,14 @@ const originalTracksSearchInputRounded = ref(true)
 }
 
 .p-autocomplete-overlay {
-	@apply rounded-b-[10px] bg-gray-800 px-3 pb-2.5;
+	@apply w-[358px] rounded-b-[10px] bg-gray-800 px-3 pb-2.5;
 }
 
 .p-autocomplete-list {
-	@apply border-b border-b-gray-700 pb-2;
+	@apply border-y border-y-gray-700 pb-2;
+}
+
+.p-autocomplete-empty-message {
+	@apply mt-2;
 }
 </style>

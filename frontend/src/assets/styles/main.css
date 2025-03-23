@@ -25,7 +25,7 @@
 }
 
 body {
-	font-weight: 600;
+	@apply font-semibold text-cyan-700;
 }
 
 input {
