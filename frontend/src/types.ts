@@ -1,11 +1,9 @@
+export type Platform = "spotify" | "youtubeMusic" | "yandexMusic"
+
 export interface OriginalTrack {
 	id: string
 	title: string
-	urls: {
-		youtubeMusic: string | null
-		yandexMusic: string | null
-		spotify: string | null
-	}
+	urls: Record<Platform, string | null>
 	thumbnailUrl: string
 	artistsNames: string[]
 	tags: string[]

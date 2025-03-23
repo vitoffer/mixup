@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Track } from "@/types"
+import { Platform, Track } from "@/types"
 import spotifyLogo from "@/assets/icons/spotify_logo.svg?url"
 import yandexLogo from "@/assets/icons/yandex_logo.svg?url"
 import youtubeLogo from "@/assets/icons/youtube_logo.svg?url"
@@ -7,8 +7,6 @@ import youtubeLogo from "@/assets/icons/youtube_logo.svg?url"
 const props = defineProps<{
 	urls: Pick<Track, "urls">["urls"]
 }>()
-
-type Platform = "spotify" | "youtubeMusic" | "yandexMusic"
 
 function getLogo(platformName: Platform): string {
 	return platformName === "spotify"
