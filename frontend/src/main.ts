@@ -4,6 +4,7 @@ import Tooltip from "primevue/tooltip"
 import App from "./App.vue"
 import { router } from "@/router/router"
 import ConfirmationService from "primevue/confirmationservice"
+import ToastService from "primevue/toastservice"
 
 import "@/assets/fonts/CarterOne/stylesheet.css"
 import "@/assets/fonts/Nunito/stylesheet.css"
@@ -17,6 +18,7 @@ app.use(router)
 
 app.use(PrimeVue, { theme: "none" })
 app.use(ConfirmationService)
+app.use(ToastService)
 
 app.directive("tooltip", Tooltip)
 
