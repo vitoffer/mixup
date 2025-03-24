@@ -9,6 +9,7 @@ import markIcon from "../assets/icons/mark.svg?url"
 import crossIcon from "../assets/icons/cross.svg?url"
 import { AutoCompleteCompleteEvent, useConfirm } from "primevue"
 import TrackItem from "@/components/TrackItem.vue"
+import axios from "axios"
 
 const confirm = useConfirm()
 
@@ -94,6 +95,25 @@ function searchOriginalTrack(event: AutoCompleteCompleteEvent) {
 }
 
 const originalTracksSearchInputRounded = ref(true)
+
+async function saveTrack() {
+	const { data, status } = await axios.post(
+		`${import.meta.env.VITE_BASE_API_URL}/tracks`,
+		{
+			title: title.value,
+			urls: {
+				youtubeMusic: savedLinks.value.youtubeMusic || null,
+				yandexMusic: savedLinks.value.yandexMusic || null,
+				spotify: savedLinks.value.spotify || null,
+			},
+			artistsNames: artistsNames.value.split(", "),
+			tags: tags.value,
+			mixedTracks: originalTracks.value.map((track) => track.id),
+		},
+	)
+
+	console.log(status, data)
+}
 </script>
 
 <template>
@@ -207,6 +227,7 @@ const originalTracksSearchInputRounded = ref(true)
 				@hide="originalTracksSearchInputRounded = true"
 				:input-class="{ '!rounded-b-none': !originalTracksSearchInputRounded }"
 				empty-search-message="Оригиналов по запросу не найдено"
+				append-to="self"
 			>
 				<template #chip="slotProps">
 					<div class="relative">
@@ -244,7 +265,8 @@ const originalTracksSearchInputRounded = ref(true)
 			</AutoComplete>
 		</div>
 		<button
-			class="mb-[52px] flex cursor-pointer items-center justify-center rounded-[10px] bg-yellow-800 px-16 py-4 text-2xl leading-none font-bold text-gray-900"
+			class="flex cursor-pointer items-center justify-center rounded-[10px] bg-yellow-800 px-16 py-4 text-2xl leading-none font-bold text-gray-900"
+			@click="saveTrack"
 		>
 			OK
 		</button>
@@ -315,7 +337,7 @@ const originalTracksSearchInputRounded = ref(true)
 }
 
 .p-autocomplete-overlay {
-	@apply w-[358px] rounded-b-[10px] bg-gray-800 px-3 pb-2.5;
+	@apply w-full rounded-b-[10px] bg-gray-800 px-3 pb-2.5;
 }
 
 .p-autocomplete-list {
