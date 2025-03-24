@@ -4,6 +4,8 @@ import AppNav from "./components/AppNav.vue"
 </script>
 
 <template>
-	<RouterView />
+	<div class="mb-[52px]">
+		<RouterView />
+	</div>
 	<AppNav />
 </template>
