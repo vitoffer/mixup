@@ -26,7 +26,7 @@ function getLogo(platformName: Platform): string {
 			>
 				<li
 					v-if="urls[platform as Platform] !== null"
-					class="flex cursor-pointer items-center justify-center bg-gray-700 px-2.5 py-2 first:rounded-l-[10px] last:rounded-r-[10px]"
+					class="flex cursor-pointer items-center justify-center bg-gray-800 px-2.5 py-2 first:rounded-l-[10px] last:rounded-r-[10px]"
 				>
 					<a :href="urls[platform as Platform]!">
 						<img

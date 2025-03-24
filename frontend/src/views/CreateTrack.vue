@@ -235,7 +235,10 @@ async function saveTrack() {
 				@complete="searchOriginalTrack"
 				@show="originalTracksSearchInputRounded = false"
 				@hide="originalTracksSearchInputRounded = true"
-				:input-class="{ '!rounded-b-none': !originalTracksSearchInputRounded }"
+				:input-class="[
+					{ '!rounded-b-none': !originalTracksSearchInputRounded },
+					'placeholder:text-cyan-800',
+				]"
 				empty-search-message="Оригиналов по запросу не найдено"
 				append-to="self"
 			>
