@@ -2,13 +2,14 @@ import { defineStore } from "pinia"
 import type { ToastMessageOptions } from "primevue"
 import { ref } from "vue"
 
-export const useGlobalStore = defineStore("global", () => {
+export const useToastStore = defineStore("toast", () => {
 	const toasts = ref<(ToastMessageOptions & { id: number })[]>([])
 
 	function addToast(toast: ToastMessageOptions) {
 		toasts.value.push({
 			...toast,
 			id: Date.now(),
+			life: 3000,
 		})
 	}
 

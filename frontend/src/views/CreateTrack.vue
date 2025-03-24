@@ -9,8 +9,10 @@ import markIcon from "../assets/icons/mark.svg?url"
 import crossIcon from "../assets/icons/cross.svg?url"
 import { AutoCompleteCompleteEvent, useConfirm } from "primevue"
 import TrackItem from "@/components/TrackItem.vue"
-import axios from "axios"
+import axios, { AxiosError } from "axios"
+import { useToastStore } from "@/stores/toastStore"
 
+const toastStore = useToastStore()
 const confirm = useConfirm()
 
 const tabs = [
@@ -97,22 +99,30 @@ function searchOriginalTrack(event: AutoCompleteCompleteEvent) {
 const originalTracksSearchInputRounded = ref(true)
 
 async function saveTrack() {
-	const { data, status } = await axios.post(
-		`${import.meta.env.VITE_BASE_API_URL}/tracks`,
-		{
-			title: title.value,
-			urls: {
-				youtubeMusic: savedLinks.value.youtubeMusic || null,
-				yandexMusic: savedLinks.value.yandexMusic || null,
-				spotify: savedLinks.value.spotify || null,
+	try {
+		const { data, status } = await axios.post(
+			`${import.meta.env.VITE_BASE_API_URL}/tracks`,
+			{
+				title: title.value,
+				urls: {
+					youtubeMusic: savedLinks.value.youtubeMusic || null,
+					yandexMusic: savedLinks.value.yandexMusic || null,
+					spotify: savedLinks.value.spotify || null,
+				},
+				artistsNames: artistsNames.value.split(", "),
+				tags: tags.value,
+				mixedTracks: originalTracks.value.map((track) => track.id),
 			},
-			artistsNames: artistsNames.value.split(", "),
-			tags: tags.value,
-			mixedTracks: originalTracks.value.map((track) => track.id),
-		},
-	)
+		)
 
-	console.log(status, data)
+		console.log(status, data)
+	} catch (e) {
+		toastStore.addToast({
+			detail: (e as any).response.data.error.issues
+				.map((issue: { message: string }) => issue.message)
+				.join("\n"),
+		})
+	}
 }
 </script>
 
