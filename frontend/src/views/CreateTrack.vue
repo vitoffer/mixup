@@ -7,7 +7,11 @@ import { trackList } from "@/storage/storage"
 import { OriginalTrack, Platform } from "@/types"
 import markIcon from "../assets/icons/mark.svg?url"
 import crossIcon from "../assets/icons/cross.svg?url"
-import { AutoCompleteCompleteEvent, useConfirm } from "primevue"
+import {
+	AutoCompleteChangeEvent,
+	AutoCompleteCompleteEvent,
+	useConfirm,
+} from "primevue"
 import TrackItem from "@/components/TrackItem.vue"
 import axios, { AxiosError } from "axios"
 import { useToastStore } from "@/stores/toastStore"
@@ -54,6 +58,13 @@ const originalTracks = ref<OriginalTrack[]>([])
 function clearSavedLink(platform: Platform) {
 	savedLinks.value[platform] = ""
 	iconStates.value[platform] = markIcon
+
+	trackFoundOnPlatform.value[platform] = {}
+
+	if (Object.values(savedLinks.value).every((link) => link.length === 0)) {
+		title.value = ""
+		artistsNames.value = ""
+	}
 }
 
 function addTag(event: Event) {
@@ -124,6 +135,61 @@ async function saveTrack() {
 		})
 	}
 }
+
+const trackFoundOnPlatform = ref<Record<Platform, object>>({
+	youtubeMusic: {},
+	yandexMusic: {},
+	spotify: {},
+})
+
+const platformTrackSuggestions = ref<Record<Platform, object[]>>({
+	youtubeMusic: [{}],
+	yandexMusic: [{}],
+	spotify: [{}],
+})
+
+async function searchTrackOnPlatform(
+	event: AutoCompleteCompleteEvent,
+	platform: Platform,
+) {
+	const formattedPlatform = {
+		youtubeMusic: "youtube",
+		yandexMusic: "yandex",
+		spotify: "spotify",
+	}[platform]
+
+	setTimeout(async () => {
+		try {
+			const { data } = await axios.get(
+				`${import.meta.env.VITE_BASE_API_URL}/search/${formattedPlatform}`,
+				{
+					params: {
+						q: event.query,
+					},
+				},
+			)
+
+			platformTrackSuggestions.value[platform] = data.slice(0, 5)
+		} catch (e) {
+			toastStore.addToast({ detail: JSON.stringify(e) })
+		}
+	}, 250)
+}
+
+const searchTrackOnPlatformRounded = ref(true)
+
+function selectFoundTrackOnPlatform(
+	event: AutoCompleteChangeEvent,
+	platform: Platform,
+) {
+	if (!title.value) {
+		title.value = event.value.title
+	}
+	if (artistsNames.value.length === 0) {
+		artistsNames.value = event.value.artistsNames.join(", ")
+	}
+	savedLinks.value[platform] = event.value.url
+}
 </script>
 
 <template>
@@ -172,6 +238,35 @@ async function saveTrack() {
 						:placeholder="tab.placeholder"
 						class="w-full px-3 py-2.5 text-cyan-700 placeholder:text-cyan-800"
 					/>
+					<AutoComplete
+						v-model="trackFoundOnPlatform[tab.platform as Platform]"
+						placeholder="Поиск трека на площадке"
+						:suggestions="platformTrackSuggestions[tab.platform as Platform]"
+						@complete="searchTrackOnPlatform($event, tab.platform as Platform)"
+						:input-class="[
+							{ '!rounded-b-none': !searchTrackOnPlatformRounded },
+							'placeholder:text-cyan-800',
+						]"
+						@show="searchTrackOnPlatformRounded = false"
+						@hide="searchTrackOnPlatformRounded = true"
+						@option-select="
+							selectFoundTrackOnPlatform($event, tab.platform as Platform)
+						"
+						empty-search-message="Треков не найдено"
+						append-to="self"
+						:option-label="
+							(track) => `${track.title} - ${track.artistsNames.join(', ')}`
+						"
+						class="platform-search"
+					>
+						<template #option="{ option }">
+							<p>
+								{{ option.title }}
+								-
+								{{ option.artistsNames.join(", ") }}
+							</p>
+						</template>
+					</AutoComplete>
 				</TabPanel>
 			</TabPanels>
 		</Tabs>
@@ -182,6 +277,7 @@ async function saveTrack() {
 				class="w-full px-3 py-2.5 text-cyan-700 placeholder:text-cyan-800"
 				v-model="title"
 			/>
+
 			<input
 				type="text"
 				placeholder="Редактировать автора(-ов через запятую)"
@@ -333,6 +429,20 @@ async function saveTrack() {
 	@apply flex gap-2;
 }
 
+.platform-search {
+	.p-autocomplete-option {
+		@apply border-b-gray-700 py-1 leading-5 not-last:border-b;
+	}
+
+	.p-autocomplete-overlay {
+		/* @apply; */
+	}
+
+	.p-autocomplete-list-container {
+		@apply overflow-y-auto;
+	}
+}
+
 .p-autocomplete-input-multiple {
 	@apply flex flex-col;
 }
@@ -341,7 +451,7 @@ async function saveTrack() {
 	@apply not-first:-translate-y-[1px];
 }
 
-.p-autocomplete-input-chip {
+.p-autocomplete {
 	@apply mt-3;
 
 	input {
