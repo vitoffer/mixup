@@ -4,22 +4,22 @@ import youtubeMusicIcon from "../assets/icons/youtube_logo.svg?url"
 import spotifyIcon from "../assets/icons/spotify_logo.svg?url"
 import yandexMusicIcon from "../assets/icons/yandex_logo.svg?url"
 import { trackList } from "@/storage/storage"
-import { OriginalTrack, Platform } from "@/types"
+import { CreateTrackPlatformTab, OriginalTrack, Platform } from "@/types"
 import markIcon from "../assets/icons/mark.svg?url"
-import crossIcon from "../assets/icons/cross.svg?url"
 import {
 	AutoCompleteChangeEvent,
 	AutoCompleteCompleteEvent,
 	useConfirm,
 } from "primevue"
 import TrackItem from "@/components/TrackItem.vue"
-import axios, { AxiosError } from "axios"
+import axios from "axios"
 import { useToastStore } from "@/stores/toastStore"
+import PlatformTabList from "@/components/CreateTrack/PlatformTabList.vue"
 
 const toastStore = useToastStore()
 const confirm = useConfirm()
 
-const tabs = [
+const tabs: CreateTrackPlatformTab[] = [
 	{
 		platform: "youtubeMusic",
 		link: "",
@@ -256,59 +256,13 @@ function changeText(event: AutoCompleteChangeEvent) {
 				</AutoComplete>
 				<label for="foundTrack">Поиск трека на площадке</label>
 			</FloatLabel>
-			<Tabs
-				value="youtubeMusic"
-				@update:value="currentPlatform = $event as Platform"
-			>
-				<TabList>
-					<Tab
-						v-for="(tab, index) in tabs"
-						:key="tab.platform"
-						:value="tab.platform"
-						class="gap-1.5"
-					>
-						<img
-							:src="tab.icon"
-							alt="Лого платформы"
-							class="max-h-[36px] w-[38px]"
-						/>
-						<div
-							v-if="!savedLinks[tab.platform as keyof typeof savedLinks]"
-							class="flex aspect-square w-6 items-center justify-center after:block after:aspect-square after:w-2 after:rounded-full after:bg-cyan-700"
-						></div>
-						<img
-							v-else
-							:src="iconStates[tab.platform]"
-							alt="Индикатор заполненности ссылки на платформу"
-							class="cursor-pointer"
-							@click.prevent="
-								confirmClearSavedLink($event, tab.platform as Platform)
-							"
-							@mouseenter="iconStates[tab.platform] = crossIcon"
-							@mouseleave="iconStates[tab.platform] = markIcon"
-						/>
-					</Tab>
-				</TabList>
-				<TabPanels>
-					<TabPanel
-						v-for="(tab, index) in tabs"
-						:key="tab.platform"
-						:value="tab.platform"
-					>
-						<FloatLabel variant="in">
-							<InputText
-								type="text"
-								v-model="savedLinks[tab.platform as keyof typeof savedLinks]"
-								class="w-full px-3 py-2.5 text-cyan-700 placeholder:text-cyan-800"
-								:id="`editLink_${tab.platform}`"
-							></InputText>
-							<label :for="`editLink_${tab.platform}`">
-								{{ tab.placeholder }}
-							</label>
-						</FloatLabel>
-					</TabPanel>
-				</TabPanels>
-			</Tabs>
+			<PlatformTabList
+				v-model:current-platform="currentPlatform"
+				:icon-states="iconStates"
+				:saved-links="savedLinks"
+				:tabs="tabs"
+				@clear-link="confirmClearSavedLink"
+			/>
 		</div>
 		<div class="flex w-full flex-col gap-3">
 			<FloatLabel variant="in">
@@ -328,7 +282,7 @@ function changeText(event: AutoCompleteChangeEvent) {
 					v-model="artistsNames"
 					id="editArtists"
 				></InputText>
-				<label for="editArtists">Редактировать автора(-ов через запятую)</label>
+				<label for="editArtists">Редактировать автора(-ов) через запятую</label>
 			</FloatLabel>
 		</div>
 		<div class="flex w-full flex-col gap-2">

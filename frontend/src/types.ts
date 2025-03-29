@@ -15,3 +15,10 @@ export type MixTrack = OriginalTrack & {
 }
 
 export type Track = OriginalTrack | MixTrack
+
+export interface CreateTrackPlatformTab {
+	platform: Platform
+	link: string
+	icon: string
+	placeholder: string
+}
