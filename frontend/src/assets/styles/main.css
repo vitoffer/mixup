@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import './float-label';
 
 @theme {
 	--color-gray-900: #0d1f2d;

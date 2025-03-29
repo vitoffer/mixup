@@ -482,45 +482,4 @@ function changeText(event: AutoCompleteChangeEvent) {
 		@apply mt-2;
 	}
 }
-
-.p-floatlabel {
-	@apply relative block;
-}
-
-.p-floatlabel label {
-	@apply pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 leading-none transition-all duration-200 ease-out;
-}
-
-.p-floatlabel:has(.p-inputtext) label {
-	@apply top-5 translate-y-0;
-}
-
-.p-floatlabel:has(input:focus) label,
-.p-floatlabel:has(input.p-filled) label,
-.p-floatlabel:has(input:-webkit-autofill) label,
-.p-floatlabel:has(.p-inputwrapper-focus) label,
-.p-floatlabel:has(.p-inputwrapper-filled) label {
-	@apply -top-5 translate-y-0 text-xs font-normal;
-}
-
-.p-floatlabel-in .p-inputtext,
-.p-floatlabel-in .p-autocomplete-input-multiple {
-	@apply pt-6 pb-2;
-}
-
-.p-floatlabel-in:has(input:focus) label,
-.p-floatlabel-in:has(input.p-filled) label,
-.p-floatlabel-in:has(input:-webkit-autofill) label,
-.p-floatlabel-in:has(.p-inputwrapper-focus) label,
-.p-floatlabel-in:has(.p-inputwrapper-filled) label {
-	@apply top-2;
-}
-
-.p-floatlabel-on:has(input:focus) label,
-.p-floatlabel-on:has(input.p-filled) label,
-.p-floatlabel-on:has(input:-webkit-autofill) label,
-.p-floatlabel-on:has(.p-inputwrapper-focus) label,
-.p-floatlabel-on:has(.p-inputwrapper-filled) label {
-	@apply top-0 -translate-y-1/2 rounded-sm px-[0.125rem] py-0;
-}
 </style>
