@@ -4,8 +4,6 @@ import PlatformTab from "./PlatformTab.vue"
 
 defineProps<{
 	tabs: CreateTrackPlatformTab[]
-	savedLinks: Record<Platform, string>
-	iconStates: Record<Platform, string>
 }>()
 
 defineEmits<{
@@ -13,6 +11,8 @@ defineEmits<{
 }>()
 
 const currentPlatform = defineModel("currentPlatform")
+const savedLinks = defineModel<Record<Platform, string>>("savedLinks")
+const iconStates = defineModel<Record<Platform, string>>("iconStates")
 </script>
 
 <template>
@@ -28,7 +28,9 @@ const currentPlatform = defineModel("currentPlatform")
 				class="gap-1.5"
 			>
 				<PlatformTab
-					v-bind="{ tab, savedLinks, iconStates }"
+					:tab="tab"
+					v-model:saved-links="savedLinks!"
+					v-model:icon-states="iconStates!"
 					@clear-link="(event, platform) => $emit('clearLink', event, platform)"
 				/>
 			</Tab>
@@ -42,7 +44,7 @@ const currentPlatform = defineModel("currentPlatform")
 				<FloatLabel variant="in">
 					<InputText
 						type="text"
-						v-model="savedLinks[tab.platform as keyof typeof savedLinks]"
+						v-model="savedLinks![tab.platform as keyof typeof savedLinks]"
 						class="w-full px-3 py-2.5 text-cyan-700 placeholder:text-cyan-800"
 						:id="`editLink_${tab.platform}`"
 					></InputText>

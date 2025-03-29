@@ -8,14 +8,18 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AddedTagsList: typeof import('./src/components/CreateTrack/AddedTagsList.vue')['default']
     AppNav: typeof import('./src/components/AppNav.vue')['default']
     AutoComplete: typeof import('primevue/autocomplete')['default']
     BackButton: typeof import('./src/components/BackButton.vue')['default']
+    BaseInfoEdit: typeof import('./src/components/CreateTrack/BaseInfoEdit.vue')['default']
     Button: typeof import('primevue/button')['default']
     Chip: typeof import('primevue/chip')['default']
     ConfirmPopup: typeof import('primevue/confirmpopup')['default']
     FloatLabel: typeof import('primevue/floatlabel')['default']
     InputText: typeof import('primevue/inputtext')['default']
+    NewTagInput: typeof import('./src/components/CreateTrack/NewTagInput.vue')['default']
+    OriginalsEdit: typeof import('./src/components/CreateTrack/OriginalsEdit.vue')['default']
     PlatformLinkList: typeof import('./src/components/PlatformLinkList.vue')['default']
     PlatformTab: typeof import('./src/components/CreateTrack/PlatformTab.vue')['default']
     PlatformTabList: typeof import('./src/components/CreateTrack/PlatformTabList.vue')['default']
@@ -29,6 +33,7 @@ declare module 'vue' {
     TabPanel: typeof import('primevue/tabpanel')['default']
     TabPanels: typeof import('primevue/tabpanels')['default']
     Tabs: typeof import('primevue/tabs')['default']
+    TagsEdit: typeof import('./src/components/CreateTrack/TagsEdit.vue')['default']
     Toast: typeof import('primevue/toast')['default']
     TrackItem: typeof import('./src/components/TrackItem.vue')['default']
   }

@@ -11,10 +11,12 @@ import {
 	AutoCompleteCompleteEvent,
 	useConfirm,
 } from "primevue"
-import TrackItem from "@/components/TrackItem.vue"
 import axios from "axios"
 import { useToastStore } from "@/stores/toastStore"
 import PlatformTabList from "@/components/CreateTrack/PlatformTabList.vue"
+import BaseInfoEdit from "@/components/CreateTrack/BaseInfoEdit.vue"
+import TagsEdit from "@/components/CreateTrack/TagsEdit.vue"
+import OriginalsEdit from "@/components/CreateTrack/OriginalsEdit.vue"
 
 const toastStore = useToastStore()
 const confirm = useConfirm()
@@ -89,7 +91,8 @@ function clearSavedLink(platform: Platform) {
 	).classList.remove("p-filled")
 }
 
-function addTag() {
+function addInputTag() {
+	console.log(inputTagText.value)
 	if (
 		inputTagText.value.trim() &&
 		!tags.value.includes(inputTagText.value.trim())
@@ -256,147 +259,31 @@ function changeText(event: AutoCompleteChangeEvent) {
 				<label for="foundTrack">Поиск трека на площадке</label>
 			</FloatLabel>
 			<PlatformTabList
-				v-model:current-platform="currentPlatform"
-				:icon-states="iconStates"
-				:saved-links="savedLinks"
 				:tabs="tabs"
+				v-model:current-platform="currentPlatform"
+				v-model:icon-states="iconStates"
+				v-model:saved-links="savedLinks"
 				@clear-link="confirmClearSavedLink"
 			/>
 		</div>
-		<div class="flex w-full flex-col gap-3">
-			<FloatLabel variant="in">
-				<InputText
-					type="text"
-					placeholder=""
-					class="w-full px-3 py-2.5 text-cyan-700 placeholder:text-cyan-800"
-					v-model="title"
-					id="editTitle"
-				></InputText>
-				<label for="editTitle">Редактировать название</label>
-			</FloatLabel>
-			<FloatLabel variant="in">
-				<InputText
-					type="text"
-					class="w-full px-3 py-2.5 text-cyan-700 placeholder:text-cyan-800"
-					v-model="artistsNames"
-					id="editArtists"
-				></InputText>
-				<label for="editArtists">Редактировать автора(-ов) через запятую</label>
-			</FloatLabel>
-		</div>
-		<div class="flex w-full flex-col gap-2">
-			<p class="text-bold mb-1 text-lg leading-none text-yellow-700">Теги:</p>
-			<ul
-				v-if="tags.length"
-				class="flex flex-wrap gap-1"
-			>
-				<li v-for="tag in tags">
-					<div
-						class="flex items-center justify-center gap-1.5 rounded-full bg-gray-800 px-3 py-2.5 text-cyan-700"
-					>
-						<span>{{ tag }}</span>
-						<button
-							@click="removeTag(tag)"
-							class="cursor-pointer"
-						>
-							<span class="hidden">Удалить тег</span>
-							<i class="pi pi-times"></i>
-						</button>
-					</div>
-				</li>
-			</ul>
-			<p
-				v-else
-				class="text-[0.875rem] text-cyan-700"
-			>
-				Пока нет тегов. Добавьте первый (если нужно) ниже
-			</p>
-			<div class="flex gap-2 rounded-[10px] bg-gray-800">
-				<FloatLabel
-					variant="in"
-					class="w-full"
-				>
-					<InputText
-						type="text"
-						placeholder=""
-						class="w-full px-3 py-2.5 text-cyan-700 placeholder:text-cyan-800"
-						@change="addTag"
-						v-model="inputTagText"
-						id="addTag"
-					></InputText>
-					<label for="addTag">Тег</label>
-				</FloatLabel>
-				<button
-					class="rounded-r-[10px] bg-green-900 px-2.5 text-2xl leading-0 text-gray-900"
-					@click="addTag"
-				>
-					+
-				</button>
-			</div>
-		</div>
-		<div class="flex w-full flex-col gap-2">
-			<p class="text-bold mb-1 text-lg leading-none text-yellow-700">
-				Оригиналы:
-			</p>
-			<p
-				v-if="originalTracks.length === 0"
-				class="text-[0.875rem] text-cyan-700"
-			>
-				Пока нет оригиналов. Добавьте первый (если нужно) ниже
-			</p>
-			<AutoComplete
-				v-model="originalTracks"
-				placeholder="Поиск трека по базе"
-				multiple
-				:suggestions="originalTracksSuggestions"
-				@complete="searchOriginalTrack"
-				@show="originalTracksSearchInputRounded = false"
-				@hide="originalTracksSearchInputRounded = true"
-				:input-class="[
-					{ '!rounded-b-none': !originalTracksSearchInputRounded },
-					'placeholder:text-cyan-800',
-				]"
-				empty-search-message="Оригиналов по запросу не найдено"
-				append-to="self"
-				class="original-search w-full"
-				:pt:inputchip:class="originalTracks.length > 0 ? 'mt-3' : 'mt-0'"
-			>
-				<template #chip="slotProps">
-					<div class="relative">
-						<TrackItem
-							:track="slotProps.value"
-							:with-links="false"
-						/>
-						<button
-							class="absolute top-1/2 right-2 flex aspect-square -translate-y-1/2 cursor-pointer items-center justify-center rounded-lg bg-gray-800 p-2 text-red-900"
-							@click="slotProps.removeCallback"
-						>
-							<span class="hidden">Удалить оригинальный трек</span>
-							<i class="pi pi-times leading-none"></i>
-						</button>
-					</div>
-				</template>
-				<template #option="slotProps">
-					<TrackItem
-						:track="slotProps.option"
-						:with-links="false"
-						unbordered
-					/>
-				</template>
-				<template #footer>
-					<div class="mt-1 flex flex-col items-center leading-[1.25rem]">
-						<p class="text-cyan-700">Не нашли, что искали?</p>
-						<a
-							class="text-yellow-700"
-							href="/create-original"
-						>
-							Добавьте трек сами!
-						</a>
-					</div>
-					<div class="spacer absolute -bottom-4 left-0 h-6 w-full"></div>
-				</template>
-			</AutoComplete>
-		</div>
+		<BaseInfoEdit
+			v-model:title="title"
+			v-model:artists-names="artistsNames"
+		/>
+		<TagsEdit
+			:tags="tags"
+			v-model:input-tag-text="inputTagText"
+			@add-input-tag="addInputTag"
+			@remove-tag="removeTag"
+		/>
+		<OriginalsEdit
+			:original-tracks-suggestions="originalTracksSuggestions"
+			v-model:original-tracks-list="originalTracks"
+			v-model:original-tracks-search-input-rounded="
+				originalTracksSearchInputRounded
+			"
+			@search-original-track="searchOriginalTrack"
+		/>
 		<button
 			class="flex cursor-pointer items-center justify-center rounded-[10px] bg-yellow-800 px-16 py-4 text-2xl leading-none font-bold text-gray-900"
 			@click="saveTrack"
@@ -456,30 +343,6 @@ function changeText(event: AutoCompleteChangeEvent) {
 
 	.p-autocomplete-overlay {
 		@apply !top-full w-full rounded-b-[10px] bg-gray-800 px-3 pb-2.5 shadow-lg;
-	}
-}
-
-.original-search {
-	@apply mt-0;
-
-	.p-autocomplete-input-multiple {
-		@apply flex flex-col;
-	}
-
-	.p-autocomplete-chip-item {
-		@apply not-first:-translate-y-[1px];
-	}
-
-	.p-autocomplete-option {
-		@apply first:mt-[1px];
-	}
-
-	.p-autocomplete-list {
-		@apply border-y border-y-gray-700 pb-2;
-	}
-
-	.p-autocomplete-empty-message {
-		@apply mt-2;
 	}
 }
 </style>
