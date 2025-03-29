@@ -40,22 +40,38 @@ const tabs: CreateTrackPlatformTab[] = [
 	},
 ]
 
+const iconStates = ref<Record<Platform, string>>({
+	youtubeMusic: markIcon,
+	spotify: markIcon,
+	yandexMusic: markIcon,
+})
+
 const currentPlatform = ref<Platform>("youtubeMusic")
 
-const iconStates = ref<Record<string, string>>({})
-tabs.forEach((tab) => {
-	iconStates.value[tab.platform] = markIcon
+const trackFoundOnPlatform = ref<object | string>({})
+const searchPlatformText = ref<string>("")
+const platformTrackSuggestions = ref<Record<Platform, object[]>>({
+	youtubeMusic: [{}],
+	yandexMusic: [{}],
+	spotify: [{}],
 })
+const searchTrackOnPlatformRounded = ref(true)
 
 const savedLinks = ref({
 	youtubeMusic: "",
 	spotify: "",
 	yandexMusic: "",
 })
+
 const title = ref<string>("")
 const artistsNames = ref<string>("")
+
 const tags = ref<string[]>([])
+const inputTagText = ref<string>("")
+
 const originalTracks = ref<OriginalTrack[]>([])
+const originalTracksSuggestions = ref<OriginalTrack[]>([])
+const originalTracksSearchInputRounded = ref(true)
 
 function clearSavedLink(platform: Platform) {
 	savedLinks.value[platform] = ""
@@ -72,8 +88,6 @@ function clearSavedLink(platform: Platform) {
 		document.querySelector(".platform-search .p-inputtext") as HTMLInputElement
 	).classList.remove("p-filled")
 }
-
-const inputTagText = ref<string>("")
 
 function addTag() {
 	if (
@@ -106,8 +120,6 @@ function confirmClearSavedLink(event: Event, platform: Platform) {
 	})
 }
 
-const originalTracksSuggestions = ref<OriginalTrack[]>([])
-
 function searchOriginalTrack(event: AutoCompleteCompleteEvent) {
 	originalTracksSuggestions.value = trackList.value.filter((track) => {
 		return (
@@ -116,8 +128,6 @@ function searchOriginalTrack(event: AutoCompleteCompleteEvent) {
 		)
 	})
 }
-
-const originalTracksSearchInputRounded = ref(true)
 
 async function saveTrack() {
 	try {
@@ -145,15 +155,6 @@ async function saveTrack() {
 		})
 	}
 }
-
-const searchPlatformText = ref<string>("")
-const trackFoundOnPlatform = ref<object | string>({})
-
-const platformTrackSuggestions = ref<Record<Platform, object[]>>({
-	youtubeMusic: [{}],
-	yandexMusic: [{}],
-	spotify: [{}],
-})
 
 async function searchTrackOnPlatform(
 	event: AutoCompleteCompleteEvent,
@@ -187,8 +188,6 @@ async function searchTrackOnPlatform(
 		}
 	}, 250)
 }
-
-const searchTrackOnPlatformRounded = ref(true)
 
 async function selectFoundTrackOnPlatform(
 	event: AutoCompleteChangeEvent,
@@ -410,30 +409,6 @@ function changeText(event: AutoCompleteChangeEvent) {
 <style>
 @reference "../assets/styles/main.css";
 
-.p-tabs {
-	@apply flex w-full flex-col gap-3;
-}
-
-.p-tablist-content {
-	@apply flex justify-center;
-}
-
-.p-tablist-tab-list {
-	@apply flex w-full gap-1;
-}
-
-.p-tab {
-	@apply flex w-full items-center justify-center bg-gray-800 py-2 first:rounded-l-[10px] last-of-type:rounded-r-[10px];
-}
-
-.p-tab-active {
-	@apply bg-gray-700;
-}
-
-.p-tablist-active-bar {
-	@apply hidden;
-}
-
 .p-confirmpopup {
 	@apply absolute top-0 left-0 mt-[10px] rounded-md border border-gray-600 bg-gray-800 p-2 text-cyan-700 before:pointer-events-none before:absolute before:bottom-full before:left-5 before:-ms-[10px] before:h-0 before:w-0 before:border-[10px] before:border-transparent before:border-b-gray-600 after:pointer-events-none after:absolute after:bottom-full after:left-5 after:-ms-[8px] after:h-0 after:w-0 after:border-[8px] after:border-transparent after:border-b-gray-800;
 }
@@ -539,20 +514,13 @@ function changeText(event: AutoCompleteChangeEvent) {
 }
 
 .p-floatlabel-in .p-inputtext,
-.p-floatlabel-in .p-textarea,
-.p-floatlabel-in .p-select-label,
-.p-floatlabel-in .p-multiselect-label,
-.p-floatlabel-in .p-autocomplete-input-multiple,
-.p-floatlabel-in .p-cascadeselect-label,
-.p-floatlabel-in .p-treeselect-label {
+.p-floatlabel-in .p-autocomplete-input-multiple {
 	@apply pt-6 pb-2;
 }
 
 .p-floatlabel-in:has(input:focus) label,
 .p-floatlabel-in:has(input.p-filled) label,
 .p-floatlabel-in:has(input:-webkit-autofill) label,
-.p-floatlabel-in:has(textarea:focus) label,
-.p-floatlabel-in:has(textarea.p-filled) label,
 .p-floatlabel-in:has(.p-inputwrapper-focus) label,
 .p-floatlabel-in:has(.p-inputwrapper-filled) label {
 	@apply top-2;
@@ -561,8 +529,6 @@ function changeText(event: AutoCompleteChangeEvent) {
 .p-floatlabel-on:has(input:focus) label,
 .p-floatlabel-on:has(input.p-filled) label,
 .p-floatlabel-on:has(input:-webkit-autofill) label,
-.p-floatlabel-on:has(textarea:focus) label,
-.p-floatlabel-on:has(textarea.p-filled) label,
 .p-floatlabel-on:has(.p-inputwrapper-focus) label,
 .p-floatlabel-on:has(.p-inputwrapper-filled) label {
 	@apply top-0 -translate-y-1/2 rounded-sm px-[0.125rem] py-0;

@@ -27,7 +27,10 @@ const currentPlatform = defineModel("currentPlatform")
 				:value="tab.platform"
 				class="gap-1.5"
 			>
-				<PlatformTab v-bind="{ tab, tabs, savedLinks, iconStates }" />
+				<PlatformTab
+					v-bind="{ tab, tabs, savedLinks, iconStates }"
+					@clear-link="(event, platform) => $emit('clearLink', event, platform)"
+				/>
 			</Tab>
 		</TabList>
 		<TabPanels>
@@ -52,4 +55,30 @@ const currentPlatform = defineModel("currentPlatform")
 	</Tabs>
 </template>
 
-<style scoped></style>
+<style>
+@reference "../../assets/styles/main.css";
+
+.p-tabs {
+	@apply flex w-full flex-col gap-3;
+}
+
+.p-tablist-content {
+	@apply flex justify-center;
+}
+
+.p-tablist-tab-list {
+	@apply flex w-full gap-1;
+}
+
+.p-tab {
+	@apply flex w-full items-center justify-center bg-gray-800 py-2 first:rounded-l-[10px] last-of-type:rounded-r-[10px];
+}
+
+.p-tab-active {
+	@apply bg-gray-700;
+}
+
+.p-tablist-active-bar {
+	@apply hidden;
+}
+</style>

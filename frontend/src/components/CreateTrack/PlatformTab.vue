@@ -8,6 +8,10 @@ defineProps<{
 	savedLinks: Record<Platform, string>
 	iconStates: Record<Platform, string>
 }>()
+
+defineEmits<{
+	clearLink: [event: Event, platform: Platform]
+}>()
 </script>
 
 <template>
