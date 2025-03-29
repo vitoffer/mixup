@@ -2,7 +2,6 @@
 import trackListIcon from "../assets/icons/track_list.svg?component"
 import createTrackIcon from "../assets/icons/create_track.svg?component"
 import { useRoute } from "vue-router"
-import { onMounted } from "vue"
 
 const route = useRoute()
 
@@ -25,20 +24,6 @@ function isActive(linkName: string) {
 			? true
 			: false
 }
-
-onMounted(() => {
-	document.addEventListener("focusin", (event) => {
-		if (window.innerWidth <= 700 && event.target instanceof HTMLInputElement) {
-			document.querySelector("nav")!.style.display = "none"
-		}
-	})
-
-	document.addEventListener("focusout", (event) => {
-		if (window.innerWidth <= 700 && event.target instanceof HTMLInputElement) {
-			document.querySelector("nav")!.style.display = "block"
-		}
-	})
-})
 </script>
 
 <template>
