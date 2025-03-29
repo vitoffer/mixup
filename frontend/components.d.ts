@@ -13,6 +13,8 @@ declare module 'vue' {
     BackButton: typeof import('./src/components/BackButton.vue')['default']
     Chip: typeof import('primevue/chip')['default']
     ConfirmPopup: typeof import('primevue/confirmpopup')['default']
+    FloatLabel: typeof import('primevue/floatlabel')['default']
+    InputText: typeof import('primevue/inputtext')['default']
     PlatformLinkList: typeof import('./src/components/PlatformLinkList.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

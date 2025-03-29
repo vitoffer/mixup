@@ -61,12 +61,16 @@ function clearSavedLink(platform: Platform) {
 	savedLinks.value[platform] = ""
 	iconStates.value[platform] = markIcon
 
-	// trackFoundOnPlatform.value[platform] = {}
-
 	if (Object.values(savedLinks.value).every((link) => link.length === 0)) {
 		title.value = ""
 		artistsNames.value = ""
+		trackFoundOnPlatform.value = ""
+		searchPlatformText.value = ""
 	}
+
+	;(
+		document.querySelector(".platform-search .p-inputtext") as HTMLInputElement
+	).classList.remove("p-filled")
 }
 
 const inputTagText = ref<string>("")
@@ -142,12 +146,6 @@ async function saveTrack() {
 	}
 }
 
-// const trackFoundOnPlatform = ref<Record<Platform, object>>({
-// 	youtubeMusic: {},
-// 	yandexMusic: {},
-// 	spotify: {},
-// })
-
 const searchPlatformText = ref<string>("")
 const trackFoundOnPlatform = ref<object | string>({})
 
@@ -196,12 +194,19 @@ async function selectFoundTrackOnPlatform(
 	event: AutoCompleteChangeEvent,
 	platform: Platform,
 ) {
-	if (!title.value) {
+	const allLinksEmpty =
+		Object.keys(savedLinks.value).filter(
+			(key) => key !== platform && savedLinks.value[key as Platform],
+		).length === 0
+
+	if (!title.value || allLinksEmpty) {
 		title.value = event.value.title
 	}
-	if (artistsNames.value.length === 0) {
+
+	if (artistsNames.value.length === 0 || allLinksEmpty) {
 		artistsNames.value = event.value.artistsNames.join(", ")
 	}
+
 	savedLinks.value[platform] = event.value.url
 
 	await nextTick()
@@ -221,33 +226,36 @@ function changeText(event: AutoCompleteChangeEvent) {
 	<div class="flex flex-col items-center gap-5">
 		<h1 class="text-xl font-bold text-yellow-900">Добавление микса</h1>
 		<div class="flex w-full flex-col gap-3">
-			<AutoComplete
-				v-model="trackFoundOnPlatform"
-				placeholder="Поиск трека на площадке"
-				:suggestions="platformTrackSuggestions[currentPlatform]"
-				@complete="searchTrackOnPlatform($event, currentPlatform)"
-				input-class="placeholder:text-cyan-800"
-				:class="{ '!rounded-b-none': !searchTrackOnPlatformRounded }"
-				@change="changeText"
-				@show="searchTrackOnPlatformRounded = false"
-				@hide="searchTrackOnPlatformRounded = true"
-				@option-select="selectFoundTrackOnPlatform($event, currentPlatform)"
-				empty-search-message="Треков не найдено"
-				append-to="self"
-				:option-label="
-					(track) => `${track.title} - ${track.artistsNames.join(', ')}`
-				"
-				class="platform-search w-full"
-				dropdown
-			>
-				<template #option="{ option }">
-					<p>
-						{{ option.title }}
-						-
-						{{ option.artistsNames.join(", ") }}
-					</p>
-				</template>
-			</AutoComplete>
+			<FloatLabel variant="in">
+				<AutoComplete
+					v-model="trackFoundOnPlatform"
+					:suggestions="platformTrackSuggestions[currentPlatform]"
+					@complete="searchTrackOnPlatform($event, currentPlatform)"
+					input-class="placeholder:text-cyan-800"
+					input-id="foundTrack"
+					:class="{ '!rounded-b-none': !searchTrackOnPlatformRounded }"
+					@change="changeText"
+					@show="searchTrackOnPlatformRounded = false"
+					@hide="searchTrackOnPlatformRounded = true"
+					@option-select="selectFoundTrackOnPlatform($event, currentPlatform)"
+					empty-search-message="Треков не найдено"
+					append-to="self"
+					:option-label="
+						(track) => `${track.title} - ${track.artistsNames.join(', ')}`
+					"
+					class="platform-search w-full"
+					dropdown
+				>
+					<template #option="{ option }">
+						<p>
+							{{ option.title }}
+							-
+							{{ option.artistsNames.join(", ") }}
+						</p>
+					</template>
+				</AutoComplete>
+				<label for="foundTrack">Поиск трека на площадке</label>
+			</FloatLabel>
 			<Tabs
 				value="youtubeMusic"
 				@update:value="currentPlatform = $event as Platform"
@@ -287,30 +295,41 @@ function changeText(event: AutoCompleteChangeEvent) {
 						:key="tab.platform"
 						:value="tab.platform"
 					>
-						<input
-							type="text"
-							v-model="savedLinks[tab.platform as keyof typeof savedLinks]"
-							:placeholder="tab.placeholder"
-							class="w-full px-3 py-2.5 text-cyan-700 placeholder:text-cyan-800"
-						/>
+						<FloatLabel variant="in">
+							<InputText
+								type="text"
+								v-model="savedLinks[tab.platform as keyof typeof savedLinks]"
+								class="w-full px-3 py-2.5 text-cyan-700 placeholder:text-cyan-800"
+								:id="`editLink_${tab.platform}`"
+							></InputText>
+							<label :for="`editLink_${tab.platform}`">
+								{{ tab.placeholder }}
+							</label>
+						</FloatLabel>
 					</TabPanel>
 				</TabPanels>
 			</Tabs>
 		</div>
 		<div class="flex w-full flex-col gap-3">
-			<input
-				type="text"
-				placeholder="Редактировать название"
-				class="w-full px-3 py-2.5 text-cyan-700 placeholder:text-cyan-800"
-				v-model="title"
-			/>
-
-			<input
-				type="text"
-				placeholder="Редактировать автора(-ов через запятую)"
-				class="w-full px-3 py-2.5 text-cyan-700 placeholder:text-cyan-800"
-				v-model="artistsNames"
-			/>
+			<FloatLabel variant="in">
+				<InputText
+					type="text"
+					placeholder=""
+					class="w-full px-3 py-2.5 text-cyan-700 placeholder:text-cyan-800"
+					v-model="title"
+					id="editTitle"
+				></InputText>
+				<label for="editTitle">Редактировать название</label>
+			</FloatLabel>
+			<FloatLabel variant="in">
+				<InputText
+					type="text"
+					class="w-full px-3 py-2.5 text-cyan-700 placeholder:text-cyan-800"
+					v-model="artistsNames"
+					id="editArtists"
+				></InputText>
+				<label for="editArtists">Редактировать автора(-ов через запятую)</label>
+			</FloatLabel>
 		</div>
 		<div class="flex w-full flex-col gap-2">
 			<p class="text-bold mb-1 text-lg leading-none text-yellow-700">Теги:</p>
@@ -340,13 +359,20 @@ function changeText(event: AutoCompleteChangeEvent) {
 				Пока нет тегов. Добавьте первый (если нужно) ниже
 			</p>
 			<div class="flex gap-2 rounded-[10px] bg-gray-800">
-				<input
-					type="text"
-					placeholder="Тег"
-					class="w-full px-3 py-2.5 text-cyan-700 placeholder:text-cyan-800"
-					@change="addTag"
-					v-model="inputTagText"
-				/>
+				<FloatLabel
+					variant="in"
+					class="w-full"
+				>
+					<InputText
+						type="text"
+						placeholder=""
+						class="w-full px-3 py-2.5 text-cyan-700 placeholder:text-cyan-800"
+						@change="addTag"
+						v-model="inputTagText"
+						id="addTag"
+					></InputText>
+					<label for="addTag">Тег</label>
+				</FloatLabel>
 				<button
 					class="rounded-r-[10px] bg-green-900 px-2.5 text-2xl leading-0 text-gray-900"
 					@click="addTag"
@@ -526,5 +552,65 @@ function changeText(event: AutoCompleteChangeEvent) {
 	.p-autocomplete-empty-message {
 		@apply mt-2;
 	}
+}
+
+.p-floatlabel {
+	@apply relative block;
+}
+
+.p-floatlabel label {
+	@apply pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 leading-none transition-all duration-200 ease-out;
+}
+
+.p-floatlabel:has(.p-inputtext) label {
+	@apply top-5 translate-y-0;
+}
+
+.p-floatlabel:has(.p-inputicon:first-child) label {
+	@apply start-10;
+}
+
+.p-floatlabel:has(.p-invalid) label {
+	@apply text-red-400 dark:text-red-300;
+}
+
+.p-floatlabel:has(input:focus) label,
+.p-floatlabel:has(input.p-filled) label,
+.p-floatlabel:has(input:-webkit-autofill) label,
+.p-floatlabel:has(textarea:focus) label,
+.p-floatlabel:has(textarea.p-filled) label,
+.p-floatlabel:has(.p-inputwrapper-focus) label,
+.p-floatlabel:has(.p-inputwrapper-filled) label {
+	@apply -top-5 translate-y-0 text-xs font-normal;
+}
+
+.p-floatlabel-in .p-inputtext,
+.p-floatlabel-in .p-textarea,
+.p-floatlabel-in .p-select-label,
+.p-floatlabel-in .p-multiselect-label,
+.p-floatlabel-in .p-autocomplete-input-multiple,
+.p-floatlabel-in .p-cascadeselect-label,
+.p-floatlabel-in .p-treeselect-label {
+	@apply pt-6 pb-2;
+}
+
+.p-floatlabel-in:has(input:focus) label,
+.p-floatlabel-in:has(input.p-filled) label,
+.p-floatlabel-in:has(input:-webkit-autofill) label,
+.p-floatlabel-in:has(textarea:focus) label,
+.p-floatlabel-in:has(textarea.p-filled) label,
+.p-floatlabel-in:has(.p-inputwrapper-focus) label,
+.p-floatlabel-in:has(.p-inputwrapper-filled) label {
+	@apply top-2;
+}
+
+.p-floatlabel-on:has(input:focus) label,
+.p-floatlabel-on:has(input.p-filled) label,
+.p-floatlabel-on:has(input:-webkit-autofill) label,
+.p-floatlabel-on:has(textarea:focus) label,
+.p-floatlabel-on:has(textarea.p-filled) label,
+.p-floatlabel-on:has(.p-inputwrapper-focus) label,
+.p-floatlabel-on:has(.p-inputwrapper-filled) label {
+	@apply top-0 -translate-y-1/2 rounded-sm px-[0.125rem] py-0;
 }
 </style>
