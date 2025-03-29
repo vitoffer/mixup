@@ -28,7 +28,7 @@ const currentPlatform = defineModel("currentPlatform")
 				class="gap-1.5"
 			>
 				<PlatformTab
-					v-bind="{ tab, tabs, savedLinks, iconStates }"
+					v-bind="{ tab, savedLinks, iconStates }"
 					@clear-link="(event, platform) => $emit('clearLink', event, platform)"
 				/>
 			</Tab>
