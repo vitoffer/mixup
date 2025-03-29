@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue"
+import { nextTick, ref } from "vue"
 import youtubeMusicIcon from "../assets/icons/youtube_logo.svg?url"
 import spotifyIcon from "../assets/icons/spotify_logo.svg?url"
 import yandexMusicIcon from "../assets/icons/yandex_logo.svg?url"
@@ -40,6 +40,8 @@ const tabs = [
 	},
 ]
 
+const currentPlatform = ref<Platform>("youtubeMusic")
+
 const iconStates = ref<Record<string, string>>({})
 tabs.forEach((tab) => {
 	iconStates.value[tab.platform] = markIcon
@@ -59,7 +61,7 @@ function clearSavedLink(platform: Platform) {
 	savedLinks.value[platform] = ""
 	iconStates.value[platform] = markIcon
 
-	trackFoundOnPlatform.value[platform] = {}
+	// trackFoundOnPlatform.value[platform] = {}
 
 	if (Object.values(savedLinks.value).every((link) => link.length === 0)) {
 		title.value = ""
@@ -136,11 +138,14 @@ async function saveTrack() {
 	}
 }
 
-const trackFoundOnPlatform = ref<Record<Platform, object>>({
-	youtubeMusic: {},
-	yandexMusic: {},
-	spotify: {},
-})
+// const trackFoundOnPlatform = ref<Record<Platform, object>>({
+// 	youtubeMusic: {},
+// 	yandexMusic: {},
+// 	spotify: {},
+// })
+
+const searchPlatformText = ref<string>("")
+const trackFoundOnPlatform = ref<object | string>({})
 
 const platformTrackSuggestions = ref<Record<Platform, object[]>>({
 	youtubeMusic: [{}],
@@ -152,6 +157,11 @@ async function searchTrackOnPlatform(
 	event: AutoCompleteCompleteEvent,
 	platform: Platform,
 ) {
+	if (!event.query && !searchPlatformText.value) {
+		platformTrackSuggestions.value[platform] = []
+		return
+	}
+
 	const formattedPlatform = {
 		youtubeMusic: "youtube",
 		yandexMusic: "yandex",
@@ -164,7 +174,7 @@ async function searchTrackOnPlatform(
 				`${import.meta.env.VITE_BASE_API_URL}/search/${formattedPlatform}`,
 				{
 					params: {
-						q: event.query,
+						q: event.query || searchPlatformText.value,
 					},
 				},
 			)
@@ -178,7 +188,7 @@ async function searchTrackOnPlatform(
 
 const searchTrackOnPlatformRounded = ref(true)
 
-function selectFoundTrackOnPlatform(
+async function selectFoundTrackOnPlatform(
 	event: AutoCompleteChangeEvent,
 	platform: Platform,
 ) {
@@ -189,6 +199,16 @@ function selectFoundTrackOnPlatform(
 		artistsNames.value = event.value.artistsNames.join(", ")
 	}
 	savedLinks.value[platform] = event.value.url
+
+	await nextTick()
+	trackFoundOnPlatform.value = searchPlatformText.value
+}
+
+function changeText(event: AutoCompleteChangeEvent) {
+	if (typeof event.value === "object") {
+		return
+	}
+	searchPlatformText.value = event.value
 }
 </script>
 
@@ -196,80 +216,85 @@ function selectFoundTrackOnPlatform(
 	<ConfirmPopup />
 	<div class="flex flex-col items-center gap-5">
 		<h1 class="text-xl font-bold text-yellow-900">Добавление микса</h1>
-		<Tabs value="youtubeMusic">
-			<TabList>
-				<Tab
-					v-for="(tab, index) in tabs"
-					:key="tab.platform"
-					:value="tab.platform"
-					class="flex gap-1.5"
-				>
-					<img
-						:src="tab.icon"
-						alt="Лого платформы"
-						class="max-h-[36px] w-[38px]"
-					/>
-					<div
-						v-if="!savedLinks[tab.platform as keyof typeof savedLinks]"
-						class="flex aspect-square w-6 items-center justify-center after:block after:aspect-square after:w-2 after:rounded-full after:bg-cyan-700"
-					></div>
-					<img
-						v-else
-						:src="iconStates[tab.platform]"
-						alt="Индикатор заполненности ссылки на платформу"
-						class="cursor-pointer"
-						@click.prevent="
-							confirmClearSavedLink($event, tab.platform as Platform)
-						"
-						@mouseenter="iconStates[tab.platform] = crossIcon"
-						@mouseleave="iconStates[tab.platform] = markIcon"
-					/>
-				</Tab>
-			</TabList>
-			<TabPanels>
-				<TabPanel
-					v-for="(tab, index) in tabs"
-					:key="tab.platform"
-					:value="tab.platform"
-				>
-					<input
-						type="text"
-						v-model="savedLinks[tab.platform as keyof typeof savedLinks]"
-						:placeholder="tab.placeholder"
-						class="w-full px-3 py-2.5 text-cyan-700 placeholder:text-cyan-800"
-					/>
-					<AutoComplete
-						v-model="trackFoundOnPlatform[tab.platform as Platform]"
-						placeholder="Поиск трека на площадке"
-						:suggestions="platformTrackSuggestions[tab.platform as Platform]"
-						@complete="searchTrackOnPlatform($event, tab.platform as Platform)"
-						:input-class="[
-							{ '!rounded-b-none': !searchTrackOnPlatformRounded },
-							'placeholder:text-cyan-800',
-						]"
-						@show="searchTrackOnPlatformRounded = false"
-						@hide="searchTrackOnPlatformRounded = true"
-						@option-select="
-							selectFoundTrackOnPlatform($event, tab.platform as Platform)
-						"
-						empty-search-message="Треков не найдено"
-						append-to="self"
-						:option-label="
-							(track) => `${track.title} - ${track.artistsNames.join(', ')}`
-						"
-						class="platform-search"
+		<div class="flex w-full flex-col gap-3">
+			<AutoComplete
+				v-model="trackFoundOnPlatform"
+				placeholder="Поиск трека на площадке"
+				:suggestions="platformTrackSuggestions[currentPlatform]"
+				@complete="searchTrackOnPlatform($event, currentPlatform)"
+				:input-class="[
+					{ '!rounded-b-none': !searchTrackOnPlatformRounded },
+					'placeholder:text-cyan-800',
+				]"
+				@change="changeText"
+				@show="searchTrackOnPlatformRounded = false"
+				@hide="searchTrackOnPlatformRounded = true"
+				@option-select="selectFoundTrackOnPlatform($event, currentPlatform)"
+				empty-search-message="Треков не найдено"
+				append-to="self"
+				:option-label="
+					(track) => `${track.title} - ${track.artistsNames.join(', ')}`
+				"
+				class="platform-search w-full"
+				dropdown
+			>
+				<template #option="{ option }">
+					<p>
+						{{ option.title }}
+						-
+						{{ option.artistsNames.join(", ") }}
+					</p>
+				</template>
+			</AutoComplete>
+			<Tabs
+				value="youtubeMusic"
+				@update:value="currentPlatform = $event as Platform"
+			>
+				<TabList>
+					<Tab
+						v-for="(tab, index) in tabs"
+						:key="tab.platform"
+						:value="tab.platform"
+						class="gap-1.5"
 					>
-						<template #option="{ option }">
-							<p>
-								{{ option.title }}
-								-
-								{{ option.artistsNames.join(", ") }}
-							</p>
-						</template>
-					</AutoComplete>
-				</TabPanel>
-			</TabPanels>
-		</Tabs>
+						<img
+							:src="tab.icon"
+							alt="Лого платформы"
+							class="max-h-[36px] w-[38px]"
+						/>
+						<div
+							v-if="!savedLinks[tab.platform as keyof typeof savedLinks]"
+							class="flex aspect-square w-6 items-center justify-center after:block after:aspect-square after:w-2 after:rounded-full after:bg-cyan-700"
+						></div>
+						<img
+							v-else
+							:src="iconStates[tab.platform]"
+							alt="Индикатор заполненности ссылки на платформу"
+							class="cursor-pointer"
+							@click.prevent="
+								confirmClearSavedLink($event, tab.platform as Platform)
+							"
+							@mouseenter="iconStates[tab.platform] = crossIcon"
+							@mouseleave="iconStates[tab.platform] = markIcon"
+						/>
+					</Tab>
+				</TabList>
+				<TabPanels>
+					<TabPanel
+						v-for="(tab, index) in tabs"
+						:key="tab.platform"
+						:value="tab.platform"
+					>
+						<input
+							type="text"
+							v-model="savedLinks[tab.platform as keyof typeof savedLinks]"
+							:placeholder="tab.placeholder"
+							class="w-full px-3 py-2.5 text-cyan-700 placeholder:text-cyan-800"
+						/>
+					</TabPanel>
+				</TabPanels>
+			</Tabs>
+		</div>
 		<div class="flex w-full flex-col gap-3">
 			<input
 				type="text"
@@ -394,11 +419,11 @@ function selectFoundTrackOnPlatform(
 }
 
 .p-tablist-tab-list {
-	@apply flex w-fit gap-1;
+	@apply flex w-full gap-1;
 }
 
 .p-tab {
-	@apply flex items-center justify-center bg-gray-800 p-2 first:rounded-l-[10px] last-of-type:rounded-r-[10px];
+	@apply flex w-full items-center justify-center bg-gray-800 py-2 first:rounded-l-[10px] last-of-type:rounded-r-[10px];
 }
 
 .p-tab-active {
@@ -430,16 +455,22 @@ function selectFoundTrackOnPlatform(
 }
 
 .platform-search {
+	@apply flex items-center rounded-[10px] bg-gray-800;
+
 	.p-autocomplete-option {
 		@apply border-b-gray-700 py-1 leading-5 not-last:border-b;
 	}
 
-	.p-autocomplete-overlay {
-		/* @apply; */
+	.p-autocomplete-input {
+		@apply min-w-[24ch];
 	}
 
 	.p-autocomplete-list-container {
 		@apply overflow-y-auto;
+	}
+
+	.p-autocomplete-dropdown {
+		@apply block aspect-square p-2 leading-3;
 	}
 }
 
@@ -452,7 +483,9 @@ function selectFoundTrackOnPlatform(
 }
 
 .p-autocomplete {
-	@apply mt-3;
+	&.original-search {
+		@apply mt-3;
+	}
 
 	input {
 		@apply w-full px-3 py-2.5 text-cyan-700;
@@ -460,7 +493,7 @@ function selectFoundTrackOnPlatform(
 }
 
 .p-autocomplete-overlay {
-	@apply w-full rounded-b-[10px] bg-gray-800 px-3 pb-2.5;
+	@apply w-full rounded-b-[10px] bg-gray-800 px-3 pb-2.5 shadow-lg;
 }
 
 .p-autocomplete-list {
