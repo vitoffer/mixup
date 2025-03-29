@@ -69,12 +69,16 @@ function clearSavedLink(platform: Platform) {
 	}
 }
 
-function addTag(event: Event) {
-	const target = event.target as HTMLInputElement
-	if (target.value.trim() && !tags.value.includes(target.value.trim())) {
-		tags.value.push(target.value.trim())
+const inputTagText = ref<string>("")
+
+function addTag() {
+	if (
+		inputTagText.value.trim() &&
+		!tags.value.includes(inputTagText.value.trim())
+	) {
+		tags.value.push(inputTagText.value.trim())
 	}
-	target.value = ""
+	inputTagText.value = ""
 }
 
 async function removeTag(tag: string) {
@@ -222,10 +226,8 @@ function changeText(event: AutoCompleteChangeEvent) {
 				placeholder="Поиск трека на площадке"
 				:suggestions="platformTrackSuggestions[currentPlatform]"
 				@complete="searchTrackOnPlatform($event, currentPlatform)"
-				:input-class="[
-					{ '!rounded-b-none': !searchTrackOnPlatformRounded },
-					'placeholder:text-cyan-800',
-				]"
+				input-class="placeholder:text-cyan-800"
+				:class="{ '!rounded-b-none': !searchTrackOnPlatformRounded }"
 				@change="changeText"
 				@show="searchTrackOnPlatformRounded = false"
 				@hide="searchTrackOnPlatformRounded = true"
@@ -335,18 +337,33 @@ function changeText(event: AutoCompleteChangeEvent) {
 				v-else
 				class="text-[0.875rem] text-cyan-700"
 			>
-				Пусто... Добавьте первый тег (если нужно) ниже
+				Пока нет тегов. Добавьте первый (если нужно) ниже
 			</p>
-			<input
-				type="text"
-				placeholder="+ Тег"
-				class="w-full px-3 py-2.5 text-cyan-700 placeholder:text-cyan-800"
-				@change="addTag"
-			/>
+			<div class="flex gap-2 rounded-[10px] bg-gray-800">
+				<input
+					type="text"
+					placeholder="Тег"
+					class="w-full px-3 py-2.5 text-cyan-700 placeholder:text-cyan-800"
+					@change="addTag"
+					v-model="inputTagText"
+				/>
+				<button
+					class="rounded-r-[10px] bg-green-900 px-2.5 text-2xl leading-0 text-gray-900"
+					@click="addTag"
+				>
+					+
+				</button>
+			</div>
 		</div>
 		<div class="flex w-full flex-col gap-2">
 			<p class="text-bold mb-1 text-lg leading-none text-yellow-700">
 				Оригиналы:
+			</p>
+			<p
+				v-if="originalTracks.length === 0"
+				class="text-[0.875rem] text-cyan-700"
+			>
+				Пока нет оригиналов. Добавьте первый (если нужно) ниже
 			</p>
 			<AutoComplete
 				v-model="originalTracks"
@@ -362,6 +379,8 @@ function changeText(event: AutoCompleteChangeEvent) {
 				]"
 				empty-search-message="Оригиналов по запросу не найдено"
 				append-to="self"
+				class="original-search w-full"
+				:pt:inputchip:class="originalTracks.length > 0 ? 'mt-3' : 'mt-0'"
 			>
 				<template #chip="slotProps">
 					<div class="relative">
@@ -395,6 +414,7 @@ function changeText(event: AutoCompleteChangeEvent) {
 							Добавьте трек сами!
 						</a>
 					</div>
+					<div class="spacer absolute -bottom-4 left-0 h-6 w-full"></div>
 				</template>
 			</AutoComplete>
 		</div>
@@ -454,6 +474,10 @@ function changeText(event: AutoCompleteChangeEvent) {
 	@apply flex gap-2;
 }
 
+.p-autocomplete-list-container {
+	@apply overflow-y-auto;
+}
+
 .platform-search {
 	@apply flex items-center rounded-[10px] bg-gray-800;
 
@@ -465,42 +489,42 @@ function changeText(event: AutoCompleteChangeEvent) {
 		@apply min-w-[24ch];
 	}
 
-	.p-autocomplete-list-container {
-		@apply overflow-y-auto;
-	}
-
 	.p-autocomplete-dropdown {
 		@apply block aspect-square p-2 leading-3;
 	}
 }
 
-.p-autocomplete-input-multiple {
-	@apply flex flex-col;
-}
-
-.p-autocomplete-chip-item {
-	@apply not-first:-translate-y-[1px];
-}
-
 .p-autocomplete {
-	&.original-search {
-		@apply mt-3;
-	}
-
 	input {
 		@apply w-full px-3 py-2.5 text-cyan-700;
 	}
+
+	.p-autocomplete-overlay {
+		@apply !top-full w-full rounded-b-[10px] bg-gray-800 px-3 pb-2.5 shadow-lg;
+	}
 }
 
-.p-autocomplete-overlay {
-	@apply w-full rounded-b-[10px] bg-gray-800 px-3 pb-2.5 shadow-lg;
-}
+.original-search {
+	@apply mt-0;
 
-.p-autocomplete-list {
-	@apply border-y border-y-gray-700 pb-2;
-}
+	.p-autocomplete-input-multiple {
+		@apply flex flex-col;
+	}
 
-.p-autocomplete-empty-message {
-	@apply mt-2;
+	.p-autocomplete-chip-item {
+		@apply not-first:-translate-y-[1px];
+	}
+
+	.p-autocomplete-option {
+		@apply first:mt-[1px];
+	}
+
+	.p-autocomplete-list {
+		@apply border-y border-y-gray-700 pb-2;
+	}
+
+	.p-autocomplete-empty-message {
+		@apply mt-2;
+	}
 }
 </style>
