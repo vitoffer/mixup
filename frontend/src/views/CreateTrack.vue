@@ -495,19 +495,9 @@ function changeText(event: AutoCompleteChangeEvent) {
 	@apply top-5 translate-y-0;
 }
 
-.p-floatlabel:has(.p-inputicon:first-child) label {
-	@apply start-10;
-}
-
-.p-floatlabel:has(.p-invalid) label {
-	@apply text-red-400 dark:text-red-300;
-}
-
 .p-floatlabel:has(input:focus) label,
 .p-floatlabel:has(input.p-filled) label,
 .p-floatlabel:has(input:-webkit-autofill) label,
-.p-floatlabel:has(textarea:focus) label,
-.p-floatlabel:has(textarea.p-filled) label,
 .p-floatlabel:has(.p-inputwrapper-focus) label,
 .p-floatlabel:has(.p-inputwrapper-filled) label {
 	@apply -top-5 translate-y-0 text-xs font-normal;
