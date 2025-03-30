@@ -1,17 +1,7 @@
 <script setup lang="ts">
-import { nextTick } from "vue"
-import youtubeMusicIcon from "../assets/icons/youtube_logo.svg?url"
-import spotifyIcon from "../assets/icons/spotify_logo.svg?url"
-import yandexMusicIcon from "../assets/icons/yandex_logo.svg?url"
 import { trackList } from "@/storage/storage"
-import { CreateTrackPlatformTab, Platform } from "@/types"
-import {
-	AutoCompleteChangeEvent,
-	AutoCompleteCompleteEvent,
-	useConfirm,
-} from "primevue"
-import axios from "axios"
-import { useToastStore } from "@/stores/toastStore"
+import { Platform } from "@/types"
+import { AutoCompleteCompleteEvent, useConfirm } from "primevue"
 import PlatformTabList from "@/components/CreateTrack/PlatformTabList.vue"
 import BaseInfoEdit from "@/components/CreateTrack/BaseInfoEdit.vue"
 import TagsEdit from "@/components/CreateTrack/TagsEdit.vue"
@@ -19,7 +9,6 @@ import OriginalsEdit from "@/components/CreateTrack/OriginalsEdit.vue"
 import { useSavedInfo } from "@/composables/createTrack/savedInfo"
 import { useOriginalTracks } from "@/composables/createTrack/originalTracks"
 
-const toastStore = useToastStore()
 const confirm = useConfirm()
 
 const {
@@ -33,11 +22,13 @@ const {
 	originalTracks,
 	clearSavedLink,
 	platformTrackSuggestions,
-	searchPlatformText,
 	searchTrackOnPlatformRounded,
 	trackFoundOnPlatform,
 	iconStates,
 	searchTrackOnPlatform,
+	saveTrack,
+	selectFoundTrackOnPlatform,
+	changeText,
 } = useSavedInfo()
 
 const {
@@ -45,27 +36,6 @@ const {
 	originalTracksSuggestions,
 	searchOriginalTrack,
 } = useOriginalTracks(trackList.value)
-
-const tabs: CreateTrackPlatformTab[] = [
-	{
-		platform: "youtubeMusic",
-		link: "",
-		icon: youtubeMusicIcon,
-		placeholder: "Ссылка на youtube",
-	},
-	{
-		platform: "spotify",
-		link: "",
-		icon: spotifyIcon,
-		placeholder: "Ссылка на spotify",
-	},
-	{
-		platform: "yandexMusic",
-		link: "",
-		icon: yandexMusicIcon,
-		placeholder: "Ссылка на яндекс музыку",
-	},
-]
 
 function confirmClearSavedLink(event: Event, platform: Platform) {
 	confirm.require({
@@ -82,63 +52,6 @@ function confirmClearSavedLink(event: Event, platform: Platform) {
 			clearSavedLink(platform)
 		},
 	})
-}
-
-async function saveTrack() {
-	try {
-		const { data, status } = await axios.post(
-			`${import.meta.env.VITE_BASE_API_URL}/tracks`,
-			{
-				title: title.value,
-				urls: {
-					youtubeMusic: savedLinks.value.youtubeMusic || null,
-					yandexMusic: savedLinks.value.yandexMusic || null,
-					spotify: savedLinks.value.spotify || null,
-				},
-				artistsNames: artistsNames.value.split(", "),
-				tags: tags.value,
-				mixedTracks: originalTracks.value.map((track) => track.id),
-			},
-		)
-
-		console.log(status, data)
-	} catch (e) {
-		toastStore.addToast({
-			detail: (e as any).response.data.error.issues
-				.map((issue: { message: string }) => issue.message)
-				.join("\n"),
-		})
-	}
-}
-
-async function selectFoundTrackOnPlatform(
-	event: AutoCompleteChangeEvent,
-	platform: Platform,
-) {
-	const allLinksEmpty =
-		Object.keys(savedLinks.value).filter(
-			(key) => key !== platform && savedLinks.value[key as Platform],
-		).length === 0
-
-	if (!title.value || allLinksEmpty) {
-		title.value = event.value.title
-	}
-
-	if (artistsNames.value.length === 0 || allLinksEmpty) {
-		artistsNames.value = event.value.artistsNames.join(", ")
-	}
-
-	savedLinks.value[platform] = event.value.url
-
-	await nextTick()
-	trackFoundOnPlatform.value = searchPlatformText.value
-}
-
-function changeText(event: AutoCompleteChangeEvent) {
-	if (typeof event.value === "object") {
-		return
-	}
-	searchPlatformText.value = event.value
 }
 </script>
 
@@ -178,7 +91,6 @@ function changeText(event: AutoCompleteChangeEvent) {
 				<label for="foundTrack">Поиск трека на площадке</label>
 			</FloatLabel>
 			<PlatformTabList
-				:tabs="tabs"
 				v-model:current-platform="currentPlatform"
 				v-model:icon-states="iconStates"
 				v-model:saved-links="savedLinks"

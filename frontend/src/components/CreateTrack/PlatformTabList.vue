@@ -1,10 +1,7 @@
 <script setup lang="ts">
-import { CreateTrackPlatformTab, Platform } from "@/types"
+import { Platform } from "@/types"
 import PlatformTab from "./PlatformTab.vue"
-
-defineProps<{
-	tabs: CreateTrackPlatformTab[]
-}>()
+import { tabs } from "@/modules/createTrackTabs"
 
 defineEmits<{
 	clearLink: [event: Event, platform: Platform]
@@ -69,7 +66,7 @@ const iconStates = defineModel<Record<Platform, string>>("iconStates")
 }
 
 .p-tablist-tab-list {
-	@apply flex w-full gap-1;
+	@apply flex w-full gap-2;
 }
 
 .p-tab {

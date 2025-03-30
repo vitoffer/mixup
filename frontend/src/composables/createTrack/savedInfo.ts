@@ -1,10 +1,15 @@
 import { OriginalTrack, Platform } from "@/types"
-import { ref } from "vue"
+import { nextTick, ref } from "vue"
 import { useSearchTrackPlatforms } from "./searchTrackPlatforms"
 import markIcon from "../../assets/icons/mark.svg?url"
 import { useIconStates } from "./iconStates"
+import { useToastStore } from "@/stores/toastStore"
+import axios from "axios"
+import { AutoCompleteChangeEvent } from "primevue"
 
 export const useSavedInfo = () => {
+	const toastStore = useToastStore()
+
 	const savedLinks = ref({
 		youtubeMusic: "",
 		spotify: "",
@@ -57,6 +62,63 @@ export const useSavedInfo = () => {
 		tags.value = tags.value.filter((filteringTag) => filteringTag !== tag)
 	}
 
+	async function saveTrack() {
+		try {
+			const { data, status } = await axios.post(
+				`${import.meta.env.VITE_BASE_API_URL}/tracks`,
+				{
+					title: title.value,
+					urls: {
+						youtubeMusic: savedLinks.value.youtubeMusic || null,
+						yandexMusic: savedLinks.value.yandexMusic || null,
+						spotify: savedLinks.value.spotify || null,
+					},
+					artistsNames: artistsNames.value.split(", "),
+					tags: tags.value,
+					mixedTracks: originalTracks.value.map((track) => track.id),
+				},
+			)
+
+			console.log(status, data)
+		} catch (e) {
+			toastStore.addToast({
+				detail: (e as any).response.data.error.issues
+					.map((issue: { message: string }) => issue.message)
+					.join("\n"),
+			})
+		}
+	}
+
+	async function selectFoundTrackOnPlatform(
+		event: AutoCompleteChangeEvent,
+		platform: Platform,
+	) {
+		const allLinksEmpty =
+			Object.keys(savedLinks.value).filter(
+				(key) => key !== platform && savedLinks.value[key as Platform],
+			).length === 0
+
+		if (!title.value || allLinksEmpty) {
+			title.value = event.value.title
+		}
+
+		if (artistsNames.value.length === 0 || allLinksEmpty) {
+			artistsNames.value = event.value.artistsNames.join(", ")
+		}
+
+		savedLinks.value[platform] = event.value.url
+
+		await nextTick()
+		trackFoundOnPlatform.value = searchPlatformText.value
+	}
+
+	function changeText(event: AutoCompleteChangeEvent) {
+		if (typeof event.value === "object") {
+			return
+		}
+		searchPlatformText.value = event.value
+	}
+
 	return {
 		savedLinks,
 		clearSavedLink,
@@ -68,10 +130,12 @@ export const useSavedInfo = () => {
 		addTag,
 		removeTag,
 		trackFoundOnPlatform,
-		searchPlatformText,
 		platformTrackSuggestions,
 		searchTrackOnPlatformRounded,
 		iconStates,
 		searchTrackOnPlatform,
+		saveTrack,
+		selectFoundTrackOnPlatform,
+		changeText,
 	}
 }
