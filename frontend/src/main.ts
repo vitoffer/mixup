@@ -1,0 +1,29 @@
+import { createApp } from "vue"
+import PrimeVue from "primevue/config"
+import Tooltip from "primevue/tooltip"
+import App from "./App.vue"
+import { router } from "@/router/router"
+import ConfirmationService from "primevue/confirmationservice"
+import ToastService from "primevue/toastservice"
+
+import "@/assets/fonts/CarterOne/stylesheet.css"
+import "@/assets/fonts/Nunito/stylesheet.css"
+
+import "primeicons/primeicons.css"
+import "@/assets/styles/main.css"
+import { createPinia } from "pinia"
+
+const app = createApp(App)
+
+app.use(router)
+
+const pinia = createPinia()
+app.use(pinia)
+
+app.use(PrimeVue, { theme: "none" })
+app.use(ConfirmationService)
+app.use(ToastService)
+
+app.directive("tooltip", Tooltip)
+
+app.mount("#app")

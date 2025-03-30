@@ -1,28 +1,63 @@
-<script setup>
+<script setup lang="ts">
 import { RouterView } from "vue-router"
-import TheHeader from "@/components/TheHeader.vue"
-import { ref } from "vue"
-import { onMounted } from "vue"
+import AppNav from "./components/AppNav.vue"
+import { watch } from "vue"
+import { storeToRefs } from "pinia"
+import { useToast } from "primevue"
+import { useToastStore } from "./stores/toastStore"
 
-const pinged = ref(false)
-const err = ref("")
+const toastStore = useToastStore()
+const { toasts } = storeToRefs(toastStore)
+const toast = useToast()
 
-const ping = async () => {
-	try {
-		const response = await fetch(`${import.meta.env.VITE_BASE_API_URL}/ping`)
-		pinged.value = true
-	} catch (e) {
-		err.value = e
-	}
-}
-
-onMounted(ping)
+watch(
+	toasts,
+	(newToasts) => {
+		newToasts.forEach((toastMessage) => {
+			toast.add(toastMessage)
+			toastStore.deleteToast(toastMessage.id)
+		})
+	},
+	{ deep: true },
+)
 </script>
 
 <template>
-	{{ pinged }}
-	<br />
-	{{ err }}
-	<!-- <TheHeader />
-	<RouterView /> -->
+	<Toast />
+	<div class="mb-[52px]">
+		<RouterView />
+	</div>
+	<AppNav />
 </template>
+
+<style>
+@reference "./assets/styles/main.css";
+
+.p-toast {
+	@apply top-4 right-4 w-[358px];
+}
+
+.p-toast-message {
+	@apply mb-2 rounded-[10px] bg-gray-600/40 p-4 backdrop-blur-md;
+}
+
+.p-toast-message-content {
+	@apply flex justify-between opacity-100;
+}
+
+.p-toast-close-button {
+	@apply leading-0 outline-0;
+}
+
+.p-toast-close-icon {
+	@apply h-5 w-5 text-lg;
+}
+
+.p-toast-message-icon {
+	@apply hidden;
+}
+
+.p-toast-detail {
+	@apply leading-5 whitespace-pre;
+}
+</style>
