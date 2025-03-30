@@ -5,10 +5,11 @@ import { RouterLink } from "vue-router"
 withDefaults(
 	defineProps<{
 		track: MixTrack | OriginalTrack
-		withLinks: boolean
+		withLinks?: boolean
 		unbordered?: boolean
 	}>(),
 	{
+		withLinks: false,
 		unbordered: false,
 	},
 )
