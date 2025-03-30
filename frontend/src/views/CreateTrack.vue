@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { nextTick, ref } from "vue"
+import { nextTick } from "vue"
 import youtubeMusicIcon from "../assets/icons/youtube_logo.svg?url"
 import spotifyIcon from "../assets/icons/spotify_logo.svg?url"
 import yandexMusicIcon from "../assets/icons/yandex_logo.svg?url"
 import { trackList } from "@/storage/storage"
-import { CreateTrackPlatformTab, OriginalTrack, Platform } from "@/types"
-import markIcon from "../assets/icons/mark.svg?url"
+import { CreateTrackPlatformTab, Platform } from "@/types"
 import {
 	AutoCompleteChangeEvent,
 	AutoCompleteCompleteEvent,
@@ -17,9 +16,35 @@ import PlatformTabList from "@/components/CreateTrack/PlatformTabList.vue"
 import BaseInfoEdit from "@/components/CreateTrack/BaseInfoEdit.vue"
 import TagsEdit from "@/components/CreateTrack/TagsEdit.vue"
 import OriginalsEdit from "@/components/CreateTrack/OriginalsEdit.vue"
+import { useSavedInfo } from "@/composables/createTrack/savedInfo"
+import { useOriginalTracks } from "@/composables/createTrack/originalTracks"
 
 const toastStore = useToastStore()
 const confirm = useConfirm()
+
+const {
+	savedLinks,
+	currentPlatform,
+	title,
+	artistsNames,
+	tags,
+	addTag,
+	removeTag,
+	originalTracks,
+	clearSavedLink,
+	platformTrackSuggestions,
+	searchPlatformText,
+	searchTrackOnPlatformRounded,
+	trackFoundOnPlatform,
+	iconStates,
+	searchTrackOnPlatform,
+} = useSavedInfo()
+
+const {
+	originalTracksSearchInputRounded,
+	originalTracksSuggestions,
+	searchOriginalTrack,
+} = useOriginalTracks(trackList.value)
 
 const tabs: CreateTrackPlatformTab[] = [
 	{
@@ -42,70 +67,6 @@ const tabs: CreateTrackPlatformTab[] = [
 	},
 ]
 
-const iconStates = ref<Record<Platform, string>>({
-	youtubeMusic: markIcon,
-	spotify: markIcon,
-	yandexMusic: markIcon,
-})
-
-const currentPlatform = ref<Platform>("youtubeMusic")
-
-const trackFoundOnPlatform = ref<object | string>({})
-const searchPlatformText = ref<string>("")
-const platformTrackSuggestions = ref<Record<Platform, object[]>>({
-	youtubeMusic: [{}],
-	yandexMusic: [{}],
-	spotify: [{}],
-})
-const searchTrackOnPlatformRounded = ref(true)
-
-const savedLinks = ref({
-	youtubeMusic: "",
-	spotify: "",
-	yandexMusic: "",
-})
-
-const title = ref<string>("")
-const artistsNames = ref<string>("")
-
-const tags = ref<string[]>([])
-const inputTagText = ref<string>("")
-
-const originalTracks = ref<OriginalTrack[]>([])
-const originalTracksSuggestions = ref<OriginalTrack[]>([])
-const originalTracksSearchInputRounded = ref(true)
-
-function clearSavedLink(platform: Platform) {
-	savedLinks.value[platform] = ""
-	iconStates.value[platform] = markIcon
-
-	if (Object.values(savedLinks.value).every((link) => link.length === 0)) {
-		title.value = ""
-		artistsNames.value = ""
-		trackFoundOnPlatform.value = ""
-		searchPlatformText.value = ""
-	}
-
-	;(
-		document.querySelector(".platform-search .p-inputtext") as HTMLInputElement
-	).classList.remove("p-filled")
-}
-
-function addInputTag() {
-	console.log(inputTagText.value)
-	if (
-		inputTagText.value.trim() &&
-		!tags.value.includes(inputTagText.value.trim())
-	) {
-		tags.value.push(inputTagText.value.trim())
-	}
-	inputTagText.value = ""
-}
-
-async function removeTag(tag: string) {
-	tags.value = tags.value.filter((filteringTag) => filteringTag !== tag)
-}
-
 function confirmClearSavedLink(event: Event, platform: Platform) {
 	confirm.require({
 		target: event.currentTarget as HTMLElement,
@@ -120,15 +81,6 @@ function confirmClearSavedLink(event: Event, platform: Platform) {
 		accept: () => {
 			clearSavedLink(platform)
 		},
-	})
-}
-
-function searchOriginalTrack(event: AutoCompleteCompleteEvent) {
-	originalTracksSuggestions.value = trackList.value.filter((track) => {
-		return (
-			!track.isMix &&
-			track.title.toLowerCase().includes(event.query.toLowerCase())
-		)
 	})
 }
 
@@ -157,39 +109,6 @@ async function saveTrack() {
 				.join("\n"),
 		})
 	}
-}
-
-async function searchTrackOnPlatform(
-	event: AutoCompleteCompleteEvent,
-	platform: Platform,
-) {
-	if (!event.query && !searchPlatformText.value) {
-		platformTrackSuggestions.value[platform] = []
-		return
-	}
-
-	const formattedPlatform = {
-		youtubeMusic: "youtube",
-		yandexMusic: "yandex",
-		spotify: "spotify",
-	}[platform]
-
-	setTimeout(async () => {
-		try {
-			const { data } = await axios.get(
-				`${import.meta.env.VITE_BASE_API_URL}/search/${formattedPlatform}`,
-				{
-					params: {
-						q: event.query || searchPlatformText.value,
-					},
-				},
-			)
-
-			platformTrackSuggestions.value[platform] = data.slice(0, 5)
-		} catch (e) {
-			toastStore.addToast({ detail: JSON.stringify(e) })
-		}
-	}, 250)
 }
 
 async function selectFoundTrackOnPlatform(
@@ -272,8 +191,7 @@ function changeText(event: AutoCompleteChangeEvent) {
 		/>
 		<TagsEdit
 			:tags="tags"
-			v-model:input-tag-text="inputTagText"
-			@add-input-tag="addInputTag"
+			@add-tag="addTag"
 			@remove-tag="removeTag"
 		/>
 		<OriginalsEdit

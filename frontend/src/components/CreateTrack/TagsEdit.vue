@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from "vue"
 import AddedTagsList from "./AddedTagsList.vue"
 import NewTagInput from "./NewTagInput.vue"
 
@@ -6,12 +7,18 @@ defineProps<{
 	tags: string[]
 }>()
 
-defineEmits<{
+const emit = defineEmits<{
 	removeTag: [tag: string]
-	addInputTag: []
+	addTag: [tag: string]
 }>()
 
-const inputTagText = defineModel<string>("inputTagText")
+const inputTagText = ref<string>("")
+
+function addInputTag() {
+	emit("addTag", inputTagText.value)
+
+	inputTagText.value = ""
+}
 </script>
 
 <template>
@@ -30,7 +37,7 @@ const inputTagText = defineModel<string>("inputTagText")
 		</p>
 		<NewTagInput
 			v-model:input-tag-text="inputTagText"
-			@add-input-tag="$emit('addInputTag')"
+			@add-input-tag="addInputTag"
 		/>
 	</div>
 </template>
