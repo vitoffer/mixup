@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { MixTrack, OriginalTrack } from "@/types"
 import { RouterLink } from "vue-router"
+import thumbnailPlaceholder from "@/assets/images/thumbnail_placeholder.png"
 
-withDefaults(
+const props = withDefaults(
 	defineProps<{
 		track: MixTrack | OriginalTrack
 		withLinks?: boolean
@@ -12,6 +13,10 @@ withDefaults(
 		withLinks: false,
 		unbordered: false,
 	},
+)
+
+console.log(
+	props.track.thumbnailUrl || "../assets/images/thumbnail_placeholder.png",
 )
 </script>
 
@@ -26,7 +31,7 @@ withDefaults(
 			class="flex items-center gap-3 py-2"
 		>
 			<img
-				:src="track.thumbnailUrl || '/'"
+				:src="track.thumbnailUrl || thumbnailPlaceholder"
 				alt=""
 				class="aspect-square w-[56px] rounded-[10px]"
 			/>

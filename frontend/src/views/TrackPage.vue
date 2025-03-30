@@ -6,6 +6,7 @@ import { trackList } from "@/storage/storage"
 import { MixTrack, Track } from "@/types"
 import { ref, Ref, watch } from "vue"
 import { useRoute } from "vue-router"
+import thumbnailPlaceholder from "@/assets/images/thumbnail_placeholder.png"
 
 const track: Ref<Track | null> = ref(null)
 
@@ -34,7 +35,7 @@ watch(
 	>
 		<div class="flex flex-col items-center gap-3">
 			<img
-				:src="track.thumbnailUrl"
+				:src="track.thumbnailUrl || thumbnailPlaceholder"
 				alt="Картинка трека"
 				class="aspect-square w-[250px] rounded-[10px]"
 			/>
