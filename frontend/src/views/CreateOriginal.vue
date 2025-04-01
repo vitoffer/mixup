@@ -8,9 +8,11 @@ import { useSavedInfo } from "@/composables/createTrack/savedInfo"
 import { onBeforeRouteLeave, useRouter } from "vue-router"
 import { useMixEditStore } from "@/stores/mixEditStore"
 import BackButton from "@/components/BackButton.vue"
+import { useToastStore } from "@/stores/toastStore"
 
 const confirm = useConfirm()
 const router = useRouter()
+const toastStore = useToastStore()
 
 const mixEditStore = useMixEditStore()
 
@@ -64,6 +66,8 @@ async function localAddOriginalTrack() {
 	}
 
 	mixEditStore.mix.originalTracks.push(formattedSavedTrack)
+
+	toastStore.addToast({ summary: "Оригинал успешно создан" })
 
 	router.push({ name: "createMix" })
 }

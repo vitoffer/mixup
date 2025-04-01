@@ -10,9 +10,11 @@ import { useOriginalTracks } from "@/composables/createTrack/originalTracks"
 import { onBeforeRouteLeave, useRouter } from "vue-router"
 import { onMounted } from "vue"
 import { useMixEditStore } from "@/stores/mixEditStore"
+import { useToastStore } from "@/stores/toastStore"
 
 const confirm = useConfirm()
 const router = useRouter()
+const toastStore = useToastStore()
 
 const mixEditStore = useMixEditStore()
 
@@ -80,6 +82,14 @@ function confirmClearSavedLink(event: Event, platform: Platform) {
 			clearSavedLink(platform)
 		},
 	})
+}
+
+async function localSaveTrack() {
+	await saveTrack()
+
+	toastStore.addToast({ summary: "Микс успешно создан" })
+
+	router.push({ name: "trackList" })
 }
 
 onBeforeRouteLeave((to) => {
@@ -151,7 +161,7 @@ onBeforeRouteLeave((to) => {
 		/>
 		<button
 			class="flex cursor-pointer items-center justify-center rounded-[10px] bg-yellow-800 px-16 py-4 text-2xl leading-none font-bold text-gray-900"
-			@click="saveTrack"
+			@click="localSaveTrack"
 		>
 			OK
 		</button>
