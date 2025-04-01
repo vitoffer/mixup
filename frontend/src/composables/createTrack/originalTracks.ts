@@ -1,18 +1,42 @@
-import { OriginalTrack, Track } from "@/types"
+import { fetchTracksOnPlatformByText } from "@/api/searchTrack"
+import { trackList } from "@/storage/storage"
+import { Track } from "@/types"
 import { AutoCompleteCompleteEvent } from "primevue"
 import { ref } from "vue"
 
-export const useOriginalTracks = (trackList: Track[]) => {
-	const originalTracksSuggestions = ref<OriginalTrack[]>([])
+export const useOriginalTracks = () => {
+	const originalTracksSuggestions = ref<
+		(Track | { splitter: boolean; text: string })[]
+	>([])
 	const originalTracksSearchInputRounded = ref(true)
 
-	function searchOriginalTrack(event: AutoCompleteCompleteEvent) {
-		originalTracksSuggestions.value = trackList.filter((track) => {
-			return (
-				!track.isMix &&
-				track.title.toLowerCase().includes(event.query.toLowerCase())
+	async function searchOriginalTrack(event: AutoCompleteCompleteEvent) {
+		const suggestions: (Track | { splitter: boolean; text: string })[] =
+			trackList.value.filter((track) => {
+				return (
+					!track.isMix &&
+					track.title.toLowerCase().includes(event.query.toLowerCase())
+				)
+			})
+
+		if (suggestions.length > 0) {
+			suggestions.unshift({ splitter: true, text: "Найденные треки в базе:" })
+		}
+
+		if (suggestions.length < 5) {
+			suggestions.push({
+				splitter: true,
+				text: "Найденные треки на youtube music",
+			})
+			suggestions.push(
+				...(await fetchTracksOnPlatformByText(
+					event.query,
+					"youtubeMusic",
+					5 - suggestions.length,
+				)),
 			)
-		})
+		}
+		originalTracksSuggestions.value = suggestions
 	}
 
 	return {

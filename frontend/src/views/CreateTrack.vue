@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { trackList } from "@/storage/storage"
 import { Platform } from "@/types"
 import { AutoCompleteCompleteEvent, useConfirm } from "primevue"
 import PlatformTabList from "@/components/CreateTrack/PlatformTabList.vue"
@@ -35,7 +34,7 @@ const {
 	originalTracksSearchInputRounded,
 	originalTracksSuggestions,
 	searchOriginalTrack,
-} = useOriginalTracks(trackList.value)
+} = useOriginalTracks()
 
 function confirmClearSavedLink(event: Event, platform: Platform) {
 	confirm.require({

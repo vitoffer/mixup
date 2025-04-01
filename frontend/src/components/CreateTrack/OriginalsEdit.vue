@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { OriginalTrack } from "@/types"
+import { OriginalTrack, Track } from "@/types"
 import { AutoCompleteCompleteEvent } from "primevue"
 
 defineProps<{
-	originalTracksSuggestions: OriginalTrack[]
+	originalTracksSuggestions: (Track | { splitter: boolean; text: string })[]
 }>()
 
 defineEmits<{
@@ -60,7 +60,14 @@ const originalTracksSearchInputRounded = defineModel<boolean>(
 				</div>
 			</template>
 			<template #option="slotProps">
+				<p
+					v-if="slotProps.option.splitter"
+					class="py-1 text-yellow-700"
+				>
+					{{ slotProps.option.text }}
+				</p>
 				<TrackItem
+					v-else
 					:track="slotProps.option"
 					:with-links="false"
 					unbordered

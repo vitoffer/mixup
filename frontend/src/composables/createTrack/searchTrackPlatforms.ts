@@ -1,6 +1,5 @@
-import { useToastStore } from "@/stores/toastStore"
+import { fetchTracksOnPlatformByText } from "@/api/searchTrack"
 import { Platform } from "@/types"
-import axios from "axios"
 import { AutoCompleteCompleteEvent } from "primevue"
 import { ref } from "vue"
 
@@ -14,8 +13,6 @@ export const useSearchTrackPlatforms = () => {
 	})
 	const searchTrackOnPlatformRounded = ref(true)
 
-	const toastStore = useToastStore()
-
 	async function searchTrackOnPlatform(
 		event: AutoCompleteCompleteEvent,
 		platform: Platform,
@@ -25,27 +22,9 @@ export const useSearchTrackPlatforms = () => {
 			return
 		}
 
-		const formattedPlatform = {
-			youtubeMusic: "youtube",
-			yandexMusic: "yandex",
-			spotify: "spotify",
-		}[platform]
-
 		setTimeout(async () => {
-			try {
-				const { data } = await axios.get(
-					`${import.meta.env.VITE_BASE_API_URL}/search/${formattedPlatform}`,
-					{
-						params: {
-							q: event.query || searchPlatformText.value,
-						},
-					},
-				)
-
-				platformTrackSuggestions.value[platform] = data.slice(0, 5)
-			} catch (e) {
-				toastStore.addToast({ detail: JSON.stringify(e) })
-			}
+			platformTrackSuggestions.value[platform] =
+				await fetchTracksOnPlatformByText(event.query, platform, 5)
 		}, 250)
 	}
 
