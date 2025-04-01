@@ -94,14 +94,6 @@ export const useSavedInfo = () => {
 
 			mixedTracks = mixedTracks.filter((obj) => Object.keys(obj).length > 0)
 
-			console.log({
-				title,
-				urls,
-				artistsNames,
-				tags,
-				mixedTracks: mixedTracks,
-			})
-
 			const { data, status } = await axios.post(
 				`${import.meta.env.VITE_BASE_API_URL}/tracks`,
 				{

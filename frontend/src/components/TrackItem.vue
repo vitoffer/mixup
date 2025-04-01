@@ -14,10 +14,6 @@ const props = withDefaults(
 		unbordered: false,
 	},
 )
-
-console.log(
-	props.track.thumbnailUrl || "../assets/images/thumbnail_placeholder.png",
-)
 </script>
 
 <template>
