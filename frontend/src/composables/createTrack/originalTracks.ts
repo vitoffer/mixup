@@ -1,5 +1,5 @@
 import { fetchTracksOnPlatformByText } from "@/api/searchTrack"
-import { trackList } from "@/storage/storage"
+import { loadTracks, trackList } from "@/storage/storage"
 import { Track } from "@/types"
 import { AutoCompleteCompleteEvent } from "primevue"
 import { ref } from "vue"
@@ -11,6 +11,10 @@ export const useOriginalTracks = () => {
 	const originalTracksSearchInputRounded = ref(true)
 
 	async function searchOriginalTrack(event: AutoCompleteCompleteEvent) {
+		if (trackList.value.length === 0) {
+			trackList.value = await loadTracks()
+		}
+
 		const suggestions: (Track | { splitter: boolean; text: string })[] =
 			trackList.value.filter((track) => {
 				return (
