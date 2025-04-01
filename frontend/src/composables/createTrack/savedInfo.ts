@@ -88,6 +88,7 @@ export const useSavedInfo = () => {
 					.map((issue: { message: string }) => issue.message)
 					.join("\n"),
 			})
+			return { error: true }
 		}
 	}
 

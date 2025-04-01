@@ -55,6 +55,10 @@ function confirmClearSavedLink(event: Event, platform: Platform) {
 async function localAddOriginalTrack() {
 	const savedTrack = await saveTrack()
 
+	if (savedTrack.error) {
+		return
+	}
+
 	const formattedSavedTrack: OriginalTrack = {
 		id: savedTrack._id,
 		title: savedTrack.title,

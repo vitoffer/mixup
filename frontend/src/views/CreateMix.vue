@@ -85,7 +85,9 @@ function confirmClearSavedLink(event: Event, platform: Platform) {
 }
 
 async function localSaveTrack() {
-	await saveTrack()
+	if ((await saveTrack()).error) {
+		return
+	}
 
 	toastStore.addToast({ summary: "Микс успешно создан" })
 
