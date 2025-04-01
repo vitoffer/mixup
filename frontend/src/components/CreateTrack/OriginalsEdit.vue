@@ -8,6 +8,7 @@ defineProps<{
 
 defineEmits<{
 	searchOriginalTrack: [event: AutoCompleteCompleteEvent]
+	createOriginal: []
 }>()
 
 const originalTracksList = defineModel<OriginalTrack[]>("originalTracksList")
@@ -76,12 +77,12 @@ const originalTracksSearchInputRounded = defineModel<boolean>(
 			<template #footer>
 				<div class="mt-1 flex flex-col items-center leading-[1.25rem]">
 					<p class="text-cyan-700">Не нашли, что искали?</p>
-					<a
+					<button
 						class="text-yellow-700"
-						href="/create-original"
+						@click="$emit('createOriginal')"
 					>
 						Добавьте трек сами!
-					</a>
+					</button>
 				</div>
 				<div class="spacer absolute -bottom-4 left-0 h-6 w-full"></div>
 			</template>

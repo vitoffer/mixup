@@ -7,8 +7,37 @@ import TagsEdit from "@/components/CreateTrack/TagsEdit.vue"
 import OriginalsEdit from "@/components/CreateTrack/OriginalsEdit.vue"
 import { useSavedInfo } from "@/composables/createTrack/savedInfo"
 import { useOriginalTracks } from "@/composables/createTrack/originalTracks"
+import { onBeforeRouteLeave, useRouter } from "vue-router"
+import { onMounted } from "vue"
+import { useMixEditStore } from "@/stores/mixEditStore"
 
 const confirm = useConfirm()
+const router = useRouter()
+
+const mixEditStore = useMixEditStore()
+
+function navigateToCreateOriginal() {
+	mixEditStore.mix = {
+		title: title.value,
+		artistsNames: artistsNames.value,
+		tags: tags.value,
+		savedLinks: savedLinks.value,
+		originalTracks: originalTracks.value,
+	}
+
+	router.push({ name: "createOriginal" })
+}
+
+onMounted(() => {
+	const savedState = mixEditStore.mix
+	if (savedState) {
+		title.value = savedState.title
+		artistsNames.value = savedState.artistsNames
+		tags.value = savedState.tags
+		savedLinks.value = savedState.savedLinks
+		originalTracks.value = savedState.originalTracks
+	}
+})
 
 const {
 	savedLinks,
@@ -52,6 +81,12 @@ function confirmClearSavedLink(event: Event, platform: Platform) {
 		},
 	})
 }
+
+onBeforeRouteLeave((to) => {
+	if (to.name !== "createMix" && to.name !== "createOriginal") {
+		mixEditStore.clearMix()
+	}
+})
 </script>
 
 <template>
@@ -112,6 +147,7 @@ function confirmClearSavedLink(event: Event, platform: Platform) {
 				originalTracksSearchInputRounded
 			"
 			@search-original-track="searchOriginalTrack"
+			@create-original="navigateToCreateOriginal"
 		/>
 		<button
 			class="flex cursor-pointer items-center justify-center rounded-[10px] bg-yellow-800 px-16 py-4 text-2xl leading-none font-bold text-gray-900"

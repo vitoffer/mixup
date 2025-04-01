@@ -11,7 +11,7 @@ const links = [
 		icon: trackListIcon,
 	},
 	{
-		name: "createTrack",
+		name: "createMix",
 		icon: createTrackIcon,
 	},
 ]
@@ -20,7 +20,7 @@ function isActive(linkName: string) {
 	return linkName === "trackList" &&
 		(route.path === "/" || route.path.startsWith("/tracks/"))
 		? true
-		: linkName === "createTrack" && route.path === "/create-track"
+		: linkName === "createMix" && route.path === "/create-mix"
 			? true
 			: false
 }
