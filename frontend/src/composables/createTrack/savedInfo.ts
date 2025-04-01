@@ -80,6 +80,7 @@ export const useSavedInfo = () => {
 			)
 
 			console.log(status, data)
+			return data
 		} catch (e) {
 			toastStore.addToast({
 				detail: (e as any).response.data.error.issues

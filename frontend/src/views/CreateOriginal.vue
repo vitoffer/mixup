@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Platform } from "@/types"
+import { OriginalTrack, Platform } from "@/types"
 import { useConfirm } from "primevue"
 import PlatformTabList from "@/components/CreateTrack/PlatformTabList.vue"
 import BaseInfoEdit from "@/components/CreateTrack/BaseInfoEdit.vue"
@@ -29,6 +29,7 @@ const {
 	iconStates,
 	searchTrackOnPlatform,
 	selectFoundTrackOnPlatform,
+	saveTrack,
 	changeText,
 } = useSavedInfo()
 
@@ -49,16 +50,20 @@ function confirmClearSavedLink(event: Event, platform: Platform) {
 	})
 }
 
-function localAddOriginalTrack() {
-	mixEditStore.mix.originalTracks.push({
-		artistsNames: artistsNames.value.split(", "),
-		id: "",
-		tags: tags.value,
-		thumbnailUrl: "",
-		title: title.value,
-		urls: savedLinks.value,
-		isMix: false,
-	})
+async function localAddOriginalTrack() {
+	const savedTrack = await saveTrack()
+
+	const formattedSavedTrack: OriginalTrack = {
+		id: savedTrack._id,
+		title: savedTrack.title,
+		artistsNames: savedTrack.artistsNames,
+		isMix: savedTrack.isMix,
+		tags: savedTrack.tags,
+		thumbnailUrl: savedTrack.thumbnailUrl,
+		urls: savedTrack.urls,
+	}
+
+	mixEditStore.mix.originalTracks.push(formattedSavedTrack)
 
 	router.push({ name: "createMix" })
 }
