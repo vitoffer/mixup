@@ -19,11 +19,13 @@ export const useOriginalTracks = () => {
 				)
 			})
 
+		let dbTrackListLength = suggestions.length
+
 		if (suggestions.length > 0) {
 			suggestions.unshift({ splitter: true, text: "Найденные треки в базе:" })
 		}
 
-		if (suggestions.length < 5) {
+		if (dbTrackListLength < 5) {
 			suggestions.push({
 				splitter: true,
 				text: "Найденные треки на youtube music",
@@ -32,7 +34,7 @@ export const useOriginalTracks = () => {
 				...(await fetchTracksOnPlatformByText(
 					event.query,
 					"youtubeMusic",
-					5 - suggestions.length,
+					5 - dbTrackListLength,
 				)),
 			)
 		}
