@@ -59,6 +59,7 @@ const {
 	saveTrack,
 	selectFoundTrackOnPlatform,
 	changeText,
+	savedThumbnails,
 } = useSavedInfo()
 
 const {
@@ -85,6 +86,12 @@ function confirmClearSavedLink(event: Event, platform: Platform) {
 }
 
 async function localSaveTrack() {
+	const thumbnailUrl =
+		savedThumbnails.value.spotify ||
+		savedThumbnails.value.yandexMusic ||
+		savedThumbnails.value.youtubeMusic ||
+		null
+
 	if (
 		(
 			await saveTrack(
@@ -97,6 +104,7 @@ async function localSaveTrack() {
 				artistsNames.value.split(", "),
 				tags.value,
 				originalTracks.value,
+				thumbnailUrl,
 			)
 		).error
 	) {

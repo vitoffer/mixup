@@ -16,6 +16,12 @@ export const useSavedInfo = () => {
 		yandexMusic: "",
 	})
 
+	const savedThumbnails = ref({
+		youtubeMusic: "",
+		spotify: "",
+		yandexMusic: "",
+	})
+
 	const { iconStates } = useIconStates()
 
 	const {
@@ -29,6 +35,7 @@ export const useSavedInfo = () => {
 	function clearSavedLink(platform: Platform) {
 		savedLinks.value[platform] = ""
 		iconStates.value[platform] = markIcon
+		savedThumbnails.value[platform] = ""
 
 		if (Object.values(savedLinks.value).every((link) => link.length === 0)) {
 			title.value = ""
@@ -37,6 +44,7 @@ export const useSavedInfo = () => {
 			searchPlatformText.value = ""
 		}
 
+		Object.entries(savedLinks.value).forEach(([platform, link]) => {})
 		;(
 			document.querySelector(
 				".platform-search .p-inputtext",
@@ -68,6 +76,7 @@ export const useSavedInfo = () => {
 		artistsNames: string[],
 		tags: string[],
 		mixedTracks: Track[],
+		thumbnailUrl: string | null,
 	) {
 		try {
 			mixedTracks = mixedTracks.map(async (originalTrack) => {
@@ -82,6 +91,7 @@ export const useSavedInfo = () => {
 						originalTrack.artistsNames,
 						[],
 						[],
+						originalTrack.thumbnailUrl,
 					)
 
 					if (savedOriginalTrack.error) {
@@ -102,6 +112,7 @@ export const useSavedInfo = () => {
 					artistsNames,
 					tags,
 					mixedTracks: mixedTracks.map((track) => track.id),
+					thumbnailUrl,
 				},
 			)
 
@@ -137,6 +148,7 @@ export const useSavedInfo = () => {
 		}
 
 		savedLinks.value[platform] = event.value.url
+		savedThumbnails.value[platform] = event.value.thumbnailUrl
 
 		await nextTick()
 		trackFoundOnPlatform.value = searchPlatformText.value
@@ -167,5 +179,6 @@ export const useSavedInfo = () => {
 		saveTrack,
 		selectFoundTrackOnPlatform,
 		changeText,
+		savedThumbnails,
 	}
 }
