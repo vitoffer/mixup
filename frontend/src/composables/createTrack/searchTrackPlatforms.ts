@@ -19,12 +19,16 @@ export const useSearchTrackPlatforms = () => {
 	) {
 		if (!event.query && !searchPlatformText.value) {
 			platformTrackSuggestions.value[platform] = []
-			return
+			return []
 		}
 
 		setTimeout(async () => {
 			platformTrackSuggestions.value[platform] =
-				await fetchTracksOnPlatformByText(event.query, platform, 5)
+				await fetchTracksOnPlatformByText(
+					event.query || searchPlatformText.value,
+					platform,
+					5,
+				)
 		}, 250)
 	}
 
