@@ -53,7 +53,17 @@ function confirmClearSavedLink(event: Event, platform: Platform) {
 }
 
 async function localAddOriginalTrack() {
-	const savedTrack = await saveTrack()
+	const savedTrack = await saveTrack(
+		title.value,
+		{
+			youtubeMusic: savedLinks.value.youtubeMusic || null,
+			yandexMusic: savedLinks.value.yandexMusic || null,
+			spotify: savedLinks.value.spotify || null,
+		},
+		artistsNames.value.split(", "),
+		tags.value,
+		[],
+	)
 
 	if (savedTrack.error) {
 		return

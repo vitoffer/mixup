@@ -1,4 +1,4 @@
-import { OriginalTrack, Platform } from "@/types"
+import { OriginalTrack, Platform, Track } from "@/types"
 import { nextTick, ref } from "vue"
 import { useSearchTrackPlatforms } from "./searchTrackPlatforms"
 import markIcon from "../../assets/icons/mark.svg?url"
@@ -62,20 +62,54 @@ export const useSavedInfo = () => {
 		tags.value = tags.value.filter((filteringTag) => filteringTag !== tag)
 	}
 
-	async function saveTrack() {
+	async function saveTrack(
+		title: string,
+		urls: Record<Platform, string | null>,
+		artistsNames: string[],
+		tags: string[],
+		mixedTracks: Track[],
+	) {
 		try {
+			mixedTracks = mixedTracks.map(async (originalTrack) => {
+				if (!originalTrack.id) {
+					const savedOriginalTrack = await saveTrack(
+						originalTrack.title,
+						{
+							spotify: null,
+							yandexMusic: null,
+							youtubeMusic: (originalTrack as any).url,
+						},
+						originalTrack.artistsNames,
+						[],
+						[],
+					)
+
+					if (savedOriginalTrack.error) {
+						return {}
+					}
+
+					return savedOriginalTrack
+				}
+			}) as any
+
+			mixedTracks = mixedTracks.filter((obj) => Object.keys(obj).length > 0)
+
+			console.log({
+				title,
+				urls,
+				artistsNames,
+				tags,
+				mixedTracks: mixedTracks,
+			})
+
 			const { data, status } = await axios.post(
 				`${import.meta.env.VITE_BASE_API_URL}/tracks`,
 				{
-					title: title.value,
-					urls: {
-						youtubeMusic: savedLinks.value.youtubeMusic || null,
-						yandexMusic: savedLinks.value.yandexMusic || null,
-						spotify: savedLinks.value.spotify || null,
-					},
-					artistsNames: artistsNames.value.split(", "),
-					tags: tags.value,
-					mixedTracks: originalTracks.value.map((track) => track.id),
+					title,
+					urls,
+					artistsNames,
+					tags,
+					mixedTracks: mixedTracks.map((track) => track.id),
 				},
 			)
 
@@ -88,6 +122,7 @@ export const useSavedInfo = () => {
 					.map((issue: { message: string }) => issue.message)
 					.join("\n"),
 			})
+			console.error(e)
 			return { error: true }
 		}
 	}

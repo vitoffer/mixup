@@ -85,7 +85,21 @@ function confirmClearSavedLink(event: Event, platform: Platform) {
 }
 
 async function localSaveTrack() {
-	if ((await saveTrack()).error) {
+	if (
+		(
+			await saveTrack(
+				title.value,
+				{
+					youtubeMusic: savedLinks.value.youtubeMusic || null,
+					yandexMusic: savedLinks.value.yandexMusic || null,
+					spotify: savedLinks.value.spotify || null,
+				},
+				artistsNames.value.split(", "),
+				tags.value,
+				originalTracks.value,
+			)
+		).error
+	) {
 		return
 	}
 
