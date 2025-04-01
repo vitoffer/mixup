@@ -63,6 +63,8 @@ export async function getSpotifySearchResults(query: string) {
 				artistsNames: track.artists.map(
 					(artist: { name: string }) => artist.name
 				),
+				thumbnailUrl:
+					track.album.images.find((image) => image.width === 64)?.url || "",
 			}))
 
 		return cleanedTracks

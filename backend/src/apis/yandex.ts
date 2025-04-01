@@ -15,6 +15,7 @@ export async function getYandexMusicSearchResults(query: string) {
 				title: track.title,
 				url: `https://music.yandex.ru/album/${track.albums[0].id}/track/${track.id}`,
 				artistsNames: track.artists.map((artist) => artist.name),
+				thumbnailUrl: `https://${track.coverUri.slice(0, -2)}200x200`,
 			}))
 
 		return cleanedTracks

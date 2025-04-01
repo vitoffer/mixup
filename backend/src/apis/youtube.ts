@@ -14,6 +14,7 @@ export async function getYoutubeVideosSearchResults(query: string) {
 				title: video.name,
 				url: `https://youtu.be/${video.videoId}`,
 				artistsNames: [video.artist.name],
+				thumbnailUrl: video.thumbnails[0].url,
 			})
 		)
 
