@@ -8,13 +8,13 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AddedOriginalsList: typeof import('./src/components/CreateTrack/AddedOriginalsList.vue')['default']
+    AddedOriginalTracksList: typeof import('./src/components/CreateTrack/AddedOriginalTracksList.vue')['default']
     AddedTagsList: typeof import('./src/components/CreateTrack/AddedTagsList.vue')['default']
     AppNav: typeof import('./src/components/AppNav.vue')['default']
     AutoComplete: typeof import('primevue/autocomplete')['default']
     BackButton: typeof import('./src/components/BackButton.vue')['default']
     BaseInfoEdit: typeof import('./src/components/CreateTrack/BaseInfoEdit.vue')['default']
-    Button: typeof import('primevue/button')['default']
-    Chip: typeof import('primevue/chip')['default']
     ConfirmPopup: typeof import('primevue/confirmpopup')['default']
     FloatLabel: typeof import('primevue/floatlabel')['default']
     InputText: typeof import('primevue/inputtext')['default']
@@ -23,8 +23,6 @@ declare module 'vue' {
     PlatformLinkList: typeof import('./src/components/PlatformLinkList.vue')['default']
     PlatformTab: typeof import('./src/components/CreateTrack/PlatformTab.vue')['default']
     PlatformTabList: typeof import('./src/components/CreateTrack/PlatformTabList.vue')['default']
-    PlatformTabPanel: typeof import('./src/components/CreateTrack/PlatformTabPanel.vue')['default']
-    PlatformTabs: typeof import('./src/components/CreateTrack/PlatformTabs.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SearchBar: typeof import('./src/components/SearchBar.vue')['default']

@@ -11,38 +11,40 @@ export const useOriginalTracks = () => {
 	const originalTracksSearchInputRounded = ref(true)
 
 	async function searchOriginalTrack(event: AutoCompleteCompleteEvent) {
-		if (trackList.value.length === 0) {
-			trackList.value = await loadTracks()
-		}
+		setTimeout(async () => {
+			if (trackList.value.length === 0) {
+				trackList.value = await loadTracks()
+			}
 
-		const suggestions: (Track | { splitter: boolean; text: string })[] =
-			trackList.value.filter((track) => {
-				return (
-					!track.isMix &&
-					track.title.toLowerCase().includes(event.query.toLowerCase())
+			const suggestions: (Track | { splitter: boolean; text: string })[] =
+				trackList.value.filter((track) => {
+					return (
+						!track.isMix &&
+						track.title.toLowerCase().includes(event.query.toLowerCase())
+					)
+				})
+
+			let dbTrackListLength = suggestions.length
+
+			if (suggestions.length > 0) {
+				suggestions.unshift({ splitter: true, text: "Найденные треки в базе:" })
+			}
+
+			if (dbTrackListLength < 5) {
+				suggestions.push({
+					splitter: true,
+					text: "Найденные треки на youtube music",
+				})
+				suggestions.push(
+					...(await fetchTracksOnPlatformByText(
+						event.query,
+						"youtubeMusic",
+						5 - dbTrackListLength,
+					)),
 				)
-			})
-
-		let dbTrackListLength = suggestions.length
-
-		if (suggestions.length > 0) {
-			suggestions.unshift({ splitter: true, text: "Найденные треки в базе:" })
-		}
-
-		if (dbTrackListLength < 5) {
-			suggestions.push({
-				splitter: true,
-				text: "Найденные треки на youtube music",
-			})
-			suggestions.push(
-				...(await fetchTracksOnPlatformByText(
-					event.query,
-					"youtubeMusic",
-					5 - dbTrackListLength,
-				)),
-			)
-		}
-		originalTracksSuggestions.value = suggestions
+			}
+			originalTracksSuggestions.value = suggestions
+		}, 250)
 	}
 
 	return {

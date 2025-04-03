@@ -44,7 +44,6 @@ export const useSavedInfo = () => {
 			searchPlatformText.value = ""
 		}
 
-		Object.entries(savedLinks.value).forEach(([platform, link]) => {})
 		;(
 			document.querySelector(
 				".platform-search .p-inputtext",
