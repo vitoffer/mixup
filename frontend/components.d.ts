@@ -8,7 +8,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    AddedOriginalsList: typeof import('./src/components/CreateTrack/AddedOriginalsList.vue')['default']
     AddedOriginalTracksList: typeof import('./src/components/CreateTrack/AddedOriginalTracksList.vue')['default']
     AddedTagsList: typeof import('./src/components/CreateTrack/AddedTagsList.vue')['default']
     AppNav: typeof import('./src/components/AppNav.vue')['default']
