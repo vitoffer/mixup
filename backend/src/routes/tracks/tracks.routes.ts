@@ -24,6 +24,10 @@ export const list = createRoute({
 			z.array(NormalizedPopulatedTrackSchema),
 			"List of tracks"
 		),
+		[HttpStatusCodes.INTERNAL_SERVER_ERROR]: jsonContent(
+			z.object({ message: z.string() }),
+			"Error on get results"
+		),
 	},
 	tags,
 })

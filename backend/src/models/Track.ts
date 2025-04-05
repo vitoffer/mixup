@@ -48,9 +48,15 @@ export const UnpopulatedDefaultTrackSchema = DefaultTrackSchema.extend({
 })
 
 // Объявление схемы для MongoDB
-const MongoTrackSchema = zodSchema(UnpopulatedDefaultTrackSchema, {
-	timestamps: true,
-})
+const MongoTrackSchema = zodSchema(
+	UnpopulatedDefaultTrackSchema.extend({
+		createdAt: z.date(),
+		updatedAt: z.date(),
+	}),
+	{
+		timestamps: true,
+	}
+)
 MongoTrackSchema.pre("save", function (next) {
 	this.isMix = this.originalTracks.length > 0
 	next()
