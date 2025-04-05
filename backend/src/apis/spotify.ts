@@ -70,6 +70,6 @@ export async function getSpotifySearchResults(query: string) {
 		return cleanedTracks
 	} catch (e) {
 		console.error(e)
-		return null
+		return []
 	}
 }

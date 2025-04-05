@@ -18,6 +18,6 @@ export async function getYoutubeVideosSearchResults(query: string) {
 		return cleanedVideos
 	} catch (e) {
 		console.error(e)
-		return null
+		return []
 	}
 }

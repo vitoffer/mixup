@@ -5,10 +5,11 @@ import { getYandexMusicSearchResults } from "../../apis/yandex"
 import { getYoutubeVideosSearchResults } from "../../apis/youtube"
 import * as HttpStatusCodes from "stoker/http-status-codes"
 import { PlatformType } from "../../types"
+import { CleanedApiSearchResultType } from "../../schemas/apis"
 
 const providerHandlers: Record<
 	PlatformType,
-	(query: string) => Promise<any[] | null>
+	(query: string) => Promise<CleanedApiSearchResultType[]>
 > = {
 	spotify: getSpotifySearchResults,
 	yandexMusic: getYandexMusicSearchResults,
@@ -23,10 +24,6 @@ export const searchTracks: RouteHandler<SearchTracksRoute> = async (c) => {
 
 	try {
 		const results = await handler(q)
-
-		if (!results) {
-			throw new Error("Results list is null")
-		}
 
 		return c.json(results, HttpStatusCodes.OK)
 	} catch (error) {
