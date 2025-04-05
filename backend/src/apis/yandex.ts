@@ -1,7 +1,6 @@
 import axios from "axios"
 import { SearchTracksResponse } from "ym-api/dist/types"
-import { z } from "zod"
-import { CleanedApiSearchResult } from "../schemas/apis"
+import { cleanedApiSearchResultType } from "../schemas/apis"
 
 export async function getYandexMusicSearchResults(query: string) {
 	try {
@@ -10,7 +9,7 @@ export async function getYandexMusicSearchResults(query: string) {
 				`https://api.music.yandex.net/search?text=${query}&page=0&type=track`
 			)
 
-		const cleanedTracks: z.infer<typeof CleanedApiSearchResult>[] =
+		const cleanedTracks: cleanedApiSearchResultType[] =
 			response.data.result.tracks.results.map((track) => ({
 				title: track.title,
 				url: `https://music.yandex.ru/album/${track.albums[0].id}/track/${track.id}`,

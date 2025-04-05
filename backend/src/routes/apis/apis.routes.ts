@@ -1,16 +1,17 @@
 import { createRoute, z } from "@hono/zod-openapi"
 import * as HttpStatusCodes from "stoker/http-status-codes"
 import { jsonContent } from "stoker/openapi/helpers"
-import { CleanedApiSearchResult } from "../../schemas/apis"
+import { cleanedApiSearchResultSchema } from "../../schemas/apis"
+import { PlatformSchema } from "../../types"
 
-const tags = ["Apis"]
+const tags = ["APIs"]
 
 export const searchTracks = createRoute({
 	path: "/search/:provider",
 	method: "get",
 	request: {
 		params: z.object({
-			provider: z.enum(["spotify", "yandex", "youtube"]),
+			platform: PlatformSchema,
 		}),
 		query: z.object({
 			q: z.string().min(1),
@@ -18,7 +19,7 @@ export const searchTracks = createRoute({
 	},
 	responses: {
 		[HttpStatusCodes.OK]: jsonContent(
-			z.array(CleanedApiSearchResult),
+			z.array(cleanedApiSearchResultSchema),
 			"Search results"
 		),
 		[HttpStatusCodes.INTERNAL_SERVER_ERROR]: jsonContent(

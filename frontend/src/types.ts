@@ -1,4 +1,4 @@
-export type Platform = "spotify" | "youtubeMusic" | "yandexMusic"
+export type Platform = "spotify" | "yandexMusic" | "youtubeMusic"
 
 export interface OriginalTrack {
 	id: string

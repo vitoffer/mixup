@@ -4,18 +4,22 @@ import { getSpotifySearchResults } from "../../apis/spotify"
 import { getYandexMusicSearchResults } from "../../apis/yandex"
 import { getYoutubeVideosSearchResults } from "../../apis/youtube"
 import * as HttpStatusCodes from "stoker/http-status-codes"
+import { PlatformType } from "../../types"
 
-const providerHandlers = {
+const providerHandlers: Record<
+	PlatformType,
+	(query: string) => Promise<any[] | null>
+> = {
 	spotify: getSpotifySearchResults,
-	yandex: getYandexMusicSearchResults,
-	youtube: getYoutubeVideosSearchResults,
+	yandexMusic: getYandexMusicSearchResults,
+	youtubeMusic: getYoutubeVideosSearchResults,
 }
 
 export const searchTracks: RouteHandler<SearchTracksRoute> = async (c) => {
-	const { provider } = c.req.valid("param")
+	const { platform } = c.req.valid("param")
 	const { q } = c.req.valid("query")
 
-	const handler = providerHandlers[provider]
+	const handler = providerHandlers[platform]
 
 	try {
 		const results = await handler(q)
@@ -27,7 +31,7 @@ export const searchTracks: RouteHandler<SearchTracksRoute> = async (c) => {
 		return c.json(results, HttpStatusCodes.OK)
 	} catch (error) {
 		return c.json(
-			{ message: `Error fetching ${provider} search results` },
+			{ message: `Error fetching ${platform} search results` },
 			HttpStatusCodes.INTERNAL_SERVER_ERROR
 		)
 	}
