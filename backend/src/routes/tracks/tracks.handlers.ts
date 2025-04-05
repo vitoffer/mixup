@@ -68,7 +68,9 @@ export const patch: RouteHandler<PatchRoute> = async (c) => {
 		"originalTracks"
 	)) as z.infer<typeof DbPopulatedTrackSchema>
 
-	return c.json(populatedUpdatedTrack, HttpStatusCodes.OK)
+	const normalizedUpdatedTrack = normalizeTrack(populatedUpdatedTrack)
+
+	return c.json(normalizedUpdatedTrack, HttpStatusCodes.OK)
 }
 
 export const remove: RouteHandler<RemoveRoute> = async (c) => {
