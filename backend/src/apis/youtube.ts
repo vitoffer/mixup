@@ -1,5 +1,5 @@
 import YTMusic from "ytmusic-api"
-import { cleanedApiSearchResultType } from "../schemas/apis"
+import { CleanedApiSearchResultType } from "../schemas/apis"
 
 const api = new YTMusic()
 await api.initialize()
@@ -8,7 +8,7 @@ export async function getYoutubeVideosSearchResults(query: string) {
 	try {
 		const videos = await api.searchVideos(query)
 
-		const cleanedVideos: cleanedApiSearchResultType[] = videos.map((video) => ({
+		const cleanedVideos: CleanedApiSearchResultType[] = videos.map((video) => ({
 			title: video.name,
 			url: `https://youtu.be/${video.videoId}`,
 			artistsNames: [video.artist.name],

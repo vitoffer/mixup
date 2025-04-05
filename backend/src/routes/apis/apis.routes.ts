@@ -1,8 +1,8 @@
 import { createRoute, z } from "@hono/zod-openapi"
 import * as HttpStatusCodes from "stoker/http-status-codes"
 import { jsonContent } from "stoker/openapi/helpers"
-import { cleanedApiSearchResultSchema } from "../../schemas/apis"
 import { PlatformSchema } from "../../types"
+import { CleanedApiSearchResultSchema } from "../../schemas/apis"
 
 const tags = ["APIs"]
 
@@ -19,7 +19,7 @@ export const searchTracks = createRoute({
 	},
 	responses: {
 		[HttpStatusCodes.OK]: jsonContent(
-			z.array(cleanedApiSearchResultSchema),
+			z.array(CleanedApiSearchResultSchema),
 			"Search results"
 		),
 		[HttpStatusCodes.INTERNAL_SERVER_ERROR]: jsonContent(

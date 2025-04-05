@@ -6,13 +6,13 @@ import {
 	jsonContentRequired,
 } from "stoker/openapi/helpers"
 import { createErrorSchema } from "stoker/openapi/schemas"
-import { notFoundSchema } from "../../lib/constants"
+import { NotFoundSchema } from "../../lib/constants"
 import {
 	InsertTrackSchema,
 	PatchTrackSchema,
 	TrackSchemaPopulated,
 } from "../../models/Track"
-import { paramsIdSchema } from "../../schemas/tracks"
+import { ParamsIdSchema } from "../../schemas/tracks"
 
 const tags = ["Tracks"]
 
@@ -32,15 +32,15 @@ export const getOne = createRoute({
 	path: "/tracks/{id}",
 	method: "get",
 	request: {
-		params: paramsIdSchema,
+		params: ParamsIdSchema,
 	},
 	responses: {
 		[HttpStatusCodes.OK]: jsonContent(TrackSchemaPopulated, "Found track"),
 		[HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
-			createErrorSchema(paramsIdSchema),
+			createErrorSchema(ParamsIdSchema),
 			"Incorrect track Id"
 		),
-		[HttpStatusCodes.NOT_FOUND]: jsonContent(notFoundSchema, "Track not found"),
+		[HttpStatusCodes.NOT_FOUND]: jsonContent(NotFoundSchema, "Track not found"),
 	},
 	tags,
 })
@@ -68,16 +68,16 @@ export const patch = createRoute({
 	path: "/tracks/{id}",
 	method: "patch",
 	request: {
-		params: paramsIdSchema,
+		params: ParamsIdSchema,
 		body: jsonContentRequired(PatchTrackSchema, "Track to update"),
 	},
 	responses: {
 		[HttpStatusCodes.OK]: jsonContent(TrackSchemaPopulated, "Updated track"),
 		[HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContentOneOf(
-			[createErrorSchema(PatchTrackSchema), createErrorSchema(paramsIdSchema)],
+			[createErrorSchema(PatchTrackSchema), createErrorSchema(ParamsIdSchema)],
 			"Validation error(s)"
 		),
-		[HttpStatusCodes.NOT_FOUND]: jsonContent(notFoundSchema, "Track not found"),
+		[HttpStatusCodes.NOT_FOUND]: jsonContent(NotFoundSchema, "Track not found"),
 	},
 	tags,
 })
@@ -86,17 +86,17 @@ export const remove = createRoute({
 	path: "/tracks/{id}",
 	method: "delete",
 	request: {
-		params: paramsIdSchema,
+		params: ParamsIdSchema,
 	},
 	responses: {
 		[HttpStatusCodes.NO_CONTENT]: {
 			description: "Track deleted",
 		},
 		[HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
-			createErrorSchema(paramsIdSchema),
+			createErrorSchema(ParamsIdSchema),
 			"Incorrect track Id"
 		),
-		[HttpStatusCodes.NOT_FOUND]: jsonContent(notFoundSchema, "Track not found"),
+		[HttpStatusCodes.NOT_FOUND]: jsonContent(NotFoundSchema, "Track not found"),
 	},
 	tags,
 })
