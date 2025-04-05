@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { Platform, Track } from "@/types"
 import spotifyLogo from "@/assets/icons/spotify_logo.svg?url"
-import yandexLogo from "@/assets/icons/yandex_logo.svg?url"
-import youtubeLogo from "@/assets/icons/youtube_logo.svg?url"
+import yandexLogo from "@/assets/icons/yandexMusic_logo.svg?url"
+import youtubeLogo from "@/assets/icons/youtubeMusic_logo.svg?url"
 
 const props = defineProps<{
 	urls: Pick<Track, "urls">["urls"]
