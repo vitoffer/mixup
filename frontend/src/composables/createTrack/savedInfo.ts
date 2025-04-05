@@ -74,11 +74,11 @@ export const useSavedInfo = () => {
 		urls: Record<Platform, string | null>,
 		artistsNames: string[],
 		tags: string[],
-		mixedTracks: Track[],
+		originalTracks: Track[],
 		thumbnailUrl: string | null,
 	) {
 		try {
-			mixedTracks = mixedTracks.map(async (originalTrack) => {
+			originalTracks = originalTracks.map(async (originalTrack) => {
 				if (!originalTrack.id) {
 					const savedOriginalTrack = await saveTrack(
 						originalTrack.title,
@@ -101,7 +101,9 @@ export const useSavedInfo = () => {
 				}
 			}) as any
 
-			mixedTracks = mixedTracks.filter((obj) => Object.keys(obj).length > 0)
+			originalTracks = originalTracks.filter(
+				(obj) => Object.keys(obj).length > 0,
+			)
 
 			const { data, status } = await axios.post(
 				`${import.meta.env.VITE_BASE_API_URL}/tracks`,
@@ -110,7 +112,7 @@ export const useSavedInfo = () => {
 					urls,
 					artistsNames,
 					tags,
-					mixedTracks: mixedTracks.map((track) => track.id),
+					originalTracks: originalTracks.map((track) => track.id),
 					thumbnailUrl,
 				},
 			)

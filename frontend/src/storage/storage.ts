@@ -11,7 +11,7 @@ export async function loadTracks() {
 		_id: string
 		__v: number
 		createdAt: string
-		mixedTracks: object[]
+		originalTracks: object[]
 		updatedAt: string
 	}
 
@@ -21,7 +21,7 @@ export async function loadTracks() {
 			__v,
 			createdAt,
 			updatedAt,
-			mixedTracks: originalTracks,
+			originalTracks,
 			...otherTrackData
 		} = track
 
@@ -53,11 +53,3 @@ export async function loadTracks() {
 }
 
 export const trackList: Ref<Track[]> = ref([])
-
-export const foundTrackListByPlatform = ref({})
-
-export const selectedTrackIdByPlatform = ref({})
-
-export const selectedTrackVkLink = ref("")
-
-export const selectedMixedTracksForNewMix = ref([])

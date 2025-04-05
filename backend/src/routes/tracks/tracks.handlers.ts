@@ -6,12 +6,13 @@ import {
 	PatchRoute,
 	RemoveRoute,
 } from "./tracks.routes"
-import Track, { TrackSchemaPopulated } from "../../models/Track"
 import * as HttpStatusCodes from "stoker/http-status-codes"
 import * as HttpStatusPhrases from "stoker/http-status-phrases"
+import { DbPopulatedTrackSchema, Track } from "../../models/Track"
+import { normalizeTrack } from "./helpers"
 
 export const list: RouteHandler<ListRoute> = async (c) => {
-	const tracks = await Track.find().populate("mixedTracks")
+	const tracks = await Track.find().populate("originalTracks")
 
 	return c.json(tracks, HttpStatusCodes.OK)
 }
@@ -19,7 +20,7 @@ export const list: RouteHandler<ListRoute> = async (c) => {
 export const getOne: RouteHandler<GetOneRoute> = async (c) => {
 	const { id } = c.req.valid("param")
 
-	const track = await Track.findById(id).populate("mixedTracks")
+	const track = await Track.findById(id).populate("originalTracks")
 
 	if (!track) {
 		return c.json(
@@ -36,10 +37,12 @@ export const create: RouteHandler<CreateRoute> = async (c) => {
 
 	const rawInsertedTrack = await Track.create(track)
 	const populatedInsertedTrack = (await rawInsertedTrack.populate(
-		"mixedTracks"
-	)) as z.infer<typeof TrackSchemaPopulated>
+		"originalTracks"
+	)) as z.infer<typeof DbPopulatedTrackSchema>
 
-	return c.json(populatedInsertedTrack, HttpStatusCodes.CREATED)
+	const normalizedInsertedTrack = normalizeTrack(populatedInsertedTrack)
+
+	return c.json(normalizedInsertedTrack, HttpStatusCodes.CREATED)
 }
 
 export const patch: RouteHandler<PatchRoute> = async (c) => {
@@ -62,8 +65,8 @@ export const patch: RouteHandler<PatchRoute> = async (c) => {
 	}
 
 	const populatedUpdatedTrack = (await rawUpdatedTrack.populate(
-		"mixedTracks"
-	)) as z.infer<typeof TrackSchemaPopulated>
+		"originalTracks"
+	)) as z.infer<typeof DbPopulatedTrackSchema>
 
 	return c.json(populatedUpdatedTrack, HttpStatusCodes.OK)
 }

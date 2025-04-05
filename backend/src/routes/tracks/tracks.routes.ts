@@ -9,8 +9,8 @@ import { createErrorSchema } from "stoker/openapi/schemas"
 import { NotFoundSchema } from "../../lib/constants"
 import {
 	InsertTrackSchema,
+	NormalizedPopulatedTrackSchema,
 	PatchTrackSchema,
-	TrackSchemaPopulated,
 } from "../../models/Track"
 import { ParamsIdSchema } from "../../schemas/tracks"
 
@@ -21,7 +21,7 @@ export const list = createRoute({
 	method: "get",
 	responses: {
 		[HttpStatusCodes.OK]: jsonContent(
-			z.array(TrackSchemaPopulated),
+			z.array(NormalizedPopulatedTrackSchema),
 			"List of tracks"
 		),
 	},
@@ -35,7 +35,10 @@ export const getOne = createRoute({
 		params: ParamsIdSchema,
 	},
 	responses: {
-		[HttpStatusCodes.OK]: jsonContent(TrackSchemaPopulated, "Found track"),
+		[HttpStatusCodes.OK]: jsonContent(
+			NormalizedPopulatedTrackSchema,
+			"Found track"
+		),
 		[HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
 			createErrorSchema(ParamsIdSchema),
 			"Incorrect track Id"
@@ -53,7 +56,7 @@ export const create = createRoute({
 	},
 	responses: {
 		[HttpStatusCodes.CREATED]: jsonContent(
-			TrackSchemaPopulated,
+			NormalizedPopulatedTrackSchema,
 			"Created track"
 		),
 		[HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
@@ -72,7 +75,10 @@ export const patch = createRoute({
 		body: jsonContentRequired(PatchTrackSchema, "Track to update"),
 	},
 	responses: {
-		[HttpStatusCodes.OK]: jsonContent(TrackSchemaPopulated, "Updated track"),
+		[HttpStatusCodes.OK]: jsonContent(
+			NormalizedPopulatedTrackSchema,
+			"Updated track"
+		),
 		[HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContentOneOf(
 			[createErrorSchema(PatchTrackSchema), createErrorSchema(ParamsIdSchema)],
 			"Validation error(s)"
