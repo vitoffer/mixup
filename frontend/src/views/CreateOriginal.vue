@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { OriginalTrack, Platform } from "@/types"
+import { Platform, Track } from "@/types"
 import { useConfirm } from "primevue"
 import PlatformTabList from "@/components/CreateTrack/PlatformTabList.vue"
 import BaseInfoEdit from "@/components/CreateTrack/BaseInfoEdit.vue"
@@ -73,18 +73,19 @@ async function localAddOriginalTrack() {
 		thumbnailUrl,
 	)
 
-	if (savedTrack.error) {
+	if ("error" in savedTrack) {
 		return
 	}
 
-	const formattedSavedTrack: OriginalTrack = {
-		id: savedTrack._id,
+	const formattedSavedTrack: Track = {
+		id: savedTrack.id,
 		title: savedTrack.title,
 		artistsNames: savedTrack.artistsNames,
 		isMix: savedTrack.isMix,
 		tags: savedTrack.tags,
 		thumbnailUrl: savedTrack.thumbnailUrl,
 		urls: savedTrack.urls,
+		originalTracks: [],
 	}
 
 	mixEditStore.mix.originalTracks.push(formattedSavedTrack)

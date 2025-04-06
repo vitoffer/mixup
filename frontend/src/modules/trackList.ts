@@ -1,9 +1,6 @@
-import { MixTrack, OriginalTrack } from "@/types"
+import { Track } from "@/types"
 
-export function getFilteredTrackList(
-	trackList: MixTrack[] | OriginalTrack[],
-	searchText: string,
-) {
+export function getFilteredTrackList(trackList: Track[], searchText: string) {
 	return trackList.filter((track) => {
 		return track.title.toLowerCase().includes(searchText.toLowerCase())
 	})

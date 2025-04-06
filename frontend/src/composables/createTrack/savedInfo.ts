@@ -1,10 +1,10 @@
-import { OriginalTrack, Platform, Track } from "@/types"
+import { Platform, Track, TrackPlatformSearchResult } from "@/types"
 import { nextTick, ref } from "vue"
 import { useSearchTrackPlatforms } from "./searchTrackPlatforms"
 import markIcon from "../../assets/icons/mark.svg?url"
 import { useIconStates } from "./iconStates"
 import { useToastStore } from "@/stores/toastStore"
-import axios from "axios"
+import axios, { AxiosResponse } from "axios"
 import { AutoCompleteChangeEvent } from "primevue"
 
 export const useSavedInfo = () => {
@@ -56,7 +56,7 @@ export const useSavedInfo = () => {
 	const title = ref<string>("")
 	const artistsNames = ref<string>("")
 	const tags = ref<string[]>([])
-	const originalTracks = ref<OriginalTrack[]>([])
+	const originalTracks = ref<Track[]>([])
 
 	function addTag(tag: string) {
 		const trimmedTag = tag.trim()
@@ -74,45 +74,52 @@ export const useSavedInfo = () => {
 		urls: Record<Platform, string | null>,
 		artistsNames: string[],
 		tags: string[],
-		originalTracks: Track[],
+		originalTracks: (Track | TrackPlatformSearchResult)[],
 		thumbnailUrl: string | null,
 	) {
 		try {
-			originalTracks = originalTracks.map(async (originalTrack) => {
-				if (!originalTrack.id) {
-					const savedOriginalTrack = await saveTrack(
-						originalTrack.title,
-						{
-							spotify: null,
-							yandexMusic: null,
-							youtubeMusic: (originalTrack as any).url,
-						},
-						originalTrack.artistsNames,
-						[],
-						[],
-						originalTrack.thumbnailUrl,
-					)
+			originalTracks = await Promise.all(
+				originalTracks.map(async (originalTrack) => {
+					if (!("id" in originalTrack)) {
+						const savedOriginalTrack = await saveTrack(
+							originalTrack.title,
+							{
+								spotify: null,
+								yandexMusic: null,
+								youtubeMusic: originalTrack.url,
+							},
+							originalTrack.artistsNames,
+							[],
+							[],
+							originalTrack.thumbnailUrl,
+						)
 
-					if (savedOriginalTrack.error) {
-						return {}
+						if ("error" in savedOriginalTrack) {
+							console.error(
+								`Error in saving original track: ${savedOriginalTrack.error}`,
+							)
+							return {} as Track
+						}
+
+						return savedOriginalTrack
+					} else {
+						return originalTrack
 					}
-
-					return savedOriginalTrack
-				}
-			}) as any
+				}),
+			)
 
 			originalTracks = originalTracks.filter(
 				(obj) => Object.keys(obj).length > 0,
 			)
 
-			const { data, status } = await axios.post(
+			const { data, status }: AxiosResponse<Track> = await axios.post(
 				`${import.meta.env.VITE_BASE_API_URL}/tracks`,
 				{
 					title,
 					urls,
 					artistsNames,
 					tags,
-					originalTracks: originalTracks.map((track) => track.id),
+					originalTracks: (originalTracks as Track[]).map((track) => track.id),
 					thumbnailUrl,
 				},
 			)

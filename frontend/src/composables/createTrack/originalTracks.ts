@@ -1,13 +1,16 @@
 import { fetchTracksOnPlatformByText } from "@/api/searchTrack"
 import { loadTracks, trackList } from "@/storage/storage"
-import { Track } from "@/types"
+import { Track, TrackPlatformSearchResult } from "@/types"
 import { AutoCompleteCompleteEvent } from "primevue"
 import { ref } from "vue"
 
+type TrackSuggestion =
+	| Track
+	| { splitter: true; text: string }
+	| TrackPlatformSearchResult
+
 export const useOriginalTracks = () => {
-	const originalTracksSuggestions = ref<
-		(Track | { splitter: boolean; text: string })[]
-	>([])
+	const originalTracksSuggestions = ref<TrackSuggestion[]>([])
 	const originalTracksSearchInputRounded = ref(true)
 
 	async function searchOriginalTrack(event: AutoCompleteCompleteEvent) {
@@ -16,13 +19,14 @@ export const useOriginalTracks = () => {
 				trackList.value = await loadTracks()
 			}
 
-			const suggestions: (Track | { splitter: boolean; text: string })[] =
-				trackList.value.filter((track) => {
+			const suggestions: TrackSuggestion[] = trackList.value
+				.filter((track) => {
 					return (
 						!track.isMix &&
 						track.title.toLowerCase().includes(event.query.toLowerCase())
 					)
 				})
+				.map((track) => track as TrackSuggestion)
 
 			let dbTrackListLength = suggestions.length
 

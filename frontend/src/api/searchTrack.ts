@@ -1,6 +1,6 @@
 import { useToastStore } from "@/stores/toastStore"
-import { Platform } from "@/types"
-import axios from "axios"
+import { Platform, TrackPlatformSearchResult } from "@/types"
+import axios, { AxiosResponse } from "axios"
 
 export async function fetchTracksOnPlatformByText(
 	text: string,
@@ -16,17 +16,19 @@ export async function fetchTracksOnPlatformByText(
 	}[platform]
 
 	try {
-		const { data } = await axios.get(
-			`${import.meta.env.VITE_BASE_API_URL}/search/${formattedPlatform}`,
-			{
-				params: {
-					q: text,
+		const { data }: AxiosResponse<TrackPlatformSearchResult[]> =
+			await axios.get(
+				`${import.meta.env.VITE_BASE_API_URL}/search/${formattedPlatform}`,
+				{
+					params: {
+						q: text,
+					},
 				},
-			},
-		)
+			)
 
 		return data.slice(0, count)
 	} catch (e) {
 		toastStore.addToast({ detail: JSON.stringify(e) })
+		return []
 	}
 }

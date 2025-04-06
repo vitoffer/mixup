@@ -1,4 +1,4 @@
-import { OriginalTrack } from "@/types"
+import { Track } from "@/types"
 import { defineStore } from "pinia"
 import { ref } from "vue"
 
@@ -12,7 +12,7 @@ export const useMixEditStore = defineStore("mixEdit", () => {
 			spotify: "",
 			yandexMusic: "",
 		},
-		originalTracks: [] as OriginalTrack[],
+		originalTracks: [] as Track[],
 	})
 
 	function clearMix() {
@@ -25,7 +25,7 @@ export const useMixEditStore = defineStore("mixEdit", () => {
 				spotify: "",
 				yandexMusic: "",
 			},
-			originalTracks: [] as OriginalTrack[],
+			originalTracks: [] as Track[],
 		}
 	}
 

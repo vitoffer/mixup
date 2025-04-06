@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { OriginalTrack } from "@/types"
+import { Track, TrackPlatformSearchResult } from "@/types"
 import TrackItem from "../TrackItem.vue"
 
 defineProps<{
-	originalTracksList: OriginalTrack[]
+	originalTracksList: (Track | TrackPlatformSearchResult)[]
 }>()
 
 defineEmits<{
@@ -32,6 +32,7 @@ defineEmits<{
 				class="absolute top-1/2 right-0 -translate-y-1/2 cursor-pointer rounded-lg bg-gray-800 p-2 leading-0"
 				@click="$emit('deleteOriginalTrack', originalTrack.title)"
 			>
+				<span class="hidden">Удалить оригинальный трек</span>
 				<i class="pi pi-times text-red-900"></i>
 			</button>
 		</li>

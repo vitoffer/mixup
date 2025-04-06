@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { MixTrack, OriginalTrack } from "@/types"
 import { RouterLink } from "vue-router"
 import thumbnailPlaceholder from "@/assets/images/thumbnail_placeholder.png"
+import { Track, TrackPlatformSearchResult } from "@/types"
 
 const props = withDefaults(
 	defineProps<{
-		track: MixTrack | OriginalTrack
+		track: Track | TrackPlatformSearchResult
 		withLinks?: boolean
 		unbordered?: boolean
 	}>(),
@@ -23,7 +23,14 @@ const props = withDefaults(
 	>
 		<component
 			:is="withLinks ? RouterLink : 'div'"
-			:to="{ name: 'trackPage', params: { id: track.id } }"
+			:to="
+				'id' in track
+					? {
+							name: 'trackPage',
+							params: { id: track.id },
+						}
+					: null
+			"
 			class="flex items-center gap-3 py-2"
 		>
 			<img

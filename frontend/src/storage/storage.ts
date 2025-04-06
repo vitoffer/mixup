@@ -1,32 +1,11 @@
-import { MixTrack, Track } from "@/types"
-import axios from "axios"
+import { Track } from "@/types"
+import axios, { AxiosResponse } from "axios"
 import { Ref, ref } from "vue"
 
 export async function loadTracks() {
-	const { data } = await axios.get(
+	const { data }: AxiosResponse<Track[]> = await axios.get(
 		`${import.meta.env.VITE_BASE_API_URL}/tracks`,
 	)
-
-	interface TrackFromApi extends Omit<MixTrack, "id" | "originalTracks"> {
-		_id: string
-		__v: number
-		createdAt: string
-		originalTracks: object[]
-		updatedAt: string
-	}
-
-	const tracksFromApiList = data.map((track: TrackFromApi) => {
-		const {
-			_id,
-			__v,
-			createdAt,
-			updatedAt,
-			originalTracks,
-			...otherTrackData
-		} = track
-
-		return { ...otherTrackData, id: _id, originalTracks }
-	})
 
 	// const data: Partial<Track>[] = [
 	// 	{
@@ -49,7 +28,7 @@ export async function loadTracks() {
 	// 	},
 	// ]
 
-	return tracksFromApiList
+	return data
 }
 
 export const trackList: Ref<Track[]> = ref([])

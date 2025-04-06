@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { OriginalTrack, Track } from "@/types"
+import { Track, TrackPlatformSearchResult } from "@/types"
 import {
 	AutoCompleteCompleteEvent,
 	AutoCompleteOptionSelectEvent,
@@ -9,7 +9,11 @@ import { ref } from "vue"
 import TrackItem from "../TrackItem.vue"
 
 defineProps<{
-	originalTracksSuggestions: (Track | { splitter: boolean; text: string })[]
+	originalTracksSuggestions: (
+		| Track
+		| { splitter: boolean; text: string }
+		| TrackPlatformSearchResult
+	)[]
 }>()
 
 defineEmits<{
@@ -17,7 +21,8 @@ defineEmits<{
 	createOriginal: []
 }>()
 
-const originalTracksList = defineModel<OriginalTrack[]>("originalTracksList")
+const originalTracksList =
+	defineModel<(Track | TrackPlatformSearchResult)[]>("originalTracksList")
 const originalTracksSearchInputRounded = defineModel<boolean>(
 	"originalTracksSearchInputRounded",
 )

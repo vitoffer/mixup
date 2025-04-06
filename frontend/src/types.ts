@@ -1,6 +1,6 @@
 export type Platform = "spotify" | "yandexMusic" | "youtubeMusic"
 
-export interface OriginalTrack {
+export interface Track {
 	id: string
 	title: string
 	urls: Record<Platform, string | null>
@@ -8,17 +8,19 @@ export interface OriginalTrack {
 	artistsNames: string[]
 	tags: string[]
 	isMix: boolean
+	originalTracks: Track[]
 }
-
-export type MixTrack = OriginalTrack & {
-	originalTracks: OriginalTrack[]
-}
-
-export type Track = OriginalTrack | MixTrack
 
 export interface CreateTrackPlatformTab {
 	platform: Platform
 	link: string
 	icon: string
 	placeholder: string
+}
+
+export interface TrackPlatformSearchResult {
+	title: string
+	url: string
+	artistsNames: string[]
+	thumbnailUrl: string
 }

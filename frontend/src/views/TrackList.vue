@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { ref, computed, Ref } from "vue"
+import { ref, computed } from "vue"
 import SearchBar from "@/components/SearchBar.vue"
 import { getFilteredTrackList } from "@/modules/trackList"
 import TrackItem from "@/components/TrackItem.vue"
-import { MixTrack, Track } from "@/types"
-import axios from "axios"
 import { loadTracks, trackList } from "@/storage/storage"
 
 const searchTrack = ref("")
