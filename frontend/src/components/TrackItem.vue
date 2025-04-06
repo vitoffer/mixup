@@ -2,6 +2,7 @@
 import { RouterLink } from "vue-router"
 import thumbnailPlaceholder from "@/assets/images/thumbnail_placeholder.png"
 import { Track, TrackPlatformSearchResult } from "@/types"
+import { computed, ref, watch, watchEffect } from "vue"
 
 const props = withDefaults(
 	defineProps<{
@@ -14,6 +15,31 @@ const props = withDefaults(
 		unbordered: false,
 	},
 )
+
+const navLink = computed(() => {
+	return "id" in props.track
+		? {
+				name: "trackPage",
+				params: { id: props.track.id },
+			}
+		: null
+})
+
+const imageLoaded = ref(false)
+const imageSrc = ref(props.track.thumbnailUrl)
+
+const imagePlaceholderSetTimeout = setTimeout(() => {
+	imageSrc.value = thumbnailPlaceholder
+}, 250)
+
+watch(
+	() => imageLoaded.value,
+	(newValue) => {
+		if (newValue) {
+			clearTimeout(imagePlaceholderSetTimeout)
+		}
+	},
+)
 </script>
 
 <template>
@@ -23,21 +49,21 @@ const props = withDefaults(
 	>
 		<component
 			:is="withLinks ? RouterLink : 'div'"
-			:to="
-				'id' in track
-					? {
-							name: 'trackPage',
-							params: { id: track.id },
-						}
-					: null
-			"
+			:to="navLink"
 			class="flex items-center gap-3 py-2"
 		>
-			<img
-				:src="track.thumbnailUrl || thumbnailPlaceholder"
-				alt=""
-				class="aspect-square w-[56px] rounded-[10px]"
-			/>
+			<div class="relative aspect-square w-[56px] rounded-[10px]">
+				<div
+					v-if="!imageLoaded"
+					class="absolute inset-0 z-10 h-full w-full rounded-[10px] bg-gray-700"
+				></div>
+				<img
+					:src="imageSrc"
+					alt="Картинка трека"
+					class="absolute inset-0 h-full w-full rounded-[10px] object-cover"
+					@load="imageLoaded = true"
+				/>
+			</div>
 			<div class="flex min-w-0 flex-col gap-[6px]">
 				<p class="w-full text-[1rem] text-yellow-900">
 					{{ track.title }}
