@@ -1,4 +1,5 @@
 import { OpenAPIHono } from "@hono/zod-openapi"
+import { serveStatic } from "hono/bun"
 import { cors } from "hono/cors"
 import { logger } from "hono/logger"
 import { notFound, onError } from "stoker/middlewares"
@@ -13,6 +14,7 @@ export default function createApp() {
 
 	app.use(logger())
 	app.use("*", cors())
+	app.use("/public/*", serveStatic({ root: "./" }))
 
 	app.notFound(notFound)
 	app.onError(onError)

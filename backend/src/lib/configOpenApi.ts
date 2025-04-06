@@ -24,6 +24,7 @@ export default function configOpenApi(app: OpenAPIHono) {
 				targetKey: "js",
 				clientKey: "axios",
 			},
+			favicon: "/public/favicon.ico",
 		})
 	)
 }
