@@ -9,16 +9,10 @@ export async function fetchTracksOnPlatformByText(
 ) {
 	const toastStore = useToastStore()
 
-	const formattedPlatform = {
-		youtubeMusic: "youtube",
-		yandexMusic: "yandex",
-		spotify: "spotify",
-	}[platform]
-
 	try {
 		const { data }: AxiosResponse<TrackPlatformSearchResult[]> =
 			await axios.get(
-				`${import.meta.env.VITE_BASE_API_URL}/search/${formattedPlatform}`,
+				`${import.meta.env.VITE_BASE_API_URL}/search/${platform}`,
 				{
 					params: {
 						q: text,
