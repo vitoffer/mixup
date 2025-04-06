@@ -4,10 +4,12 @@ import { useSearchTrackPlatforms } from "./searchTrackPlatforms"
 import markIcon from "../../assets/icons/mark.svg?url"
 import { useIconStates } from "./iconStates"
 import { useToastStore } from "@/stores/toastStore"
-import axios, { AxiosResponse } from "axios"
 import { AutoCompleteChangeEvent } from "primevue"
+import { postSaveTrack } from "@/api/saveTrack"
+import { useRouter } from "vue-router"
 
 export const useSavedInfo = () => {
+	const router = useRouter()
 	const toastStore = useToastStore()
 
 	const savedLinks = ref({
@@ -69,73 +71,6 @@ export const useSavedInfo = () => {
 		tags.value = tags.value.filter((filteringTag) => filteringTag !== tag)
 	}
 
-	async function saveTrack(
-		title: string,
-		urls: Record<Platform, string | null>,
-		artistsNames: string[],
-		tags: string[],
-		originalTracks: (Track | TrackPlatformSearchResult)[],
-		thumbnailUrl: string | null,
-	) {
-		try {
-			originalTracks = await Promise.all(
-				originalTracks.map(async (originalTrack) => {
-					if (!("id" in originalTrack)) {
-						const savedOriginalTrack = await saveTrack(
-							originalTrack.title,
-							{
-								spotify: null,
-								yandexMusic: null,
-								youtubeMusic: originalTrack.url,
-							},
-							originalTrack.artistsNames,
-							[],
-							[],
-							originalTrack.thumbnailUrl,
-						)
-
-						if ("error" in savedOriginalTrack) {
-							console.error(
-								`Error in saving original track: ${savedOriginalTrack.error}`,
-							)
-							return {} as Track
-						}
-
-						return savedOriginalTrack
-					} else {
-						return originalTrack
-					}
-				}),
-			)
-
-			originalTracks = originalTracks.filter(
-				(obj) => Object.keys(obj).length > 0,
-			)
-
-			const { data }: AxiosResponse<Track> = await axios.post(
-				`${import.meta.env.VITE_BASE_API_URL}/tracks`,
-				{
-					title,
-					urls,
-					artistsNames,
-					tags,
-					originalTracks: (originalTracks as Track[]).map((track) => track.id),
-					thumbnailUrl,
-				},
-			)
-
-			return data
-		} catch (e) {
-			toastStore.addToast({
-				detail: (e as any).response.data.error.issues
-					.map((issue: { message: string }) => issue.message)
-					.join("\n"),
-			})
-			console.error(e)
-			return { error: true }
-		}
-	}
-
 	async function selectFoundTrackOnPlatform(
 		event: AutoCompleteChangeEvent,
 		platform: Platform,
@@ -158,6 +93,34 @@ export const useSavedInfo = () => {
 
 		await nextTick()
 		trackFoundOnPlatform.value = searchPlatformText.value
+	}
+
+	async function saveTrack(isMix: boolean, successMessage: string) {
+		const thumbnailUrl =
+			savedThumbnails.value.spotify ||
+			savedThumbnails.value.yandexMusic ||
+			savedThumbnails.value.youtubeMusic ||
+			null
+
+		const savedTrack = await postSaveTrack(
+			title.value,
+			{
+				youtubeMusic: savedLinks.value.youtubeMusic || null,
+				yandexMusic: savedLinks.value.yandexMusic || null,
+				spotify: savedLinks.value.spotify || null,
+			},
+			artistsNames.value.split(", "),
+			tags.value,
+			isMix ? [] : originalTracks.value,
+			thumbnailUrl,
+		)
+
+		if ("error" in savedTrack) {
+			return
+		}
+
+		toastStore.addToast({ summary: successMessage })
+		router.push({ name: isMix ? "trackList" : "createMix" })
 	}
 
 	function changeText(event: AutoCompleteChangeEvent) {
@@ -185,6 +148,5 @@ export const useSavedInfo = () => {
 		saveTrack,
 		selectFoundTrackOnPlatform,
 		changeText,
-		savedThumbnails,
 	}
 }

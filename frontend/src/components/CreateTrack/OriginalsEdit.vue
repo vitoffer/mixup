@@ -23,6 +23,8 @@ const emit = defineEmits<{
 	updateOriginalTracksList: [newValue: Track[]]
 }>()
 
+const autocompleteDisabled = ref(false)
+
 const originalTracksSearchInputRounded = defineModel<boolean>(
 	"originalTracksSearchInputRounded",
 )
@@ -52,8 +54,6 @@ function hideFloatLabel() {
 	) as HTMLInputElement
 	inputElem.classList.remove("p-filled")
 }
-
-const autocompleteDisabled = ref(false)
 </script>
 
 <template>

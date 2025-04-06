@@ -5,7 +5,7 @@ import { useToastStore } from "@/stores/toastStore"
 import { Platform, Track } from "@/types"
 import { useConfirm } from "primevue"
 import { onMounted } from "vue"
-import { onBeforeRouteUpdate, useRouter } from "vue-router"
+import { onBeforeRouteLeave, useRouter } from "vue-router"
 import TagsEdit from "./TagsEdit.vue"
 import BaseInfoEdit from "./BaseInfoEdit.vue"
 import PlatformTabList from "./PlatformTabList.vue"
@@ -26,23 +26,6 @@ const router = useRouter()
 const mixEditStore = useMixEditStore()
 const toastStore = useToastStore()
 
-function confirmClearSavedLink(event: Event, platform: Platform) {
-	confirm.require({
-		target: event.currentTarget as HTMLElement,
-		message: "Точно удалить эту ссылку?",
-		icon: "pi pi=exclamation-triangle",
-		rejectProps: {
-			label: "Отмена",
-		},
-		acceptProps: {
-			label: "Удалить",
-		},
-		accept: () => {
-			clearSavedLink(platform)
-		},
-	})
-}
-
 const {
 	savedLinks,
 	currentPlatform,
@@ -61,7 +44,6 @@ const {
 	saveTrack,
 	selectFoundTrackOnPlatform,
 	changeText,
-	savedThumbnails,
 } = useSavedInfo()
 
 function updateOriginalTracksList(newValue: Track[]) {
@@ -79,32 +61,21 @@ async function navigateToCreateOriginal() {
 	router.push({ name: "createOriginal" })
 }
 
-async function localSaveTrack() {
-	const thumbnailUrl =
-		savedThumbnails.value.spotify ||
-		savedThumbnails.value.yandexMusic ||
-		savedThumbnails.value.youtubeMusic ||
-		null
-
-	const savedTrack = await saveTrack(
-		title.value,
-		{
-			youtubeMusic: savedLinks.value.youtubeMusic || null,
-			yandexMusic: savedLinks.value.yandexMusic || null,
-			spotify: savedLinks.value.spotify || null,
+function confirmClearSavedLink(event: Event, platform: Platform) {
+	confirm.require({
+		target: event.currentTarget as HTMLElement,
+		message: "Точно удалить эту ссылку?",
+		icon: "pi pi=exclamation-triangle",
+		rejectProps: {
+			label: "Отмена",
 		},
-		artistsNames.value.split(", "),
-		tags.value,
-		props.isMix ? [] : originalTracks.value,
-		thumbnailUrl,
-	)
-
-	if ("error" in savedTrack) {
-		return
-	}
-
-	toastStore.addToast({ summary: props.successMessage })
-	router.push({ name: props.isMix ? "trackList" : "createMix" })
+		acceptProps: {
+			label: "Удалить",
+		},
+		accept: () => {
+			clearSavedLink(platform)
+		},
+	})
 }
 
 onMounted(() => {
@@ -118,9 +89,10 @@ onMounted(() => {
 	}
 })
 
-onBeforeRouteUpdate((to) => {
+onBeforeRouteLeave((to) => {
 	if (to.name !== "createMix" && to.name !== "createOriginal") {
 		mixEditStore.clearMix()
+		console.log(1)
 	}
 })
 </script>
@@ -184,7 +156,7 @@ onBeforeRouteUpdate((to) => {
 		></slot>
 		<button
 			class="flex cursor-pointer items-center justify-center rounded-[10px] bg-yellow-800 px-16 py-4 text-2xl leading-none font-bold text-gray-900"
-			@click="localSaveTrack"
+			@click="saveTrack(isMix, successMessage)"
 		>
 			OK
 		</button>
