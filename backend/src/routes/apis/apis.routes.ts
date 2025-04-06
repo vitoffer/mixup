@@ -7,7 +7,7 @@ import { CleanedApiSearchResultSchema } from "../../schemas/apis"
 const tags = ["APIs"]
 
 export const searchTracks = createRoute({
-	path: "/search/:provider",
+	path: "/search/:platform",
 	method: "get",
 	request: {
 		params: z.object({

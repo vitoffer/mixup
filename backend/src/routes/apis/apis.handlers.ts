@@ -7,7 +7,7 @@ import * as HttpStatusCodes from "stoker/http-status-codes"
 import { PlatformType } from "../../types"
 import { CleanedApiSearchResultType } from "../../schemas/apis"
 
-const providerHandlers: Record<
+const platformHandlers: Record<
 	PlatformType,
 	(query: string) => Promise<CleanedApiSearchResultType[]>
 > = {
@@ -20,7 +20,7 @@ export const searchTracks: RouteHandler<SearchTracksRoute> = async (c) => {
 	const { platform } = c.req.valid("param")
 	const { q } = c.req.valid("query")
 
-	const handler = providerHandlers[platform]
+	const handler = platformHandlers[platform]
 
 	try {
 		const results = await handler(q)
