@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { RouterView } from "vue-router"
+import { RouterView, useRoute } from "vue-router"
 import AppNav from "./components/AppNav.vue"
 import { watch } from "vue"
 import { storeToRefs } from "pinia"
 import { useToast } from "primevue"
 import { useToastStore } from "./stores/toastStore"
 
+const toast = useToast()
 const toastStore = useToastStore()
 const { toasts } = storeToRefs(toastStore)
-const toast = useToast()
 
 watch(
 	toasts,

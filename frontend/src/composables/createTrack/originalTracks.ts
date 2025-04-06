@@ -1,5 +1,5 @@
 import { fetchTracksOnPlatformByText } from "@/api/searchTrack"
-import { loadTracks, trackList } from "@/storage/storage"
+import { loadTracks, trackList } from "@/modules/trackList"
 import { Track, TrackPlatformSearchResult } from "@/types"
 import { AutoCompleteCompleteEvent } from "primevue"
 import { ref } from "vue"

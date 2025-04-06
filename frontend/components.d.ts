@@ -17,6 +17,7 @@ declare module 'vue' {
     ConfirmPopup: typeof import('primevue/confirmpopup')['default']
     FloatLabel: typeof import('primevue/floatlabel')['default']
     InputText: typeof import('primevue/inputtext')['default']
+    Layout: typeof import('./src/components/CreateTrack/Layout.vue')['default']
     NewTagInput: typeof import('./src/components/CreateTrack/NewTagInput.vue')['default']
     OriginalsEdit: typeof import('./src/components/CreateTrack/OriginalsEdit.vue')['default']
     PlatformLinkList: typeof import('./src/components/PlatformLinkList.vue')['default']

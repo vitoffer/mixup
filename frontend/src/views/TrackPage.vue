@@ -2,11 +2,12 @@
 import BackButton from "@/components/BackButton.vue"
 import PlatformLinkList from "@/components/PlatformLinkList.vue"
 import TrackItem from "@/components/TrackItem.vue"
-import { trackList } from "@/storage/storage"
+
 import { Track } from "@/types"
 import { ref, Ref, watch } from "vue"
 import { useRoute } from "vue-router"
 import thumbnailPlaceholder from "@/assets/images/thumbnail_placeholder.png"
+import { trackList } from "@/modules/trackList"
 
 const track: Ref<Track | null> = ref(null)
 

@@ -8,40 +8,40 @@ import AddedOriginalTracksList from "./AddedOriginalTracksList.vue"
 import { ref } from "vue"
 import TrackItem from "../TrackItem.vue"
 
-defineProps<{
+const props = defineProps<{
 	originalTracksSuggestions: (
 		| Track
 		| { splitter: boolean; text: string }
 		| TrackPlatformSearchResult
 	)[]
+	originalTracksList: Track[]
 }>()
 
-defineEmits<{
+const emit = defineEmits<{
 	searchOriginalTrack: [event: AutoCompleteCompleteEvent]
 	createOriginal: []
+	updateOriginalTracksList: [newValue: Track[]]
 }>()
 
-const originalTracksList =
-	defineModel<(Track | TrackPlatformSearchResult)[]>("originalTracksList")
 const originalTracksSearchInputRounded = defineModel<boolean>(
 	"originalTracksSearchInputRounded",
 )
-
 const originalTracksSearch = ref("")
 
 function deleteOriginalTrack(title: string) {
-	originalTracksList.value = originalTracksList.value?.filter(
-		(track) => track.title !== title,
+	emit(
+		"updateOriginalTracksList",
+		props.originalTracksList?.filter((track) => track.title !== title),
 	)
 }
 
 function selectOriginalTrack(event: AutoCompleteOptionSelectEvent) {
 	if (
-		originalTracksList.value?.find(
+		props.originalTracksList?.find(
 			(track) => track.title === event.value.title,
 		) === undefined
 	) {
-		originalTracksList.value?.push(event.value)
+		emit("updateOriginalTracksList", [...props.originalTracksList, event.value])
 	}
 	originalTracksSearch.value = ""
 }
@@ -52,6 +52,8 @@ function hideFloatLabel() {
 	) as HTMLInputElement
 	inputElem.classList.remove("p-filled")
 }
+
+const autocompleteDisabled = ref(false)
 </script>
 
 <template>
@@ -68,6 +70,7 @@ function hideFloatLabel() {
 		/>
 		<FloatLabel variant="in">
 			<AutoComplete
+				:disabled="autocompleteDisabled"
 				v-model="originalTracksSearch"
 				:suggestions="originalTracksSuggestions"
 				@complete="(event) => $emit('searchOriginalTrack', event)"
@@ -103,7 +106,12 @@ function hideFloatLabel() {
 						<p class="text-cyan-700">Не нашли, что искали?</p>
 						<button
 							class="text-yellow-700"
-							@click="$emit('createOriginal')"
+							@click="
+								() => {
+									autocompleteDisabled = true
+									$emit('createOriginal')
+								}
+							"
 						>
 							Добавьте трек сами!
 						</button>

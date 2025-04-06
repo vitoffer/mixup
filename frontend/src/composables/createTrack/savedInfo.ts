@@ -112,7 +112,7 @@ export const useSavedInfo = () => {
 				(obj) => Object.keys(obj).length > 0,
 			)
 
-			const { data, status }: AxiosResponse<Track> = await axios.post(
+			const { data }: AxiosResponse<Track> = await axios.post(
 				`${import.meta.env.VITE_BASE_API_URL}/tracks`,
 				{
 					title,
@@ -123,8 +123,6 @@ export const useSavedInfo = () => {
 					thumbnailUrl,
 				},
 			)
-
-			console.log(status, data)
 
 			return data
 		} catch (e) {
