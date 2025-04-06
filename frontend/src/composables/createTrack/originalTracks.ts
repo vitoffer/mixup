@@ -30,6 +30,11 @@ export const useOriginalTracks = () => {
 
 			let dbTrackListLength = suggestions.length
 
+			while (dbTrackListLength > 5) {
+				suggestions.pop()
+				dbTrackListLength = suggestions.length
+			}
+
 			if (suggestions.length > 0) {
 				suggestions.unshift({ splitter: true, text: "Найденные треки в базе:" })
 			}
