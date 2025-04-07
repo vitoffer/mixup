@@ -51,27 +51,27 @@ function handleFocus(event: Event) {
 
 <template>
 	<AutoComplete
-		:disabled
 		v-model="searchModel"
+		:disabled
+		:dropdown
 		:suggestions="suggestions"
-		@complete="(event) => $emit('searchTrack', event)"
-		@option-select="$emit('selectTrack', $event)"
-		@show="searchTrackRounded = false"
-		@hide="searchTrackRounded = true"
+		:class="$attrs.class"
+		:option-label
+		:empty-search-message
+		:input-id="inputId"
 		:input-class="[
 			{ '!rounded-b-none': !searchTrackRounded },
 			'placeholder:text-cyan-700',
 		]"
-		:empty-search-message
 		append-to="self"
 		class="w-full"
-		:class="$attrs.class"
-		:input-id="inputId"
-		@blur="$emit('blur')"
+		@complete="(event) => $emit('searchTrack', event)"
 		@change="$emit('change', $event)"
+		@option-select="$emit('selectTrack', $event)"
+		@show="searchTrackRounded = false"
+		@hide="searchTrackRounded = true"
+		@blur="$emit('blur')"
 		@focus="handleFocus($event)"
-		:dropdown
-		:option-label
 	>
 		<template #option="{ option }">
 			<p
