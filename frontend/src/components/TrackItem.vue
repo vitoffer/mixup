@@ -52,7 +52,7 @@ watch(
 			:to="navLink"
 			class="flex items-center gap-3 py-2"
 		>
-			<div class="relative aspect-square w-[56px] rounded-[10px]">
+			<div class="relative aspect-square w-[56px] min-w-0 rounded-[10px]">
 				<div
 					v-if="!imageLoaded"
 					class="absolute inset-0 z-10 h-full w-full rounded-[10px] bg-gray-700"
@@ -64,13 +64,11 @@ watch(
 					@load="imageLoaded = true"
 				/>
 			</div>
-			<div class="flex min-w-0 flex-col gap-[6px]">
-				<p class="w-full text-[1rem] text-yellow-900">
+			<div class="flex w-full flex-col gap-[6px]">
+				<p class="line-clamp-2 text-[1rem] break-words text-yellow-900">
 					{{ track.title }}
 				</p>
-				<p
-					class="w-full overflow-hidden text-[0.875rem] text-nowrap text-ellipsis text-yellow-700"
-				>
+				<p class="truncate text-[0.875rem] text-yellow-700">
 					{{ track.artistsNames.join(", ") }}
 				</p>
 			</div>
@@ -78,4 +76,8 @@ watch(
 	</article>
 </template>
 
-<style scoped></style>
+<style scoped>
+p {
+	text-wrap: balance;
+}
+</style>
