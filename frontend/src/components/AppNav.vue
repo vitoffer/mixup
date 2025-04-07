@@ -20,7 +20,8 @@ function isActive(linkName: string) {
 	return linkName === "trackList" &&
 		(route.path === "/" || route.path.startsWith("/tracks/"))
 		? true
-		: linkName === "createMix" && route.path === "/create-mix"
+		: linkName === "createMix" &&
+			  (route.path === "/create-mix" || route.path === "/create-original")
 			? true
 			: false
 }

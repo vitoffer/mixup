@@ -92,7 +92,6 @@ onMounted(() => {
 onBeforeRouteLeave((to) => {
 	if (to.name !== "createMix" && to.name !== "createOriginal") {
 		mixEditStore.clearMix()
-		console.log(1)
 	}
 })
 </script>
