@@ -11,7 +11,7 @@ defineOptions({
 	inheritAttrs: false,
 })
 
-withDefaults(
+const props = withDefaults(
 	defineProps<{
 		suggestions: (
 			| Track
@@ -51,6 +51,13 @@ function handleFocus(event: Event) {
 		})
 	}
 }
+
+async function hideFloatLabel() {
+	const inputElem = document.querySelector(
+		`#${props.inputId}`,
+	) as HTMLInputElement
+	inputElem.classList.remove("p-filled")
+}
 </script>
 
 <template>
@@ -76,6 +83,7 @@ function handleFocus(event: Event) {
 			@show="searchTrackRounded = false"
 			@hide="searchTrackRounded = true"
 			@focus="handleFocus"
+			@blur="hideFloatLabel"
 		>
 			<template #option="{ option }">
 				<p
