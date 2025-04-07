@@ -54,10 +54,10 @@ function selectOriginalTrack(event: AutoCompleteOptionSelectEvent) {
 		>
 			Оригиналы:
 		</p>
-		<!-- <AddedOriginalTracksList
+		<AddedOriginalTracksList
 			:originalTracksList="originalTracksList!"
 			@delete-original-track="deleteOriginalTrack"
-		/> -->
+		/>
 		<PlatformTrackSearch
 			input-id="searchOriginal"
 			v-model:search-model="originalTracksSearch"

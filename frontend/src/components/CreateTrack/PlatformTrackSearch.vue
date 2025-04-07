@@ -11,7 +11,7 @@ defineOptions({
 	inheritAttrs: false,
 })
 
-const props = withDefaults(
+withDefaults(
 	defineProps<{
 		suggestions: (
 			| Track
@@ -33,7 +33,7 @@ const props = withDefaults(
 
 const searchModel = defineModel<string>("searchModel")
 
-const emit = defineEmits<{
+defineEmits<{
 	searchTrack: [event: AutoCompleteCompleteEvent]
 	selectTrack: [event: AutoCompleteOptionSelectEvent]
 	change: [event: AutoCompleteChangeEvent]
@@ -50,18 +50,6 @@ function handleFocus(event: Event) {
 			behavior: "smooth",
 		})
 	}
-}
-
-function hideFloatLabel() {
-	const inputElem = document.querySelector(
-		`#${props.inputId}`,
-	) as HTMLInputElement
-	inputElem.classList.remove("p-filled")
-}
-
-async function handleSelect(event: AutoCompleteOptionSelectEvent) {
-	emit("selectTrack", event)
-	hideFloatLabel()
 }
 </script>
 
@@ -84,11 +72,10 @@ async function handleSelect(event: AutoCompleteOptionSelectEvent) {
 			class="w-full"
 			@complete="$emit('searchTrack', $event)"
 			@change="$emit('change', $event)"
-			@option-select="handleSelect"
+			@option-select="$emit('selectTrack', $event)"
 			@show="searchTrackRounded = false"
 			@hide="searchTrackRounded = true"
 			@focus="handleFocus"
-			@blur="hideFloatLabel"
 		>
 			<template #option="{ option }">
 				<p
