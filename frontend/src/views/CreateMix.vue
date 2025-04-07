@@ -4,11 +4,7 @@ import OriginalsEdit from "@/components/CreateTrack/OriginalsEdit.vue"
 import { useOriginalTracks } from "@/composables/createTrack/originalTracks"
 import CreateTrackLayout from "@/components/CreateTrack/Layout.vue"
 
-const {
-	originalTracksSearchInputRounded,
-	originalTracksSuggestions,
-	searchOriginalTrack,
-} = useOriginalTracks()
+const { originalTracksSuggestions, searchOriginalTrack } = useOriginalTracks()
 </script>
 
 <template>
@@ -27,9 +23,6 @@ const {
 			<OriginalsEdit
 				:original-tracks-suggestions="originalTracksSuggestions"
 				:original-tracks-list="originalTracks"
-				v-model:original-tracks-search-input-rounded="
-					originalTracksSearchInputRounded
-				"
 				@search-original-track="searchOriginalTrack"
 				@create-original="createOriginal"
 				@update-original-tracks-list="updateOriginalTracksList"

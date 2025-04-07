@@ -13,7 +13,6 @@ export const useSearchTrackPlatforms = () => {
 		yandexMusic: [],
 		spotify: [],
 	})
-	const searchTrackOnPlatformRounded = ref(true)
 
 	async function searchTrackOnPlatform(
 		event: AutoCompleteCompleteEvent,
@@ -38,7 +37,6 @@ export const useSearchTrackPlatforms = () => {
 		trackFoundOnPlatform,
 		searchPlatformText,
 		platformTrackSuggestions,
-		searchTrackOnPlatformRounded,
 		searchTrackOnPlatform,
 	}
 }

@@ -7,7 +7,11 @@ import {
 } from "primevue"
 import { ref } from "vue"
 
-withDefaults(
+defineOptions({
+	inheritAttrs: false,
+})
+
+const props = withDefaults(
 	defineProps<{
 		suggestions: (
 			| Track
@@ -19,6 +23,7 @@ withDefaults(
 		dropdown?: boolean
 		emptySearchMessage: string
 		optionLabel?: string | ((data: any) => string)
+		labelText: string
 	}>(),
 	{
 		disabled: false,
@@ -28,10 +33,9 @@ withDefaults(
 
 const searchModel = defineModel<string>("searchModel")
 
-defineEmits<{
+const emit = defineEmits<{
 	searchTrack: [event: AutoCompleteCompleteEvent]
 	selectTrack: [event: AutoCompleteOptionSelectEvent]
-	blur: []
 	change: [event: AutoCompleteChangeEvent]
 }>()
 
@@ -47,50 +51,65 @@ function handleFocus(event: Event) {
 		})
 	}
 }
+
+function hideFloatLabel() {
+	const inputElem = document.querySelector(
+		`#${props.inputId}`,
+	) as HTMLInputElement
+	inputElem.classList.remove("p-filled")
+}
+
+async function handleSelect(event: AutoCompleteOptionSelectEvent) {
+	emit("selectTrack", event)
+	hideFloatLabel()
+}
 </script>
 
 <template>
-	<AutoComplete
-		v-model="searchModel"
-		:disabled
-		:dropdown
-		:suggestions="suggestions"
-		:class="$attrs.class"
-		:option-label
-		:empty-search-message
-		:input-id="inputId"
-		:input-class="[
-			{ '!rounded-b-none': !searchTrackRounded },
-			'placeholder:text-cyan-700',
-		]"
-		append-to="self"
-		class="w-full"
-		@complete="(event) => $emit('searchTrack', event)"
-		@change="$emit('change', $event)"
-		@option-select="$emit('selectTrack', $event)"
-		@show="searchTrackRounded = false"
-		@hide="searchTrackRounded = true"
-		@blur="$emit('blur')"
-		@focus="handleFocus($event)"
-	>
-		<template #option="{ option }">
-			<p
-				v-if="option.splitter"
-				class="py-1 text-yellow-700"
-			>
-				{{ option.text }}
-			</p>
-			<TrackItem
-				v-else
-				:track="option"
-				:with-links="false"
-				unbordered
-			/>
-		</template>
-		<template #footer>
-			<slot name="footer" />
-		</template>
-	</AutoComplete>
+	<FloatLabel variant="in">
+		<AutoComplete
+			v-model="searchModel"
+			:disabled
+			:dropdown
+			:suggestions="suggestions"
+			:class="$attrs.class"
+			:option-label
+			:empty-search-message
+			:input-id="inputId"
+			:input-class="[
+				{ '!rounded-b-none': !searchTrackRounded },
+				'placeholder:text-cyan-700',
+			]"
+			append-to="self"
+			class="w-full"
+			@complete="(event) => $emit('searchTrack', event)"
+			@change="$emit('change', $event)"
+			@option-select="handleSelect"
+			@show="searchTrackRounded = false"
+			@hide="searchTrackRounded = true"
+			@focus="handleFocus"
+			@blur="hideFloatLabel"
+		>
+			<template #option="{ option }">
+				<p
+					v-if="option.splitter"
+					class="py-1 text-yellow-700"
+				>
+					{{ option.text }}
+				</p>
+				<TrackItem
+					v-else
+					:track="option"
+					:with-links="false"
+					unbordered
+				/>
+			</template>
+			<template #footer>
+				<slot name="footer" />
+			</template>
+		</AutoComplete>
+		<label :for="inputId">{{ labelText }}</label>
+	</FloatLabel>
 </template>
 
 <style>

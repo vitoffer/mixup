@@ -25,7 +25,6 @@ const props = withDefaults(
 const confirm = useConfirm()
 const router = useRouter()
 const mixEditStore = useMixEditStore()
-const toastStore = useToastStore()
 
 const {
 	savedLinks,
@@ -38,7 +37,6 @@ const {
 	originalTracks,
 	clearSavedLink,
 	platformTrackSuggestions,
-	searchTrackOnPlatformRounded,
 	trackFoundOnPlatform,
 	iconStates,
 	searchTrackOnPlatform,
@@ -102,23 +100,21 @@ onBeforeRouteLeave((to) => {
 	<div class="flex flex-col items-center gap-5">
 		<h1 class="text-xl font-bold text-yellow-900">Добавление микса</h1>
 		<div class="flex w-full flex-col gap-3">
-			<FloatLabel variant="in">
-				<PlatformTrackSearch
-					input-id="foundTrack"
-					v-model:search-model="trackFoundOnPlatform"
-					:suggestions="platformTrackSuggestions[currentPlatform]"
-					@search-track="searchTrackOnPlatform($event, currentPlatform)"
-					@select-track="selectFoundTrackOnPlatform($event, currentPlatform)"
-					dropdown
-					class="platform-search"
-					empty-search-message="Треков не найдено"
-					@change="changeText"
-					:option-label="
-						(track) => `${track.title} - ${track.artistsNames.join(', ')}`
-					"
-				/>
-				<label for="foundTrack">Поиск трека на площадке</label>
-			</FloatLabel>
+			<PlatformTrackSearch
+				input-id="foundTrack"
+				v-model:search-model="trackFoundOnPlatform"
+				:suggestions="platformTrackSuggestions[currentPlatform]"
+				@search-track="searchTrackOnPlatform($event, currentPlatform)"
+				@select-track="selectFoundTrackOnPlatform($event, currentPlatform)"
+				dropdown
+				class="platform-search"
+				empty-search-message="Треков не найдено"
+				@change="changeText"
+				:option-label="
+					(track) => `${track.title} - ${track.artistsNames.join(', ')}`
+				"
+				label-text="Поиск трека на площадке"
+			/>
 			<PlatformTabList
 				v-model:current-platform="currentPlatform"
 				v-model:icon-states="iconStates"

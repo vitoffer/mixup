@@ -11,7 +11,6 @@ type TrackSuggestion =
 
 export const useOriginalTracks = () => {
 	const originalTracksSuggestions = ref<TrackSuggestion[]>([])
-	const originalTracksSearchInputRounded = ref(true)
 
 	async function searchOriginalTrack(event: AutoCompleteCompleteEvent) {
 		setTimeout(async () => {
@@ -58,7 +57,6 @@ export const useOriginalTracks = () => {
 
 	return {
 		originalTracksSuggestions,
-		originalTracksSearchInputRounded,
 		searchOriginalTrack,
 	}
 }

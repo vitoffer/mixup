@@ -30,7 +30,6 @@ export const useSavedInfo = () => {
 		trackFoundOnPlatform,
 		searchPlatformText,
 		platformTrackSuggestions,
-		searchTrackOnPlatformRounded,
 		searchTrackOnPlatform,
 	} = useSearchTrackPlatforms()
 
@@ -142,7 +141,6 @@ export const useSavedInfo = () => {
 		removeTag,
 		trackFoundOnPlatform,
 		platformTrackSuggestions,
-		searchTrackOnPlatformRounded,
 		iconStates,
 		searchTrackOnPlatform,
 		saveTrack,
