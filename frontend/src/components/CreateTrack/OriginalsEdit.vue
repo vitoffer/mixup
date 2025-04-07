@@ -7,6 +7,7 @@ import {
 import AddedOriginalTracksList from "./AddedOriginalTracksList.vue"
 import { ref } from "vue"
 import TrackItem from "../TrackItem.vue"
+import PlatformTrackSearch from "./PlatformTrackSearch.vue"
 
 const props = defineProps<{
 	originalTracksSuggestions: (
@@ -23,12 +24,12 @@ const emit = defineEmits<{
 	updateOriginalTracksList: [newValue: Track[]]
 }>()
 
-const autocompleteDisabled = ref(false)
-
 const originalTracksSearchInputRounded = defineModel<boolean>(
 	"originalTracksSearchInputRounded",
 )
 const originalTracksSearch = ref("")
+
+const autocompleteDisabled = ref(false)
 
 function deleteOriginalTrack(title: string) {
 	emit(
@@ -69,38 +70,17 @@ function hideFloatLabel() {
 			@delete-original-track="deleteOriginalTrack"
 		/>
 		<FloatLabel variant="in">
-			<AutoComplete
-				:disabled="autocompleteDisabled"
-				v-model="originalTracksSearch"
-				:suggestions="originalTracksSuggestions"
-				@complete="(event) => $emit('searchOriginalTrack', event)"
-				@option-select="selectOriginalTrack"
-				@show="originalTracksSearchInputRounded = false"
-				@hide="originalTracksSearchInputRounded = true"
-				:input-class="[
-					{ '!rounded-b-none': !originalTracksSearchInputRounded },
-					'placeholder:text-cyan-700',
-				]"
-				empty-search-message="Оригиналов по запросу не найдено"
-				append-to="self"
-				class="original-search w-full"
+			<PlatformTrackSearch
 				input-id="searchOriginal"
+				v-model:search-model="originalTracksSearch"
+				:suggestions="originalTracksSuggestions"
+				@search-track="$emit('searchOriginalTrack', $event)"
+				@select-track="selectOriginalTrack"
+				:disabled="autocompleteDisabled"
 				@blur="hideFloatLabel"
+				class="original-search"
+				empty-search-message="Оригиналов по запросу не найдено"
 			>
-				<template #option="slotProps">
-					<p
-						v-if="slotProps.option.splitter"
-						class="py-1 text-yellow-700"
-					>
-						{{ slotProps.option.text }}
-					</p>
-					<TrackItem
-						v-else
-						:track="slotProps.option"
-						:with-links="false"
-						unbordered
-					/>
-				</template>
 				<template #footer>
 					<div class="mt-1 flex flex-col items-center leading-[1.25rem]">
 						<p class="text-cyan-700">Не нашли, что искали?</p>
@@ -118,28 +98,10 @@ function hideFloatLabel() {
 					</div>
 					<div class="spacer absolute -bottom-4 left-0 h-6 w-full"></div>
 				</template>
-			</AutoComplete>
+			</PlatformTrackSearch>
 			<label for="searchOriginal">Поиск трека по базе и на youtube music</label>
 		</FloatLabel>
 	</div>
 </template>
 
-<style>
-@reference "../../assets/styles/main.css";
-
-.original-search {
-	@apply mt-0;
-
-	.p-autocomplete-option {
-		@apply first:mt-[1px];
-	}
-
-	.p-autocomplete-list {
-		@apply border-y border-y-gray-700 pb-2;
-	}
-
-	.p-autocomplete-empty-message {
-		@apply mt-2;
-	}
-}
-</style>
+<style></style>

@@ -23,6 +23,7 @@ declare module 'vue' {
     PlatformLinkList: typeof import('./src/components/PlatformLinkList.vue')['default']
     PlatformTab: typeof import('./src/components/CreateTrack/PlatformTab.vue')['default']
     PlatformTabList: typeof import('./src/components/CreateTrack/PlatformTabList.vue')['default']
+    PlatformTrackSearch: typeof import('./src/components/CreateTrack/PlatformTrackSearch.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SearchBar: typeof import('./src/components/SearchBar.vue')['default']

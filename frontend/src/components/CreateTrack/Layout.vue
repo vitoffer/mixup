@@ -9,6 +9,7 @@ import { onBeforeRouteLeave, useRouter } from "vue-router"
 import TagsEdit from "./TagsEdit.vue"
 import BaseInfoEdit from "./BaseInfoEdit.vue"
 import PlatformTabList from "./PlatformTabList.vue"
+import PlatformTrackSearch from "./PlatformTrackSearch.vue"
 
 const props = withDefaults(
 	defineProps<{
@@ -102,33 +103,20 @@ onBeforeRouteLeave((to) => {
 		<h1 class="text-xl font-bold text-yellow-900">Добавление микса</h1>
 		<div class="flex w-full flex-col gap-3">
 			<FloatLabel variant="in">
-				<AutoComplete
-					v-model="trackFoundOnPlatform"
-					:suggestions="platformTrackSuggestions[currentPlatform]"
-					@complete="searchTrackOnPlatform($event, currentPlatform)"
-					input-class="placeholder:text-cyan-800"
+				<PlatformTrackSearch
 					input-id="foundTrack"
-					:class="{ '!rounded-b-none': !searchTrackOnPlatformRounded }"
-					@change="changeText"
-					@show="searchTrackOnPlatformRounded = false"
-					@hide="searchTrackOnPlatformRounded = true"
-					@option-select="selectFoundTrackOnPlatform($event, currentPlatform)"
+					v-model:search-model="trackFoundOnPlatform"
+					:suggestions="platformTrackSuggestions[currentPlatform]"
+					@search-track="searchTrackOnPlatform($event, currentPlatform)"
+					@select-track="selectFoundTrackOnPlatform($event, currentPlatform)"
+					dropdown
+					class="platform-search"
 					empty-search-message="Треков не найдено"
-					append-to="self"
+					@change="changeText"
 					:option-label="
 						(track) => `${track.title} - ${track.artistsNames.join(', ')}`
 					"
-					class="platform-search w-full"
-					dropdown
-				>
-					<template #option="{ option }">
-						<p>
-							{{ option.title }}
-							-
-							{{ option.artistsNames.join(", ") }}
-						</p>
-					</template>
-				</AutoComplete>
+				/>
 				<label for="foundTrack">Поиск трека на площадке</label>
 			</FloatLabel>
 			<PlatformTabList
@@ -183,35 +171,5 @@ onBeforeRouteLeave((to) => {
 
 .p-confirmpopup-footer {
 	@apply flex gap-2;
-}
-
-.p-autocomplete-list-container {
-	@apply overflow-y-auto;
-}
-
-.platform-search {
-	@apply flex items-center rounded-[10px] bg-gray-800;
-
-	.p-autocomplete-option {
-		@apply border-b-gray-700 py-1 leading-5 not-last:border-b;
-	}
-
-	.p-autocomplete-input {
-		@apply min-w-[24ch];
-	}
-
-	.p-autocomplete-dropdown {
-		@apply block aspect-square p-2 leading-3;
-	}
-}
-
-.p-autocomplete {
-	input {
-		@apply w-full px-3 py-2.5 text-cyan-700;
-	}
-
-	.p-autocomplete-overlay {
-		@apply !top-full w-full rounded-b-[10px] bg-gray-800 px-3 pb-2.5 shadow-lg;
-	}
 }
 </style>
