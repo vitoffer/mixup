@@ -1,8 +1,7 @@
-import { Platform, Track, TrackPlatformSearchResult } from "@/types"
+import { Platform, Track } from "@/types"
 import { nextTick, ref } from "vue"
 import { useSearchTrackPlatforms } from "./searchTrackPlatforms"
 import markIcon from "../../assets/icons/mark.svg?url"
-import { useIconStates } from "./iconStates"
 import { useToastStore } from "@/stores/toastStore"
 import { AutoCompleteChangeEvent } from "primevue"
 import { postSaveTrack } from "@/api/saveTrack"
@@ -24,7 +23,11 @@ export const useSavedInfo = () => {
 		yandexMusic: "",
 	})
 
-	const { iconStates } = useIconStates()
+	const iconStates = ref<Record<Platform, string>>({
+		youtubeMusic: markIcon,
+		spotify: markIcon,
+		yandexMusic: markIcon,
+	})
 
 	const {
 		trackFoundOnPlatform,

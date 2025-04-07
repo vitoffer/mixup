@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useSavedInfo } from "@/composables/createTrack/savedInfo"
 import { useMixEditStore } from "@/stores/mixEditStore"
-import { useToastStore } from "@/stores/toastStore"
 import { Platform, Track } from "@/types"
 import { useConfirm } from "primevue"
 import { onMounted } from "vue"

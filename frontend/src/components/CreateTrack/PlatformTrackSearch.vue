@@ -67,7 +67,7 @@ async function handleSelect(event: AutoCompleteOptionSelectEvent) {
 
 <template>
 	<FloatLabel variant="in">
-		<AutoComplete
+		<Autocomplete
 			v-model="searchModel"
 			:disabled
 			:dropdown
@@ -82,7 +82,7 @@ async function handleSelect(event: AutoCompleteOptionSelectEvent) {
 			]"
 			append-to="self"
 			class="w-full"
-			@complete="(event) => $emit('searchTrack', event)"
+			@complete="$emit('searchTrack', $event)"
 			@change="$emit('change', $event)"
 			@option-select="handleSelect"
 			@show="searchTrackRounded = false"
@@ -107,7 +107,7 @@ async function handleSelect(event: AutoCompleteOptionSelectEvent) {
 			<template #footer>
 				<slot name="footer" />
 			</template>
-		</AutoComplete>
+		</Autocomplete>
 		<label :for="inputId">{{ labelText }}</label>
 	</FloatLabel>
 </template>

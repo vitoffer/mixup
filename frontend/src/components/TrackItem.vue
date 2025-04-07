@@ -2,7 +2,7 @@
 import { RouterLink } from "vue-router"
 import thumbnailPlaceholder from "@/assets/images/thumbnail_placeholder.png"
 import { Track, TrackPlatformSearchResult } from "@/types"
-import { computed, ref, watch, watchEffect } from "vue"
+import { computed, ref, watch } from "vue"
 
 const props = withDefaults(
 	defineProps<{

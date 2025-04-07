@@ -11,6 +11,7 @@ declare module 'vue' {
     AddedOriginalTracksList: typeof import('./src/components/CreateTrack/AddedOriginalTracksList.vue')['default']
     AddedTagsList: typeof import('./src/components/CreateTrack/AddedTagsList.vue')['default']
     AppNav: typeof import('./src/components/AppNav.vue')['default']
+    Autocomplete: typeof import('primevue/autocomplete')['default']
     AutoComplete: typeof import('primevue/autocomplete')['default']
     BackButton: typeof import('./src/components/BackButton.vue')['default']
     BaseInfoEdit: typeof import('./src/components/CreateTrack/BaseInfoEdit.vue')['default']

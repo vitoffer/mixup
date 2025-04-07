@@ -5,6 +5,7 @@ import tailwindcss from "@tailwindcss/vite"
 import svgLoader from "vite-svg-loader"
 import Components from "unplugin-vue-components/vite"
 import { PrimeVueResolver } from "@primevue/auto-import-resolver"
+import path from "node:path"
 
 export default defineConfig({
 	plugins: [
@@ -16,9 +17,7 @@ export default defineConfig({
 		}),
 	],
 	resolve: {
-		alias: {
-			"@": fileURLToPath(new URL("./src", import.meta.url)),
-		},
+		alias: [{ find: "@", replacement: path.resolve(__dirname, "./src") }],
 	},
 	server: {
 		host: "0.0.0.0",
