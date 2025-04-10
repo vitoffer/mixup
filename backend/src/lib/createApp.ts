@@ -4,8 +4,6 @@ import { cors } from "hono/cors"
 import { notFound, onError } from "stoker/middlewares"
 import { defaultHook } from "stoker/openapi"
 import { pinoLogger } from "@/middlewares/pinoLogger"
-import { jwt } from "hono/jwt"
-import env from "@/env"
 
 export function createRouter() {
 	return new OpenAPIHono({ strict: false, defaultHook })
@@ -17,9 +15,13 @@ export default function createApp() {
 	app
 		.use(pinoLogger())
 		.use("*", cors())
-		.use(jwt({ secret: env.JWT_SECRET }))
 
 		.use("/public/*", serveStatic({ root: "./" }))
+
+	app.openAPIRegistry.registerComponent("securitySchemes", "Bearer", {
+		type: "http",
+		scheme: "bearer",
+	})
 
 	app.notFound(notFound)
 	app.onError(onError)

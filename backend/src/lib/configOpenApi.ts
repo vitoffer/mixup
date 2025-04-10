@@ -26,6 +26,9 @@ export default function configOpenApi(app: AppOpenAPI) {
 				clientKey: "axios",
 			},
 			favicon: "/public/favicon.ico",
+			authentication: {
+				preferredSecurityScheme: "Bearer",
+			}
 		})
 	)
 }
