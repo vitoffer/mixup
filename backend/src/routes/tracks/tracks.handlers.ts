@@ -9,7 +9,9 @@ import {
 import * as HttpStatusCodes from "stoker/http-status-codes"
 import * as HttpStatusPhrases from "stoker/http-status-phrases"
 import { DbPopulatedTrackSchema, Track } from "../../models/Track"
-import { normalizeTrack } from "./helpers"
+import { normalizeTrack } from "./tracks.helpers"
+import { bearerAuth } from "hono/bearer-auth"
+import { sign, verify } from "hono/jwt"
 
 export const list: RouteHandler<ListRoute> = async (c) => {
 	let resultTracks: z.infer<typeof DbPopulatedTrackSchema>[]
@@ -52,6 +54,8 @@ export const getOne: RouteHandler<GetOneRoute> = async (c) => {
 }
 
 export const create: RouteHandler<CreateRoute> = async (c) => {
+	const bearer = bearerAuth({ verifyToken: (token: string) => true })
+
 	const track = c.req.valid("json")
 
 	const rawInsertedTrack = await Track.create(track)
