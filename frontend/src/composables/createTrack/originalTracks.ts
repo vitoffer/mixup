@@ -2,7 +2,7 @@ import { fetchTracksOnPlatformByText } from "@/api/searchTrack"
 import { loadTracks, trackList } from "@/modules/trackList"
 import { Track, TrackPlatformSearchResult } from "@/types"
 import { AutoCompleteCompleteEvent } from "primevue"
-import { ref } from "vue"
+import { nextTick, ref } from "vue"
 
 type TrackSuggestion =
 	| Track
@@ -26,32 +26,61 @@ export const useOriginalTracks = () => {
 					)
 				})
 				.map((track) => track as TrackSuggestion)
-
-			let dbTrackListLength = suggestions.length
-
-			while (dbTrackListLength > 5) {
-				suggestions.pop()
-				dbTrackListLength = suggestions.length
-			}
+				.slice(0, 2)
 
 			if (suggestions.length > 0) {
 				suggestions.unshift({ splitter: true, text: "Найденные треки в базе:" })
 			}
 
-			if (dbTrackListLength < 5) {
-				suggestions.push({
-					splitter: true,
-					text: "Найденные треки на youtube music",
-				})
-				suggestions.push(
-					...(await fetchTracksOnPlatformByText(
+			const platformFunctions = [
+				async () => {
+					suggestions.push({
+						splitter: true,
+						text: "Найденные треки на яндекс музыке",
+					})
+					const yandexTracks = await fetchTracksOnPlatformByText(
+						event.query,
+						"yandexMusic",
+						2,
+					)
+					suggestions.push(...yandexTracks)
+					originalTracksSuggestions.value = suggestions
+				},
+				async () => {
+					suggestions.push({
+						splitter: true,
+						text: "Найденные треки на youtube music",
+					})
+					const youtubeTracks = await fetchTracksOnPlatformByText(
 						event.query,
 						"youtubeMusic",
-						5 - dbTrackListLength,
-					)),
-				)
+						2,
+					)
+					suggestions.push(...youtubeTracks)
+					originalTracksSuggestions.value = suggestions
+				},
+				async () => {
+					suggestions.push({
+						splitter: true,
+						text: "Найденные треки на spotify",
+					})
+					const spotifyTracks = await fetchTracksOnPlatformByText(
+						event.query,
+						"spotify",
+						2,
+					)
+					suggestions.push(...spotifyTracks)
+					originalTracksSuggestions.value = suggestions
+				},
+			]
+
+			for (const platformFunction of platformFunctions) {
+				try {
+					await platformFunction()
+				} catch (error) {
+					console.error("Ошибка при выполнении запроса:", error)
+				}
 			}
-			originalTracksSuggestions.value = suggestions
 		}, 250)
 	}
 
