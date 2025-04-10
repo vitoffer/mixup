@@ -2,9 +2,10 @@ import axios from "axios"
 import { HttpProxyAgent } from "http-proxy-agent"
 import { SearchResults } from "@spotify/web-api-ts-sdk"
 import { CleanedApiSearchResultType } from "../schemas/apis"
+import env from "@/env"
 
 const agent = new HttpProxyAgent(
-	`http://${process.env.PROXY_USERNAME}:${process.env.PROXY_PASSWORD}@${process.env.PROXY_HOST}:${process.env.PROXY_PORT}`
+	`http://${env.PROXY_USERNAME}:${env.PROXY_PASSWORD}@${env.PROXY_HOST}:${env.PROXY_PORT}`
 )
 
 let tokenCache: {
@@ -17,8 +18,8 @@ async function fetchSpotifyToken(): Promise<string> {
 		`https://accounts.spotify.com/api/token`,
 		new URLSearchParams({
 			grant_type: "client_credentials",
-			client_id: process.env.SPOTIFY_CLIENT_ID!,
-			client_secret: process.env.SPOTIFY_CLIENT_SECRET!,
+			client_id: env.SPOTIFY_CLIENT_ID!,
+			client_secret: env.SPOTIFY_CLIENT_SECRET!,
 		}),
 		{
 			headers: { "Content-Type": "application/x-www-form-urlencoded" },
