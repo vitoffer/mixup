@@ -3,7 +3,7 @@ import { serveStatic } from "hono/bun"
 import { cors } from "hono/cors"
 import { notFound, onError } from "stoker/middlewares"
 import { defaultHook } from "stoker/openapi"
-import { pinoLogger } from "@/middlewares/pino-logger"
+import { pinoLogger } from "@/middlewares/pinoLogger"
 
 export function createRouter() {
 	return new OpenAPIHono({ strict: false, defaultHook })
