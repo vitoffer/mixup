@@ -13,6 +13,7 @@ import {
 	PatchTrackSchema,
 } from "../../models/Track"
 import { ParamsIdSchema } from "../../schemas/tracks"
+import { moderatorAuth } from "@/middlewares/auth"
 
 const tags = ["Tracks"]
 
@@ -69,6 +70,7 @@ export const create = createRoute({
 		),
 	},
 	tags,
+	middleware: moderatorAuth,
 })
 
 export const patch = createRoute({
@@ -90,6 +92,7 @@ export const patch = createRoute({
 		[HttpStatusCodes.NOT_FOUND]: jsonContent(NotFoundSchema, "Track not found"),
 	},
 	tags,
+	middleware: moderatorAuth,
 })
 
 export const remove = createRoute({
@@ -109,6 +112,7 @@ export const remove = createRoute({
 		[HttpStatusCodes.NOT_FOUND]: jsonContent(NotFoundSchema, "Track not found"),
 	},
 	tags,
+	middleware: moderatorAuth,
 })
 
 export type ListRoute = typeof list

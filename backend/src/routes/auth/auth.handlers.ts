@@ -20,6 +20,7 @@ export const login: AppRouteHandler<LoginRoute> = async (c) => {
 
 	const payload = {
 		username: user.username,
+		role: "admin",
 		exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
 	}
 
