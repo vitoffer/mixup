@@ -1,4 +1,3 @@
-import { RouteHandler } from "@hono/zod-openapi"
 import { SearchTracksRoute } from "./apis.routes"
 import { getSpotifySearchResults } from "../../apis/spotify"
 import { getYandexMusicSearchResults } from "../../apis/yandex"
@@ -6,6 +5,7 @@ import { getYoutubeVideosSearchResults } from "../../apis/youtube"
 import * as HttpStatusCodes from "stoker/http-status-codes"
 import { PlatformType } from "../../types"
 import { CleanedApiSearchResultType } from "../../schemas/apis"
+import { AppRouteHandler } from "@/lib/types"
 
 const platformHandlers: Record<
 	PlatformType,
@@ -16,7 +16,7 @@ const platformHandlers: Record<
 	youtubeMusic: getYoutubeVideosSearchResults,
 }
 
-export const searchTracks: RouteHandler<SearchTracksRoute> = async (c) => {
+export const searchTracks: AppRouteHandler<SearchTracksRoute> = async (c) => {
 	const { platform } = c.req.valid("param")
 	const { q } = c.req.valid("query")
 

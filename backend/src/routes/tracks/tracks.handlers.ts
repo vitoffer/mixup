@@ -1,4 +1,4 @@
-import { RouteHandler, z } from "@hono/zod-openapi"
+import { z } from "@hono/zod-openapi"
 import {
 	CreateRoute,
 	GetOneRoute,
@@ -11,9 +11,9 @@ import * as HttpStatusPhrases from "stoker/http-status-phrases"
 import { DbPopulatedTrackSchema, Track } from "../../models/Track"
 import { normalizeTrack } from "./tracks.helpers"
 import { bearerAuth } from "hono/bearer-auth"
-import { sign, verify } from "hono/jwt"
+import { AppRouteHandler } from "@/lib/types"
 
-export const list: RouteHandler<ListRoute> = async (c) => {
+export const list: AppRouteHandler<ListRoute> = async (c) => {
 	let resultTracks: z.infer<typeof DbPopulatedTrackSchema>[]
 
 	const rawTracks = await Track.find().populate("originalTracks")
@@ -34,7 +34,7 @@ export const list: RouteHandler<ListRoute> = async (c) => {
 	return c.json(normalizedInsertedTrack, HttpStatusCodes.OK)
 }
 
-export const getOne: RouteHandler<GetOneRoute> = async (c) => {
+export const getOne: AppRouteHandler<GetOneRoute> = async (c) => {
 	const { id } = c.req.valid("param")
 
 	const track = (await Track.findById(id).populate(
@@ -53,7 +53,7 @@ export const getOne: RouteHandler<GetOneRoute> = async (c) => {
 	return c.json(normalizedInsertedTrack, HttpStatusCodes.OK)
 }
 
-export const create: RouteHandler<CreateRoute> = async (c) => {
+export const create: AppRouteHandler<CreateRoute> = async (c) => {
 	const bearer = bearerAuth({ verifyToken: (token: string) => true })
 
 	const track = c.req.valid("json")
@@ -68,7 +68,7 @@ export const create: RouteHandler<CreateRoute> = async (c) => {
 	return c.json(normalizedInsertedTrack, HttpStatusCodes.CREATED)
 }
 
-export const patch: RouteHandler<PatchRoute> = async (c) => {
+export const patch: AppRouteHandler<PatchRoute> = async (c) => {
 	const { id } = c.req.valid("param")
 	const updates = c.req.valid("json")
 
@@ -96,7 +96,7 @@ export const patch: RouteHandler<PatchRoute> = async (c) => {
 	return c.json(normalizedUpdatedTrack, HttpStatusCodes.OK)
 }
 
-export const remove: RouteHandler<RemoveRoute> = async (c) => {
+export const remove: AppRouteHandler<RemoveRoute> = async (c) => {
 	const { id } = c.req.valid("param")
 
 	const result = await Track.deleteOne({ _id: id })
