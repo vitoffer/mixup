@@ -3,7 +3,6 @@
 	"version": "1.0.0",
 	"description": "client for mixup website",
 	"author": "vitoffer",
-	"license": "ISC",
 	"type": "module",
 	"packageManager": "pnpm@10.5.1",
 	"scripts": {
