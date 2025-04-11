@@ -1,5 +1,5 @@
 {
-	"name": "backend-hono",
+	"name": "mixup-backend",
 	"version": "1.0.0",
 	"type": "module",
 	"module": "esnext",
