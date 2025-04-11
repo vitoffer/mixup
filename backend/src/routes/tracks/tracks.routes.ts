@@ -5,7 +5,10 @@ import {
 	jsonContentOneOf,
 	jsonContentRequired,
 } from "stoker/openapi/helpers"
-import { createErrorSchema } from "stoker/openapi/schemas"
+import {
+	createErrorSchema,
+	createMessageObjectSchema,
+} from "stoker/openapi/schemas"
 import { NotFoundSchema } from "../../lib/constants"
 import {
 	InsertTrackSchema,
@@ -68,6 +71,10 @@ export const create = createRoute({
 			createErrorSchema(InsertTrackSchema),
 			"Validation error(s)"
 		),
+		[HttpStatusCodes.BAD_REQUEST]: jsonContent(
+			createMessageObjectSchema("Invalid request"),
+			"Error in request"
+		),
 	},
 	tags,
 	middleware: moderatorAuth,
@@ -89,6 +96,10 @@ export const patch = createRoute({
 			[createErrorSchema(PatchTrackSchema), createErrorSchema(ParamsIdSchema)],
 			"Validation error(s)"
 		),
+		[HttpStatusCodes.BAD_REQUEST]: jsonContent(
+			createMessageObjectSchema("Invalid request"),
+			"Error in request"
+		),
 		[HttpStatusCodes.NOT_FOUND]: jsonContent(NotFoundSchema, "Track not found"),
 	},
 	tags,
@@ -108,6 +119,10 @@ export const remove = createRoute({
 		[HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
 			createErrorSchema(ParamsIdSchema),
 			"Incorrect track Id"
+		),
+		[HttpStatusCodes.BAD_REQUEST]: jsonContent(
+			createMessageObjectSchema("Invalid request"),
+			"Error in request"
 		),
 		[HttpStatusCodes.NOT_FOUND]: jsonContent(NotFoundSchema, "Track not found"),
 	},
