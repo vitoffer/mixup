@@ -30,8 +30,8 @@ export const login = createRoute({
 		),
 		[HttpStatusCodes.NOT_FOUND]: jsonContent(NotFoundSchema, "User not found"),
 		[HttpStatusCodes.UNAUTHORIZED]: jsonContent(
-			createMessageObjectSchema("Unauthorized error"),
-			"Error on login"
+			createMessageObjectSchema("Error on login"),
+			"Unauthorized error"
 		),
 	},
 	tags,
