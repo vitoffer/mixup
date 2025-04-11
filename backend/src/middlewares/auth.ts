@@ -27,11 +27,20 @@ export async function checkUserPermission(
 	}
 }
 
-export const moderatorAuth = bearerAuth({
-	verifyToken: (token) => checkUserPermission(token, ["admin", "moderator"]),
-	invalidTokenMessage: {
-		message: "Invalid token",
-	},
-	noAuthenticationHeaderMessage: { message: "No auth header" },
-	invalidAuthenticationHeaderMessage: { message: "Invalid Auth header" },
-})
+function basicAuth(roles: Role[]) {
+	return bearerAuth({
+		verifyToken: (token) => checkUserPermission(token, roles),
+		invalidTokenMessage: {
+			message: "Invalid token",
+		},
+		noAuthenticationHeaderMessage: { message: "No auth header" },
+		invalidAuthenticationHeaderMessage: { message: "Invalid Auth header" },
+	})
+}
+
+function basicAdminAuth(additionalRoles?: Role[]) {
+	return basicAuth(["admin", ...(additionalRoles || [])])
+}
+
+export const adminAuth = basicAdminAuth()
+export const moderatorAuth = basicAdminAuth(["moderator"])

@@ -9,7 +9,7 @@ import {
 	createErrorSchema,
 	createMessageObjectSchema,
 } from "stoker/openapi/schemas"
-import { NotFoundSchema } from "../../lib/constants"
+import { InternalServerErrorSchema, NotFoundSchema } from "../../lib/constants"
 import {
 	InsertTrackSchema,
 	NormalizedPopulatedTrackSchema,
@@ -29,7 +29,7 @@ export const list = createRoute({
 			"List of tracks"
 		),
 		[HttpStatusCodes.INTERNAL_SERVER_ERROR]: jsonContent(
-			z.object({ message: z.string() }),
+			InternalServerErrorSchema,
 			"Error on get results"
 		),
 	},

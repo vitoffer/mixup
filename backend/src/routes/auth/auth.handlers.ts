@@ -1,26 +1,40 @@
 import { AppRouteHandler } from "@/lib/types"
-import { LoginRoute } from "./auth.routes"
+import { LoginRoute, RegisterModeratorRoute } from "./auth.routes"
 import { sign } from "hono/jwt"
 import env from "@/env"
+import { User } from "@/models/User"
+import * as HttpStatusCodes from "stoker/http-status-codes"
 
 export const login: AppRouteHandler<LoginRoute> = async (c) => {
-	const defaultCreds = {
-		username: "admin",
-		password: "admin",
+	const { username, password } = c.req.valid("json")
+
+	const dbUser = await User.findOne({ username })
+
+	if (!dbUser) {
+		return c.json(
+			{ message: "User with this username not found" },
+			HttpStatusCodes.NOT_FOUND
+		)
 	}
 
-	const user = c.req.valid("json")
+	const passwordMatch = await Bun.password.verify(
+		password,
+		dbUser.passwordHash,
+		"bcrypt"
+	)
 
-	if (
-		user.username !== defaultCreds.username ||
-		user.password !== defaultCreds.password
-	) {
-		return c.json({ message: "Wrong username or password" }, 401)
+	if (!passwordMatch) {
+		return c.json(
+			{
+				message: "Wrong password",
+			},
+			HttpStatusCodes.UNAUTHORIZED
+		)
 	}
 
 	const payload = {
-		username: user.username,
-		role: "admin",
+		username: username,
+		role: dbUser.role,
 		exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
 	}
 
@@ -32,6 +46,39 @@ export const login: AppRouteHandler<LoginRoute> = async (c) => {
 			data: payload,
 			token,
 		},
-		200
+		HttpStatusCodes.OK
+	)
+}
+
+export const registerModerator: AppRouteHandler<
+	RegisterModeratorRoute
+> = async (c) => {
+	const { username, password } = c.req.valid("json")
+
+	const existingUsername = await User.findOne({ username })
+
+	if (existingUsername) {
+		return c.json(
+			{ message: "User with this username already exists" },
+			HttpStatusCodes.CONFLICT
+		)
+	}
+
+	const passwordHash = await Bun.password.hash(password, {
+		algorithm: "bcrypt",
+		cost: 4,
+	})
+
+	await User.create({
+		username,
+		passwordHash,
+		role: "moderator",
+	})
+
+	return c.json(
+		{
+			message: "Success register",
+		},
+		HttpStatusCodes.CREATED
 	)
 }
