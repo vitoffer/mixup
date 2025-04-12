@@ -22,6 +22,7 @@ export const login = createRoute({
 				message: z.string(),
 				data: z.object({
 					username: z.string(),
+					role: z.string(),
 					exp: z.number(),
 				}),
 				token: z.string(),
@@ -60,5 +61,32 @@ export const registerModerator = createRoute({
 	middleware: adminAuth,
 })
 
+export const getMe = createRoute({
+	path: "/get-me",
+	method: "get",
+	responses: {
+		[HttpStatusCodes.OK]: jsonContent(
+			z.object({
+				data: z.object({
+					username: z.string(),
+					role: z.string(),
+					exp: z.number(),
+				}),
+			}),
+			"Requested user info"
+		),
+		[HttpStatusCodes.UNAUTHORIZED]: jsonContent(
+			createMessageObjectSchema("Error on get user info"),
+			"Unauthorized error"
+		),
+		[HttpStatusCodes.BAD_REQUEST]: jsonContent(
+			createMessageObjectSchema("Invalid Authorization header"),
+			"Bad request error"
+		),
+	},
+	tags,
+})
+
 export type LoginRoute = typeof login
 export type RegisterModeratorRoute = typeof registerModerator
+export type GetMeRoute = typeof getMe

@@ -5,7 +5,14 @@ import { JWTPayload } from "hono/utils/jwt/types"
 
 export type Role = "user" | "moderator" | "admin"
 export interface UserJWTPayload extends JWTPayload {
+	exp: number
+	username: string
 	role: Role
+}
+
+export async function verifyToken(token: string) {
+	const decodedPayload = (await verify(token, env.JWT_SECRET)) as UserJWTPayload
+	return decodedPayload
 }
 
 export async function checkUserPermission(
@@ -13,12 +20,7 @@ export async function checkUserPermission(
 	requiredRoles: Role[]
 ): Promise<boolean> {
 	try {
-		const decodedPayload = (await verify(
-			token,
-			env.JWT_SECRET
-		)) as UserJWTPayload
-
-		console.log(decodedPayload)
+		const decodedPayload = await verifyToken(token)
 
 		return requiredRoles.includes(decodedPayload.role)
 	} catch (e) {
@@ -27,9 +29,11 @@ export async function checkUserPermission(
 	}
 }
 
-function basicAuth(roles: Role[]) {
+function basicAuth(
+	verifyFunction: (token: string) => boolean | Promise<boolean>
+) {
 	return bearerAuth({
-		verifyToken: (token) => checkUserPermission(token, roles),
+		verifyToken: verifyFunction,
 		invalidTokenMessage: {
 			message: "Invalid token",
 		},
@@ -38,8 +42,22 @@ function basicAuth(roles: Role[]) {
 	})
 }
 
+export const generalAuth = basicAuth(async (token) => {
+	try {
+		await verifyToken(token)
+		return true
+	} catch (e) {
+		console.error(e)
+		return false
+	}
+})
+
+function authByRoles(roles: Role[]) {
+	return basicAuth((token) => checkUserPermission(token, roles))
+}
+
 function basicAdminAuth(additionalRoles?: Role[]) {
-	return basicAuth(["admin", ...(additionalRoles || [])])
+	return authByRoles(["admin", ...(additionalRoles || [])])
 }
 
 export const adminAuth = basicAdminAuth()

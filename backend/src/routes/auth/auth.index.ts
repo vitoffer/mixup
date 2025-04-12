@@ -7,5 +7,6 @@ const router = createRouter()
 	.basePath("/auth")
 	.openapi(routes.login, handlers.login)
 	.openapi(routes.registerModerator, handlers.registerModerator)
+	.openapi(routes.getMe, handlers.getMe)
 
 export default router
