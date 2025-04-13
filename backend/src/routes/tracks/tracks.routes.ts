@@ -75,8 +75,17 @@ export const create = createRoute({
 			createMessageObjectSchema("Invalid request"),
 			"Error in request"
 		),
+		[HttpStatusCodes.UNAUTHORIZED]: jsonContent(
+			createMessageObjectSchema("User unauthorized"),
+			"Unauthorized error"
+		),
 	},
 	tags,
+	security: [
+		{
+			Bearer: [],
+		},
+	],
 	middleware: moderatorAuth,
 })
 
@@ -101,8 +110,17 @@ export const patch = createRoute({
 			"Error in request"
 		),
 		[HttpStatusCodes.NOT_FOUND]: jsonContent(NotFoundSchema, "Track not found"),
+		[HttpStatusCodes.UNAUTHORIZED]: jsonContent(
+			createMessageObjectSchema("User unauthorized"),
+			"Unauthorized error"
+		),
 	},
 	tags,
+	security: [
+		{
+			Bearer: [],
+		},
+	],
 	middleware: moderatorAuth,
 })
 
@@ -125,8 +143,17 @@ export const remove = createRoute({
 			"Error in request"
 		),
 		[HttpStatusCodes.NOT_FOUND]: jsonContent(NotFoundSchema, "Track not found"),
+		[HttpStatusCodes.UNAUTHORIZED]: jsonContent(
+			createMessageObjectSchema("User unauthorized"),
+			"Unauthorized error"
+		),
 	},
 	tags,
+	security: [
+		{
+			Bearer: [],
+		},
+	],
 	middleware: moderatorAuth,
 })
 

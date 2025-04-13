@@ -4,7 +4,7 @@ import { sign, verify } from "hono/jwt"
 import env from "@/env"
 import { User } from "@/models/User"
 import * as HttpStatusCodes from "stoker/http-status-codes"
-import { generalAuth, UserJWTPayload } from "@/middlewares/auth"
+import { UserJWTPayload } from "@/middlewares/auth"
 
 export const login: AppRouteHandler<LoginRoute> = async (c) => {
 	const { username, password } = c.req.valid("json")
@@ -84,7 +84,7 @@ export const registerModerator: AppRouteHandler<
 	)
 }
 
-export const getMe: AppRouteHandler<GetMeRoute> = async (c, next) => {
+export const getMe: AppRouteHandler<GetMeRoute> = async (c) => {
 	const authorization = c.req.header("authorization")
 
 	if (authorization === undefined) {

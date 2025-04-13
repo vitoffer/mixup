@@ -36,6 +36,11 @@ export const login = createRoute({
 		),
 	},
 	tags,
+	security: [
+		{
+			Bearer: [],
+		},
+	],
 })
 
 export const registerModerator = createRoute({
@@ -56,13 +61,22 @@ export const registerModerator = createRoute({
 			createMessageObjectSchema("Conflict in database"),
 			"Conflict error"
 		),
+		[HttpStatusCodes.UNAUTHORIZED]: jsonContent(
+			createMessageObjectSchema("User unauthorized"),
+			"Unauthorized error"
+		),
 	},
 	tags,
+	security: [
+		{
+			Bearer: [],
+		},
+	],
 	middleware: adminAuth,
 })
 
 export const getMe = createRoute({
-	path: "/get-me",
+	path: "/me",
 	method: "get",
 	responses: {
 		[HttpStatusCodes.OK]: jsonContent(
@@ -76,7 +90,7 @@ export const getMe = createRoute({
 			"Requested user info"
 		),
 		[HttpStatusCodes.UNAUTHORIZED]: jsonContent(
-			createMessageObjectSchema("Error on get user info"),
+			createMessageObjectSchema("User unauthorized"),
 			"Unauthorized error"
 		),
 		[HttpStatusCodes.BAD_REQUEST]: jsonContent(
@@ -85,6 +99,11 @@ export const getMe = createRoute({
 		),
 	},
 	tags,
+	security: [
+		{
+			Bearer: [],
+		},
+	],
 })
 
 export type LoginRoute = typeof login
