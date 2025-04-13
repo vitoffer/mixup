@@ -5,7 +5,12 @@ import {
 } from "../../models/Track"
 
 export function normalizeTrack(
-	track: z.infer<typeof DbPopulatedTrackSchema>
+	track:
+		| z.infer<typeof DbPopulatedTrackSchema>
+		| Omit<
+				z.infer<typeof DbPopulatedTrackSchema>,
+				"__v" | "createdAt" | "updatedAt"
+		  >
 ): z.infer<typeof NormalizedPopulatedTrackSchema> {
 	const {
 		_id: id,
@@ -30,10 +35,24 @@ export function normalizeTrack(
 	}
 
 	originalTracks.forEach((originalTrack) => {
-		const { originalTracks, ...track } = originalTrack
-		normalizedTrack.originalTracks.push(
-			normalizeTrack({ ...track, originalTracks: [] })
-		)
+		const { _id, title, artistsNames, urls, thumbnailUrl, tags, isMix } =
+			originalTrack
+
+		const track: Omit<
+			z.infer<typeof DbPopulatedTrackSchema>,
+			"__v" | "createdAt" | "updatedAt"
+		> = {
+			_id,
+			title,
+			artistsNames,
+			urls,
+			thumbnailUrl,
+			tags,
+			isMix,
+			originalTracks: [],
+		}
+
+		normalizedTrack.originalTracks.push(normalizeTrack(track))
 	})
 
 	return normalizedTrack
