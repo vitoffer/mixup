@@ -5,6 +5,7 @@ import TrackPageView from "@/views/TrackPage.vue"
 import NotFoundView from "@/views/NotFound.vue"
 import CreateMix from "@/views/CreateMix.vue"
 import CreateOriginal from "@/views/CreateOriginal.vue"
+import LoginView from "@/views/Login.vue"
 import { type RouteRecordRaw } from "vue-router"
 
 const routes: RouteRecordRaw[] = [
@@ -20,6 +21,7 @@ const routes: RouteRecordRaw[] = [
 		path: "/create-original",
 		component: CreateOriginal,
 	},
+	{ name: "login", path: "/login", component: LoginView },
 	{ path: "/:pathMatch(.*)*", component: NotFoundView },
 ]
 
