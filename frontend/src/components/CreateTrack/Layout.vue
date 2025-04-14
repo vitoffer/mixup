@@ -110,7 +110,7 @@ onBeforeRouteLeave((to) => {
 				empty-search-message="Треков не найдено"
 				@change="changeText"
 				:option-label="
-					(track) => `${track.title} - ${track.artistsNames.join(', ')}`
+					(track: Track) => `${track.title} - ${track.artistsNames.join(', ')}`
 				"
 				label-text="Поиск трека на площадке"
 			/>

@@ -69,6 +69,8 @@ async function hideFloatLabel() {
 			:suggestions="suggestions"
 			:class="$attrs.class"
 			:option-label
+			option-group-label="label"
+			option-group-children="items"
 			:empty-search-message
 			:input-id="inputId"
 			:input-class="[
@@ -86,14 +88,7 @@ async function hideFloatLabel() {
 			@blur="hideFloatLabel"
 		>
 			<template #option="{ option }">
-				<p
-					v-if="option.splitter"
-					class="py-1 text-yellow-700"
-				>
-					{{ option.text }}
-				</p>
 				<TrackItem
-					v-else
 					:track="option"
 					:with-links="false"
 					unbordered
@@ -119,6 +114,10 @@ async function hideFloatLabel() {
 
 	.p-autocomplete-option {
 		@apply border-b-gray-700 py-1 leading-5 not-last:border-b;
+	}
+
+	.p-autocomplete-option-group {
+		@apply py-1 text-yellow-900;
 	}
 
 	.p-autocomplete-input {

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { AutoCompleteCompleteEvent } from "primevue"
 import OriginalsEdit from "@/components/CreateTrack/OriginalsEdit.vue"
 import { useOriginalTracks } from "@/composables/createTrack/originalTracks"
 import CreateTrackLayout from "@/components/CreateTrack/Layout.vue"

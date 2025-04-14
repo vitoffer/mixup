@@ -1,8 +1,8 @@
-import { fetchTracksOnPlatformByText } from "@/api/searchTrack"
+import { getOriginalTracksSuggestions } from "@/api/searchTrack"
 import { loadTracks, trackList } from "@/modules/trackList"
-import { Track, TrackPlatformSearchResult } from "@/types"
+import { Platform, Track, TrackPlatformSearchResult } from "@/types"
 import { AutoCompleteCompleteEvent } from "primevue"
-import { nextTick, ref } from "vue"
+import { ref } from "vue"
 
 type TrackSuggestion =
 	| Track
@@ -10,7 +10,18 @@ type TrackSuggestion =
 	| TrackPlatformSearchResult
 
 export const useOriginalTracks = () => {
-	const originalTracksSuggestions = ref<TrackSuggestion[]>([])
+	const originalTracksSuggestions = ref<
+		{ label: string; items: TrackSuggestion[] }[]
+	>([])
+
+	const groups: { label: string; items: TrackSuggestion[] }[] = [
+		{ label: "Найденные треки в базе:", items: [] },
+		{ label: "Найденные треки на яндекс музыке:", items: [] },
+		{ label: "Найденные треки на youtube music:", items: [] },
+		{ label: "Найденные треки на spotify", items: [] },
+	]
+
+	const platforms: Platform[] = ["yandexMusic", "youtubeMusic", "spotify"]
 
 	async function searchOriginalTrack(event: AutoCompleteCompleteEvent) {
 		setTimeout(async () => {
@@ -18,7 +29,7 @@ export const useOriginalTracks = () => {
 				trackList.value = await loadTracks()
 			}
 
-			const suggestions: TrackSuggestion[] = trackList.value
+			const trackListSuggestions: TrackSuggestion[] = trackList.value
 				.filter((track) => {
 					return (
 						!track.isMix &&
@@ -28,59 +39,23 @@ export const useOriginalTracks = () => {
 				.map((track) => track as TrackSuggestion)
 				.slice(0, 2)
 
-			if (suggestions.length > 0) {
-				suggestions.unshift({ splitter: true, text: "Найденные треки в базе:" })
-			}
+			const fetchedPlatformSuggestions =
+				(await getOriginalTracksSuggestions(event.query)) || null
 
-			const platformFunctions = [
-				async () => {
-					suggestions.push({
-						splitter: true,
-						text: "Найденные треки на яндекс музыке",
-					})
-					const yandexTracks = await fetchTracksOnPlatformByText(
-						event.query,
-						"yandexMusic",
-						2,
-					)
-					suggestions.push(...yandexTracks)
-					originalTracksSuggestions.value = suggestions
-				},
-				async () => {
-					suggestions.push({
-						splitter: true,
-						text: "Найденные треки на youtube music",
-					})
-					const youtubeTracks = await fetchTracksOnPlatformByText(
-						event.query,
-						"youtubeMusic",
-						2,
-					)
-					suggestions.push(...youtubeTracks)
-					originalTracksSuggestions.value = suggestions
-				},
-				async () => {
-					suggestions.push({
-						splitter: true,
-						text: "Найденные треки на spotify",
-					})
-					const spotifyTracks = await fetchTracksOnPlatformByText(
-						event.query,
-						"spotify",
-						2,
-					)
-					suggestions.push(...spotifyTracks)
-					originalTracksSuggestions.value = suggestions
-				},
-			]
+			const suggestionsList: { label: string; items: TrackSuggestion[] }[] = []
 
-			for (const platformFunction of platformFunctions) {
-				try {
-					await platformFunction()
-				} catch (error) {
-					console.error("Ошибка при выполнении запроса:", error)
+			for (const [index, group] of groups.entries()) {
+				if (index === 0) {
+					suggestionsList.push({ ...group, items: trackListSuggestions })
+				} else {
+					suggestionsList.push({
+						...group,
+						items: fetchedPlatformSuggestions[platforms[index - 1]],
+					})
 				}
 			}
+
+			originalTracksSuggestions.value = suggestionsList
 		}, 250)
 	}
 

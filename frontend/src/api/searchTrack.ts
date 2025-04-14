@@ -26,3 +26,30 @@ export async function fetchTracksOnPlatformByText(
 		return []
 	}
 }
+
+export async function getOriginalTracksSuggestions(text: string) {
+	const toastStore = useToastStore()
+
+	try {
+		const {
+			data,
+		}: AxiosResponse<Record<Platform, TrackPlatformSearchResult[]>> =
+			await axios.get(
+				`${import.meta.env.VITE_BASE_API_URL}/originals-suggestions`,
+				{
+					params: {
+						q: text,
+					},
+				},
+			)
+
+		return data
+	} catch (e) {
+		toastStore.addToast({ detail: JSON.stringify(e) })
+		return {
+			yandexMusic: [],
+			youtubeMusic: [],
+			spotify: [],
+		}
+	}
+}
