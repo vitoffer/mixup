@@ -7,6 +7,7 @@ import CreateMix from "@/views/CreateMix.vue"
 import CreateOriginal from "@/views/CreateOriginal.vue"
 import LoginView from "@/views/Login.vue"
 import { type RouteRecordRaw } from "vue-router"
+import { apiCheckRole } from "@/api/auth"
 
 const routes: RouteRecordRaw[] = [
 	{ name: "trackList", path: "/", component: TrackListView },
@@ -15,6 +16,9 @@ const routes: RouteRecordRaw[] = [
 		name: "createMix",
 		path: "/create-mix",
 		component: CreateMix,
+		beforeEnter: async () => {
+			return await apiCheckRole(["moderator", "admin"])
+		},
 	},
 	{
 		name: "createOriginal",

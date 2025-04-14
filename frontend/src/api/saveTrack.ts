@@ -1,4 +1,5 @@
 import { useToastStore } from "@/stores/toastStore"
+import { useUserStore } from "@/stores/userStore"
 import { Platform, Track, TrackPlatformSearchResult } from "@/types"
 import axios, { AxiosResponse } from "axios"
 
@@ -11,6 +12,7 @@ export async function postSaveTrack(
 	thumbnailUrl: string | null,
 ) {
 	const toastStore = useToastStore()
+	const userStore = useUserStore()
 
 	try {
 		originalTracks = await Promise.all(
@@ -54,6 +56,11 @@ export async function postSaveTrack(
 				tags,
 				originalTracks: (originalTracks as Track[]).map((track) => track.id),
 				thumbnailUrl,
+			},
+			{
+				headers: {
+					Authorization: `Bearer ${userStore.token}`,
+				},
 			},
 		)
 

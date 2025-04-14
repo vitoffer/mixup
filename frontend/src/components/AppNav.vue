@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import trackListIcon from "../assets/icons/track_list.svg?component"
 import createTrackIcon from "../assets/icons/create_track.svg?component"
-import loginIcon from "../assets/icons/login.svg?component"
+import userIcon from "../assets/icons/user.svg?component"
 import { useRoute } from "vue-router"
 import { DefineComponent, shallowRef, watch } from "vue"
-import { useUserStore } from "@/stores/user"
+import { useUserStore } from "@/stores/userStore"
 
 const route = useRoute()
 const userStore = useUserStore()
@@ -21,7 +21,7 @@ async function getAccessibleLinks() {
 		},
 		{
 			name: "login",
-			icon: loginIcon,
+			icon: userIcon,
 		},
 	]
 
@@ -37,14 +37,11 @@ async function getAccessibleLinks() {
 		{},
 	)
 
-	// try {
-	// 	 const {data} = await axios.post()
-	// }
-
-	links.value.push({
-		name: "createMix",
-		icon: createTrackIcon,
-	})
+	if (await userStore.checkRole(["moderator", "admin"]))
+		links.value.push({
+			name: "createMix",
+			icon: createTrackIcon,
+		})
 
 	links.value.sort((a, b) => sortByObj[a.name] - sortByObj[b.name])
 }
@@ -66,8 +63,11 @@ function isActive(linkName: string) {
 	<nav
 		class="nav fixed bottom-0 left-0 z-10000 w-full rounded-t-xl bg-gray-800 py-2"
 	>
-		<ul class="flex justify-center gap-[48px]">
-			<li v-for="link in links">
+		<ul class="flex items-baseline justify-center gap-[48px]">
+			<li
+				v-for="link in links"
+				class="leading-0"
+			>
 				<RouterLink
 					:to="link"
 					:class="{ 'text-yellow-900': isActive(link.name) }"

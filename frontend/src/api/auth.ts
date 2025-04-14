@@ -1,12 +1,7 @@
-import { useUserStore } from "@/stores/user"
+import { useUserStore } from "@/stores/userStore"
 import axios, { AxiosError } from "axios"
 import { BASIC_AUTH_ROUTE } from "./constants"
-
-interface UserJWTPayload {
-	username: string
-	role: string
-	exp: number
-}
+import { Role, UserJWTPayload } from "@/types"
 
 export async function login(
 	username: string,
@@ -23,34 +18,43 @@ export async function login(
 		userStore.token = data.token
 		return true
 	} catch (e) {
-		if (e instanceof AxiosError) {
-			if (e.status === 404) {
-			}
-			if (e.status === 401) {
-			}
-		}
 		console.error(e)
 		return false
 	}
 }
 
 export async function getMe(): Promise<
-	{
-		success: boolean
-		status: number
-	} & (
-		| { data: UserJWTPayload }
-		| {
-				error: AxiosError
-		  }
-	)
+	| {
+			success: true
+			status: number
+			data: UserJWTPayload
+	  }
+	| {
+			success: false
+			status: number
+			error: AxiosError
+	  }
 > {
+	const userStore = useUserStore()
+
 	try {
-		const { data, status } = await axios.get(`${BASIC_AUTH_ROUTE}/me`)
-		return { success: true, status, data }
+		const { data, status } = await axios.get(`${BASIC_AUTH_ROUTE}/me`, {
+			headers: {
+				Authorization: `Bearer ${userStore.token}`,
+			},
+		})
+		return { success: true, status, data: data.data }
 	} catch (e) {
 		const axiosErr = e as AxiosError
 		console.log(axiosErr)
-		return { success: false, status: axiosErr.status!, error: axiosErr }
+		return { success: false, status: axiosErr.status || 400, error: axiosErr }
 	}
+}
+
+export async function apiCheckRole(requiredRoles: Role[]) {
+	const fetchedUserData = await getMe()
+	if (!fetchedUserData.success) {
+		return false
+	}
+	return requiredRoles.includes(fetchedUserData.data.role)
 }

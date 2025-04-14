@@ -1,3 +1,5 @@
+import { JwtPayload } from "jwt-decode"
+
 export type Platform = "spotify" | "yandexMusic" | "youtubeMusic"
 
 export interface Track {
@@ -24,3 +26,10 @@ export interface TrackPlatformSearchResult {
 	artistsNames: string[]
 	thumbnailUrl: string
 }
+
+export interface UserJWTPayload extends JwtPayload {
+	username: string
+	role: Role
+}
+
+export type Role = "admin" | "moderator" | "user"

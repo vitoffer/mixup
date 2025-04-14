@@ -1,14 +1,26 @@
 <script setup lang="ts">
-import { RouterView, useRoute } from "vue-router"
+import { RouterView } from "vue-router"
 import AppNav from "./components/AppNav.vue"
 import { watch } from "vue"
 import { storeToRefs } from "pinia"
 import { useToast } from "primevue"
 import { useToastStore } from "./stores/toastStore"
+import { useUserStore } from "./stores/userStore"
 
 const toast = useToast()
 const toastStore = useToastStore()
 const { toasts } = storeToRefs(toastStore)
+
+const { checkAuth } = useUserStore()
+localCheckAuth()
+
+async function localCheckAuth() {
+	if (!(await checkAuth())) {
+		toastStore.addToast({
+			summary: "Ошибка авторизации. Пожалуйста, войдите снова",
+		})
+	}
+}
 
 watch(
 	toasts,
