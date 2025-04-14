@@ -13,10 +13,13 @@ defineOptions({
 
 const props = withDefaults(
 	defineProps<{
-		suggestions: {
-			label: string
-			items: TrackSuggestion[]
-		}[]
+		suggestions: (
+			| {
+					label: string
+					items: TrackSuggestion[]
+			  }
+			| TrackSuggestion
+		)[]
 		inputId: string
 		disabled?: boolean
 		dropdown?: boolean
