@@ -65,6 +65,8 @@ function selectOriginalTrack(event: AutoCompleteOptionSelectEvent) {
 			@search-track="$emit('searchOriginalTrack', $event)"
 			@select-track="selectOriginalTrack"
 			:disabled="autocompleteDisabled"
+			option-group-label="label"
+			option-group-children="items"
 			class="original-search"
 			empty-search-message="Оригиналов по запросу не найдено"
 			label-text="Поиск трека по базе и на youtube music"

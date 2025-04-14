@@ -65,7 +65,7 @@ watch(
 				/>
 			</div>
 			<div class="flex w-full flex-col gap-[6px]">
-				<p class="line-clamp-2 text-[1rem] break-words text-yellow-900">
+				<p class="line-clamp-1 text-[1rem] break-words text-yellow-900">
 					{{ track.title }}
 				</p>
 				<p class="truncate text-[0.875rem] text-yellow-700">

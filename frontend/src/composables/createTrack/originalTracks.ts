@@ -18,7 +18,7 @@ export const useOriginalTracks = () => {
 		{ label: "Найденные треки в базе:", items: [] },
 		{ label: "Найденные треки на яндекс музыке:", items: [] },
 		{ label: "Найденные треки на youtube music:", items: [] },
-		{ label: "Найденные треки на spotify", items: [] },
+		{ label: "Найденные треки на spotify:", items: [] },
 	]
 
 	const platforms: Platform[] = ["yandexMusic", "youtubeMusic", "spotify"]
@@ -45,14 +45,15 @@ export const useOriginalTracks = () => {
 			const suggestionsList: { label: string; items: TrackSuggestion[] }[] = []
 
 			for (const [index, group] of groups.entries()) {
-				if (index === 0) {
-					suggestionsList.push({ ...group, items: trackListSuggestions })
-				} else {
-					suggestionsList.push({
-						...group,
-						items: fetchedPlatformSuggestions[platforms[index - 1]] || [],
-					})
-				}
+				const items =
+					index === 0
+						? trackListSuggestions
+						: fetchedPlatformSuggestions[platforms[index - 1]] || []
+
+				suggestionsList.push({
+					label: group.label + (items.length === 0 ? " 0" : ""),
+					items,
+				})
 			}
 
 			originalTracksSuggestions.value = suggestionsList

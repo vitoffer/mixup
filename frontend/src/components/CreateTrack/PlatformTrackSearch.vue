@@ -24,6 +24,8 @@ const props = withDefaults(
 		emptySearchMessage: string
 		optionLabel?: string | ((data: any) => string)
 		labelText: string
+		optionGroupLabel?: string
+		optionGroupChildren?: string
 	}>(),
 	{
 		disabled: false,
@@ -69,8 +71,8 @@ async function hideFloatLabel() {
 			:suggestions="suggestions"
 			:class="$attrs.class"
 			:option-label
-			option-group-label="label"
-			option-group-children="items"
+			:option-group-label
+			:option-group-children
 			:empty-search-message
 			:input-id="inputId"
 			:input-class="[
@@ -116,10 +118,6 @@ async function hideFloatLabel() {
 		@apply border-b-gray-700 py-1 leading-5 not-last:border-b;
 	}
 
-	.p-autocomplete-option-group {
-		@apply py-1 text-yellow-900;
-	}
-
 	.p-autocomplete-input {
 		@apply min-w-[24ch];
 	}
@@ -152,6 +150,10 @@ async function hideFloatLabel() {
 
 	.p-autocomplete-option {
 		@apply first:mt-[1px];
+	}
+
+	.p-autocomplete-option-group {
+		@apply py-1;
 	}
 
 	.p-autocomplete-list {
