@@ -50,7 +50,7 @@ export const useOriginalTracks = () => {
 				} else {
 					suggestionsList.push({
 						...group,
-						items: fetchedPlatformSuggestions[platforms[index - 1]],
+						items: fetchedPlatformSuggestions[platforms[index - 1]] || [],
 					})
 				}
 			}
