@@ -1,4 +1,7 @@
-import { SearchTracksRoute } from "./apis.routes"
+import {
+	OriginalTracksSuggestionsRoute,
+	SearchTracksRoute,
+} from "./apis.routes"
 import { getSpotifySearchResults } from "../../apis/spotify"
 import { getYandexMusicSearchResults } from "../../apis/yandex"
 import { getYoutubeVideosSearchResults } from "../../apis/youtube"
@@ -29,6 +32,27 @@ export const searchTracks: AppRouteHandler<SearchTracksRoute> = async (c) => {
 	} catch (error) {
 		return c.json(
 			{ message: `Error fetching ${platform} search results` },
+			HttpStatusCodes.INTERNAL_SERVER_ERROR
+		)
+	}
+}
+
+export const originalTracksSuggestions: AppRouteHandler<
+	OriginalTracksSuggestionsRoute
+> = async (c) => {
+	const { q } = c.req.valid("query")
+
+	try {
+		const res: Partial<Record<PlatformType, CleanedApiSearchResultType[]>> = {}
+		for (const platform in platformHandlers) {
+			res[platform as PlatformType] = (
+				await platformHandlers[platform as PlatformType](q)
+			).slice(0, 2)
+		}
+		return c.json(res, HttpStatusCodes.OK)
+	} catch (error) {
+		return c.json(
+			{ message: `Error fetching suggestions` },
 			HttpStatusCodes.INTERNAL_SERVER_ERROR
 		)
 	}

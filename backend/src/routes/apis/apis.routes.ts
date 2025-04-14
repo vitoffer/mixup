@@ -3,7 +3,6 @@ import * as HttpStatusCodes from "stoker/http-status-codes"
 import { jsonContent } from "stoker/openapi/helpers"
 import { PlatformSchema } from "../../types"
 import { CleanedApiSearchResultSchema } from "../../schemas/apis"
-import { createMessageObjectSchema } from "stoker/openapi/schemas"
 import { InternalServerErrorSchema } from "@/lib/constants"
 
 const tags = ["APIs"]
@@ -32,4 +31,33 @@ export const searchTracks = createRoute({
 	tags,
 })
 
+export const originalTracksSuggestions = createRoute({
+	path: "/originals-suggestions",
+	method: "get",
+	request: {
+		query: z.object({
+			q: z.string().min(1),
+		}),
+	},
+	responses: {
+		[HttpStatusCodes.OK]: jsonContent(
+			z.record(
+				z.union([
+					z.literal("yandexMusic"),
+					z.literal("youtubeMusic"),
+					z.literal("spotify"),
+				]),
+				z.array(CleanedApiSearchResultSchema)
+			),
+			"Search results"
+		),
+		[HttpStatusCodes.INTERNAL_SERVER_ERROR]: jsonContent(
+			InternalServerErrorSchema,
+			"Error on get results"
+		),
+	},
+	tags,
+})
+
 export type SearchTracksRoute = typeof searchTracks
+export type OriginalTracksSuggestionsRoute = typeof originalTracksSuggestions
