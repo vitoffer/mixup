@@ -1,53 +1,62 @@
-import { fetchTracksOnPlatformByText } from "@/api/searchTrack"
-import { loadTracks, trackList } from "@/storage/storage"
-import { Track } from "@/types"
+import { getOriginalTracksSuggestions } from "@/api/searchTrack"
+import { loadTracks, trackList } from "@/modules/trackList"
+import { Platform, TrackSuggestion } from "@/types"
 import { AutoCompleteCompleteEvent } from "primevue"
 import { ref } from "vue"
 
 export const useOriginalTracks = () => {
 	const originalTracksSuggestions = ref<
-		(Track | { splitter: boolean; text: string })[]
+		{ label: string; items: TrackSuggestion[] }[]
 	>([])
-	const originalTracksSearchInputRounded = ref(true)
+
+	const groups: { label: string; items: TrackSuggestion[] }[] = [
+		{ label: "Найденные треки в базе:", items: [] },
+		{ label: "Найденные треки на яндекс музыке:", items: [] },
+		{ label: "Найденные треки на youtube music:", items: [] },
+		{ label: "Найденные треки на spotify:", items: [] },
+	]
+
+	const platforms: Platform[] = ["yandexMusic", "youtubeMusic", "spotify"]
 
 	async function searchOriginalTrack(event: AutoCompleteCompleteEvent) {
-		if (trackList.value.length === 0) {
-			trackList.value = await loadTracks()
-		}
+		setTimeout(async () => {
+			if (trackList.value.length === 0) {
+				trackList.value = await loadTracks()
+			}
 
-		const suggestions: (Track | { splitter: boolean; text: string })[] =
-			trackList.value.filter((track) => {
-				return (
-					!track.isMix &&
-					track.title.toLowerCase().includes(event.query.toLowerCase())
-				)
-			})
+			const trackListSuggestions: TrackSuggestion[] = trackList.value
+				.filter((track) => {
+					return (
+						!track.isMix &&
+						track.title.toLowerCase().includes(event.query.toLowerCase())
+					)
+				})
+				.map((track) => track as TrackSuggestion)
+				.slice(0, 2)
 
-		let dbTrackListLength = suggestions.length
+			const fetchedPlatformSuggestions =
+				(await getOriginalTracksSuggestions(event.query)) || null
 
-		if (suggestions.length > 0) {
-			suggestions.unshift({ splitter: true, text: "Найденные треки в базе:" })
-		}
+			const suggestionsList: { label: string; items: TrackSuggestion[] }[] = []
 
-		if (dbTrackListLength < 5) {
-			suggestions.push({
-				splitter: true,
-				text: "Найденные треки на youtube music",
-			})
-			suggestions.push(
-				...(await fetchTracksOnPlatformByText(
-					event.query,
-					"youtubeMusic",
-					5 - dbTrackListLength,
-				)),
-			)
-		}
-		originalTracksSuggestions.value = suggestions
+			for (const [index, group] of groups.entries()) {
+				const items =
+					index === 0
+						? trackListSuggestions
+						: fetchedPlatformSuggestions[platforms[index - 1]] || []
+
+				suggestionsList.push({
+					label: group.label + (items.length === 0 ? " 0" : ""),
+					items,
+				})
+			}
+
+			originalTracksSuggestions.value = suggestionsList
+		}, 250)
 	}
 
 	return {
 		originalTracksSuggestions,
-		originalTracksSearchInputRounded,
 		searchOriginalTrack,
 	}
 }

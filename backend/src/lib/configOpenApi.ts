@@ -1,8 +1,9 @@
-import { OpenAPIHono } from "@hono/zod-openapi"
-import packageJSON from "../../package.json"
 import { apiReference } from "@scalar/hono-api-reference"
+import { AppOpenAPI } from "./types"
+import packageJSON from "../../package.json" with {type: "json"}
+import env from "@/env"
 
-export default function configOpenApi(app: OpenAPIHono) {
+export default function configOpenApi(app: AppOpenAPI) {
 	app.doc("/doc", {
 		openapi: "3.0.0",
 		info: {
@@ -18,12 +19,16 @@ export default function configOpenApi(app: OpenAPIHono) {
 			spec: {
 				url: "doc",
 			},
-			servers: [{ url: process.env.VITE_BASE_API_URL }],
+			servers: [{ url: env.VITE_BASE_API_URL }],
 			theme: "deepSpace",
 			defaultHttpClient: {
 				targetKey: "js",
 				clientKey: "axios",
 			},
+			favicon: "/public/favicon.ico",
+			authentication: {
+				preferredSecurityScheme: "Bearer",
+			}
 		})
 	)
 }

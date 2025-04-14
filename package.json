@@ -1,0 +1,9 @@
+{
+	"name": "mixup-core",
+	"version": "1.0.0",
+	"scripts": {
+		"devf": "cd ./frontend && pnpm dev",
+		"devb": "cd ./backend && bun dev"
+	},
+	"author": "vitoffer"
+}

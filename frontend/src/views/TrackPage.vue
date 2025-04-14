@@ -2,11 +2,12 @@
 import BackButton from "@/components/BackButton.vue"
 import PlatformLinkList from "@/components/PlatformLinkList.vue"
 import TrackItem from "@/components/TrackItem.vue"
-import { trackList } from "@/storage/storage"
-import { MixTrack, Track } from "@/types"
+
+import { Track } from "@/types"
 import { ref, Ref, watch } from "vue"
 import { useRoute } from "vue-router"
 import thumbnailPlaceholder from "@/assets/images/thumbnail_placeholder.png"
+import { trackList } from "@/modules/trackList"
 
 const track: Ref<Track | null> = ref(null)
 
@@ -56,7 +57,7 @@ watch(
 			<p class="text-center text-cyan-700">Оригиналы:</p>
 			<ul class="track-list">
 				<li
-					v-for="track in (track as MixTrack).originalTracks"
+					v-for="track in (track as Track).originalTracks"
 					:key="track.id"
 					class="not-first:-translate-y-[1px]"
 				>

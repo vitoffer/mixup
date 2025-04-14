@@ -1,119 +1,94 @@
 <script setup lang="ts">
-import { OriginalTrack, Track } from "@/types"
-import { AutoCompleteCompleteEvent } from "primevue"
+import { Track, TrackSuggestion } from "@/types"
+import {
+	AutoCompleteCompleteEvent,
+	AutoCompleteOptionSelectEvent,
+} from "primevue"
+import AddedOriginalTracksList from "./AddedOriginalTracksList.vue"
+import { ref } from "vue"
+import PlatformTrackSearch from "./PlatformTrackSearch.vue"
 
-defineProps<{
-	originalTracksSuggestions: (Track | { splitter: boolean; text: string })[]
+const props = defineProps<{
+	originalTracksSuggestions: {
+		label: string
+		items: TrackSuggestion[]
+	}[]
+	originalTracksList: Track[]
 }>()
 
-defineEmits<{
+const emit = defineEmits<{
 	searchOriginalTrack: [event: AutoCompleteCompleteEvent]
 	createOriginal: []
+	updateOriginalTracksList: [newValue: Track[]]
 }>()
 
-const originalTracksList = defineModel<OriginalTrack[]>("originalTracksList")
-const originalTracksSearchInputRounded = defineModel<boolean>(
-	"originalTracksSearchInputRounded",
-)
+const originalTracksSearch = ref("")
+
+const autocompleteDisabled = ref(false)
+
+function deleteOriginalTrack(title: string) {
+	emit(
+		"updateOriginalTracksList",
+		props.originalTracksList?.filter((track) => track.title !== title),
+	)
+}
+
+function selectOriginalTrack(event: AutoCompleteOptionSelectEvent) {
+	if (
+		props.originalTracksList?.find(
+			(track) => track.title === event.value.title,
+		) === undefined
+	) {
+		emit("updateOriginalTracksList", [...props.originalTracksList, event.value])
+	}
+	originalTracksSearch.value = ""
+}
 </script>
 
 <template>
 	<div class="flex w-full flex-col gap-2">
-		<p class="text-bold mb-1 text-lg leading-none text-yellow-700">
+		<p
+			class="text-bold text-lg leading-none text-yellow-700"
+			:class="{ 'mb-1': originalTracksList?.length === 0 }"
+		>
 			Оригиналы:
 		</p>
-		<p
-			v-if="originalTracksList!.length === 0"
-			class="text-[0.875rem] text-cyan-700"
-		>
-			Пока нет оригиналов. Добавьте первый (если нужно) ниже
-		</p>
-		<AutoComplete
-			v-model="originalTracksList"
-			placeholder="Поиск трека по базе"
-			multiple
+		<AddedOriginalTracksList
+			:originalTracksList="originalTracksList!"
+			@delete-original-track="deleteOriginalTrack"
+		/>
+		<PlatformTrackSearch
+			input-id="searchOriginal"
+			v-model:search-model="originalTracksSearch"
 			:suggestions="originalTracksSuggestions"
-			@complete="(event) => $emit('searchOriginalTrack', event)"
-			@show="originalTracksSearchInputRounded = false"
-			@hide="originalTracksSearchInputRounded = true"
-			:input-class="[
-				{ '!rounded-b-none': !originalTracksSearchInputRounded },
-				'placeholder:text-cyan-800',
-			]"
+			@search-track="$emit('searchOriginalTrack', $event)"
+			@select-track="selectOriginalTrack"
+			:disabled="autocompleteDisabled"
+			option-group-label="label"
+			option-group-children="items"
+			class="original-search"
 			empty-search-message="Оригиналов по запросу не найдено"
-			append-to="self"
-			class="original-search w-full"
-			:pt:inputchip:class="originalTracksList!.length > 0 ? 'mt-3' : 'mt-0'"
+			label-text="Поиск трека по базе и на youtube music"
 		>
-			<template #chip="slotProps">
-				<div class="relative">
-					<TrackItem
-						:track="slotProps.value"
-						:with-links="false"
-					/>
-					<button
-						class="absolute top-1/2 right-2 flex aspect-square -translate-y-1/2 cursor-pointer items-center justify-center rounded-lg bg-gray-800 p-2 text-red-900"
-						@click="slotProps.removeCallback"
-					>
-						<span class="hidden">Удалить оригинальный трек</span>
-						<i class="pi pi-times leading-none"></i>
-					</button>
-				</div>
-			</template>
-			<template #option="slotProps">
-				<p
-					v-if="slotProps.option.splitter"
-					class="py-1 text-yellow-700"
-				>
-					{{ slotProps.option.text }}
-				</p>
-				<TrackItem
-					v-else
-					:track="slotProps.option"
-					:with-links="false"
-					unbordered
-				/>
-			</template>
 			<template #footer>
 				<div class="mt-1 flex flex-col items-center leading-[1.25rem]">
 					<p class="text-cyan-700">Не нашли, что искали?</p>
 					<button
 						class="text-yellow-700"
-						@click="$emit('createOriginal')"
+						@click="
+							() => {
+								autocompleteDisabled = true
+								$emit('createOriginal')
+							}
+						"
 					>
 						Добавьте трек сами!
 					</button>
 				</div>
 				<div class="spacer absolute -bottom-4 left-0 h-6 w-full"></div>
 			</template>
-		</AutoComplete>
+		</PlatformTrackSearch>
 	</div>
 </template>
 
-<style>
-@reference "../../assets/styles/main.css";
-
-.original-search {
-	@apply mt-0;
-
-	.p-autocomplete-input-multiple {
-		@apply flex flex-col;
-	}
-
-	.p-autocomplete-chip-item {
-		@apply not-first:-translate-y-[1px];
-	}
-
-	.p-autocomplete-option {
-		@apply first:mt-[1px];
-	}
-
-	.p-autocomplete-list {
-		@apply border-y border-y-gray-700 pb-2;
-	}
-
-	.p-autocomplete-empty-message {
-		@apply mt-2;
-	}
-}
-</style>
+<style></style>

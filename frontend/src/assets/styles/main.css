@@ -1,26 +1,27 @@
 @import "tailwindcss";
-@import './float-label';
+@import "./float-label";
+@import "./confirm-dialog";
 
 @theme {
 	--color-gray-900: #0d1f2d;
-	--color-gray-800: #1B2C39;
+	--color-gray-800: #1b2c39;
 	--color-gray-700: #293946;
-	--color-gray-600: #54616B;
-	--color-gray-500: #8D969C;
-	--color-gray-400: #E3E5E6;
+	--color-gray-600: #54616b;
+	--color-gray-500: #8d969c;
+	--color-gray-400: #e3e5e6;
 
-	--color-yellow-900: #F8A917;
-	--color-yellow-800: #FABD4E;
-	--color-yellow-700: #FCDC9F;
+	--color-yellow-900: #f8a917;
+	--color-yellow-800: #fabd4e;
+	--color-yellow-700: #fcdc9f;
 
-	--color-cyan-900: #75A69C;
-	--color-cyan-800: #AECBC5;
-	--color-cyan-700: #C6DAD6;
-	--color-cyan-600: #D6E5E2;
-	--color-cyan-500: #E7EFEE;
+	--color-cyan-900: #75a69c;
+	--color-cyan-800: #aecbc5;
+	--color-cyan-700: #c6dad6;
+	--color-cyan-600: #d6e5e2;
+	--color-cyan-500: #e7efee;
 
-	--color-red-900: #F13E2E;
-	--color-green-900: #46B246;
+	--color-red-900: #f13e2e;
+	--color-green-900: #46b246;
 
 	--font-carter-one: "Carter One", sans-serif;
 	--font-nunito: "Nunito", sans-serif;
@@ -31,7 +32,7 @@ body {
 }
 
 input {
-	@apply outline-none bg-gray-800 rounded-[10px];
+	@apply rounded-[10px] bg-gray-800 outline-none;
 }
 
 @media (max-width: 700px) {

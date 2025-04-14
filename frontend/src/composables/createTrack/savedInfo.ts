@@ -1,13 +1,14 @@
-import { OriginalTrack, Platform, Track } from "@/types"
+import { Platform, Track } from "@/types"
 import { nextTick, ref } from "vue"
 import { useSearchTrackPlatforms } from "./searchTrackPlatforms"
 import markIcon from "../../assets/icons/mark.svg?url"
-import { useIconStates } from "./iconStates"
 import { useToastStore } from "@/stores/toastStore"
-import axios from "axios"
 import { AutoCompleteChangeEvent } from "primevue"
+import { postSaveTrack } from "@/api/saveTrack"
+import { useRouter } from "vue-router"
 
 export const useSavedInfo = () => {
+	const router = useRouter()
 	const toastStore = useToastStore()
 
 	const savedLinks = ref({
@@ -22,13 +23,16 @@ export const useSavedInfo = () => {
 		yandexMusic: "",
 	})
 
-	const { iconStates } = useIconStates()
+	const iconStates = ref<Record<Platform, string>>({
+		youtubeMusic: markIcon,
+		spotify: markIcon,
+		yandexMusic: markIcon,
+	})
 
 	const {
 		trackFoundOnPlatform,
 		searchPlatformText,
 		platformTrackSuggestions,
-		searchTrackOnPlatformRounded,
 		searchTrackOnPlatform,
 	} = useSearchTrackPlatforms()
 
@@ -44,7 +48,6 @@ export const useSavedInfo = () => {
 			searchPlatformText.value = ""
 		}
 
-		Object.entries(savedLinks.value).forEach(([platform, link]) => {})
 		;(
 			document.querySelector(
 				".platform-search .p-inputtext",
@@ -57,7 +60,7 @@ export const useSavedInfo = () => {
 	const title = ref<string>("")
 	const artistsNames = ref<string>("")
 	const tags = ref<string[]>([])
-	const originalTracks = ref<OriginalTrack[]>([])
+	const originalTracks = ref<Track[]>([])
 
 	function addTag(tag: string) {
 		const trimmedTag = tag.trim()
@@ -68,66 +71,6 @@ export const useSavedInfo = () => {
 
 	async function removeTag(tag: string) {
 		tags.value = tags.value.filter((filteringTag) => filteringTag !== tag)
-	}
-
-	async function saveTrack(
-		title: string,
-		urls: Record<Platform, string | null>,
-		artistsNames: string[],
-		tags: string[],
-		mixedTracks: Track[],
-		thumbnailUrl: string | null,
-	) {
-		try {
-			mixedTracks = mixedTracks.map(async (originalTrack) => {
-				if (!originalTrack.id) {
-					const savedOriginalTrack = await saveTrack(
-						originalTrack.title,
-						{
-							spotify: null,
-							yandexMusic: null,
-							youtubeMusic: (originalTrack as any).url,
-						},
-						originalTrack.artistsNames,
-						[],
-						[],
-						originalTrack.thumbnailUrl,
-					)
-
-					if (savedOriginalTrack.error) {
-						return {}
-					}
-
-					return savedOriginalTrack
-				}
-			}) as any
-
-			mixedTracks = mixedTracks.filter((obj) => Object.keys(obj).length > 0)
-
-			const { data, status } = await axios.post(
-				`${import.meta.env.VITE_BASE_API_URL}/tracks`,
-				{
-					title,
-					urls,
-					artistsNames,
-					tags,
-					mixedTracks: mixedTracks.map((track) => track.id),
-					thumbnailUrl,
-				},
-			)
-
-			console.log(status, data)
-
-			return data
-		} catch (e) {
-			toastStore.addToast({
-				detail: (e as any).response.data.error.issues
-					.map((issue: { message: string }) => issue.message)
-					.join("\n"),
-			})
-			console.error(e)
-			return { error: true }
-		}
 	}
 
 	async function selectFoundTrackOnPlatform(
@@ -154,6 +97,41 @@ export const useSavedInfo = () => {
 		trackFoundOnPlatform.value = searchPlatformText.value
 	}
 
+	async function saveTrack(
+		id: string | null,
+		isMix: boolean,
+		successMessage: string,
+	) {
+		const thumbnailUrl =
+			savedThumbnails.value.yandexMusic ||
+			savedThumbnails.value.youtubeMusic ||
+			savedThumbnails.value.spotify ||
+			null
+
+		const savedTrack = await postSaveTrack(
+			id,
+			title.value,
+			{
+				youtubeMusic: savedLinks.value.youtubeMusic || null,
+				yandexMusic: savedLinks.value.yandexMusic || null,
+				spotify: savedLinks.value.spotify || null,
+			},
+			artistsNames.value.split(", "),
+			tags.value,
+			isMix ? originalTracks.value : [],
+			thumbnailUrl,
+		)
+
+		if ("error" in savedTrack) {
+			return
+		}
+
+		const chosenSuccessMessage = id ? "Микс успешно обновлен" : successMessage
+
+		toastStore.addToast({ summary: chosenSuccessMessage })
+		router.push({ name: isMix ? "trackList" : "createMix" })
+	}
+
 	function changeText(event: AutoCompleteChangeEvent) {
 		if (typeof event.value === "object") {
 			return
@@ -173,12 +151,10 @@ export const useSavedInfo = () => {
 		removeTag,
 		trackFoundOnPlatform,
 		platformTrackSuggestions,
-		searchTrackOnPlatformRounded,
 		iconStates,
 		searchTrackOnPlatform,
 		saveTrack,
 		selectFoundTrackOnPlatform,
 		changeText,
-		savedThumbnails,
 	}
 }

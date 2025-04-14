@@ -1,5 +1,5 @@
 {
-	"name": "backend-hono",
+	"name": "mixup-backend",
 	"version": "1.0.0",
 	"type": "module",
 	"module": "esnext",
@@ -14,8 +14,11 @@
 		"@zodyac/zod-mongoose": "^3.2.0",
 		"axios": "^1.8.2",
 		"hono": "^4.7.4",
+		"hono-pino": "^0.8.0",
 		"http-proxy-agent": "^7.0.2",
 		"mongoose": "^8.12.1",
+		"pino": "^9.6.0",
+		"pino-pretty": "^13.0.0",
 		"stoker": "^1.4.2",
 		"ym-api": "^1.2.1",
 		"ytmusic-api": "^5.3.0",

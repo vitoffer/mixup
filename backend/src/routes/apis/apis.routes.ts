@@ -1,16 +1,18 @@
 import { createRoute, z } from "@hono/zod-openapi"
 import * as HttpStatusCodes from "stoker/http-status-codes"
 import { jsonContent } from "stoker/openapi/helpers"
-import { CleanedApiSearchResult } from "../../schemas/apis"
+import { PlatformSchema } from "../../types"
+import { CleanedApiSearchResultSchema } from "../../schemas/apis"
+import { InternalServerErrorSchema } from "@/lib/constants"
 
-const tags = ["Apis"]
+const tags = ["APIs"]
 
 export const searchTracks = createRoute({
-	path: "/search/:provider",
+	path: "/search/:platform",
 	method: "get",
 	request: {
 		params: z.object({
-			provider: z.enum(["spotify", "yandex", "youtube"]),
+			platform: PlatformSchema,
 		}),
 		query: z.object({
 			q: z.string().min(1),
@@ -18,11 +20,39 @@ export const searchTracks = createRoute({
 	},
 	responses: {
 		[HttpStatusCodes.OK]: jsonContent(
-			z.array(CleanedApiSearchResult),
+			z.array(CleanedApiSearchResultSchema),
 			"Search results"
 		),
 		[HttpStatusCodes.INTERNAL_SERVER_ERROR]: jsonContent(
-			z.object({ message: z.string() }),
+			InternalServerErrorSchema,
+			"Error on get results"
+		),
+	},
+	tags,
+})
+
+export const originalTracksSuggestions = createRoute({
+	path: "/originals-suggestions",
+	method: "get",
+	request: {
+		query: z.object({
+			q: z.string().min(1),
+		}),
+	},
+	responses: {
+		[HttpStatusCodes.OK]: jsonContent(
+			z.record(
+				z.union([
+					z.literal("yandexMusic"),
+					z.literal("youtubeMusic"),
+					z.literal("spotify"),
+				]),
+				z.array(CleanedApiSearchResultSchema)
+			),
+			"Search results"
+		),
+		[HttpStatusCodes.INTERNAL_SERVER_ERROR]: jsonContent(
+			InternalServerErrorSchema,
 			"Error on get results"
 		),
 	},
@@ -30,3 +60,4 @@ export const searchTracks = createRoute({
 })
 
 export type SearchTracksRoute = typeof searchTracks
+export type OriginalTracksSuggestionsRoute = typeof originalTracksSuggestions

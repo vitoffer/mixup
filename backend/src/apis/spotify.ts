@@ -1,11 +1,11 @@
 import axios from "axios"
 import { HttpProxyAgent } from "http-proxy-agent"
 import { SearchResults } from "@spotify/web-api-ts-sdk"
-import { z } from "zod"
-import { CleanedApiSearchResult } from "../schemas/apis"
+import { CleanedApiSearchResultType } from "../schemas/apis"
+import env from "@/env"
 
 const agent = new HttpProxyAgent(
-	`http://${process.env.PROXY_USERNAME}:${process.env.PROXY_PASSWORD}@${process.env.PROXY_HOST}:${process.env.PROXY_PORT}`
+	`http://${env.PROXY_USERNAME}:${env.PROXY_PASSWORD}@${env.PROXY_HOST}:${env.PROXY_PORT}`
 )
 
 let tokenCache: {
@@ -18,8 +18,8 @@ async function fetchSpotifyToken(): Promise<string> {
 		`https://accounts.spotify.com/api/token`,
 		new URLSearchParams({
 			grant_type: "client_credentials",
-			client_id: process.env.SPOTIFY_CLIENT_ID!,
-			client_secret: process.env.SPOTIFY_CLIENT_SECRET!,
+			client_id: env.SPOTIFY_CLIENT_ID!,
+			client_secret: env.SPOTIFY_CLIENT_SECRET!,
 		}),
 		{
 			headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -56,8 +56,8 @@ export async function getSpotifySearchResults(query: string) {
 
 		const rawTracks = data.tracks.items
 
-		const cleanedTracks: z.infer<typeof CleanedApiSearchResult>[] =
-			rawTracks.map((track) => ({
+		const cleanedTracks: CleanedApiSearchResultType[] = rawTracks.map(
+			(track) => ({
 				title: track.name,
 				url: track.external_urls.spotify,
 				artistsNames: track.artists.map(
@@ -65,11 +65,12 @@ export async function getSpotifySearchResults(query: string) {
 				),
 				thumbnailUrl:
 					track.album.images.find((image) => image.width === 64)?.url || "",
-			}))
+			})
+		)
 
 		return cleanedTracks
 	} catch (e) {
 		console.error(e)
-		return null
+		return []
 	}
 }

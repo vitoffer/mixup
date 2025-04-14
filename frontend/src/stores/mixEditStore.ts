@@ -1,9 +1,17 @@
-import { OriginalTrack } from "@/types"
+import { Platform, Track } from "@/types"
 import { defineStore } from "pinia"
 import { ref } from "vue"
 
 export const useMixEditStore = defineStore("mixEdit", () => {
-	const mix = ref({
+	const mix = ref<{
+		id: string | null
+		title: string
+		artistsNames: string
+		tags: string[]
+		savedLinks: Record<Platform, string>
+		originalTracks: Track[]
+	}>({
+		id: null,
 		title: "",
 		artistsNames: "",
 		tags: [] as string[],
@@ -12,11 +20,12 @@ export const useMixEditStore = defineStore("mixEdit", () => {
 			spotify: "",
 			yandexMusic: "",
 		},
-		originalTracks: [] as OriginalTrack[],
+		originalTracks: [],
 	})
 
 	function clearMix() {
 		mix.value = {
+			id: null,
 			title: "",
 			artistsNames: "",
 			tags: [] as string[],
@@ -25,7 +34,7 @@ export const useMixEditStore = defineStore("mixEdit", () => {
 				spotify: "",
 				yandexMusic: "",
 			},
-			originalTracks: [] as OriginalTrack[],
+			originalTracks: [],
 		}
 	}
 

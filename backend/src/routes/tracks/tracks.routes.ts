@@ -5,14 +5,18 @@ import {
 	jsonContentOneOf,
 	jsonContentRequired,
 } from "stoker/openapi/helpers"
-import { createErrorSchema } from "stoker/openapi/schemas"
-import { notFoundSchema } from "../../lib/constants"
+import {
+	createErrorSchema,
+	createMessageObjectSchema,
+} from "stoker/openapi/schemas"
+import { InternalServerErrorSchema, NotFoundSchema } from "../../lib/constants"
 import {
 	InsertTrackSchema,
+	NormalizedPopulatedTrackSchema,
 	PatchTrackSchema,
-	TrackSchemaPopulated,
 } from "../../models/Track"
-import { paramsIdSchema } from "../../schemas/tracks"
+import { ParamsIdSchema } from "../../schemas/tracks"
+import { moderatorAuth } from "@/middlewares/auth"
 
 const tags = ["Tracks"]
 
@@ -21,8 +25,12 @@ export const list = createRoute({
 	method: "get",
 	responses: {
 		[HttpStatusCodes.OK]: jsonContent(
-			z.array(TrackSchemaPopulated),
+			z.array(NormalizedPopulatedTrackSchema),
 			"List of tracks"
+		),
+		[HttpStatusCodes.INTERNAL_SERVER_ERROR]: jsonContent(
+			InternalServerErrorSchema,
+			"Error on get results"
 		),
 	},
 	tags,
@@ -32,15 +40,18 @@ export const getOne = createRoute({
 	path: "/tracks/{id}",
 	method: "get",
 	request: {
-		params: paramsIdSchema,
+		params: ParamsIdSchema,
 	},
 	responses: {
-		[HttpStatusCodes.OK]: jsonContent(TrackSchemaPopulated, "Found track"),
+		[HttpStatusCodes.OK]: jsonContent(
+			NormalizedPopulatedTrackSchema,
+			"Found track"
+		),
 		[HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
-			createErrorSchema(paramsIdSchema),
+			createErrorSchema(ParamsIdSchema),
 			"Incorrect track Id"
 		),
-		[HttpStatusCodes.NOT_FOUND]: jsonContent(notFoundSchema, "Track not found"),
+		[HttpStatusCodes.NOT_FOUND]: jsonContent(NotFoundSchema, "Track not found"),
 	},
 	tags,
 })
@@ -53,52 +64,97 @@ export const create = createRoute({
 	},
 	responses: {
 		[HttpStatusCodes.CREATED]: jsonContent(
-			TrackSchemaPopulated,
+			NormalizedPopulatedTrackSchema,
 			"Created track"
 		),
 		[HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
 			createErrorSchema(InsertTrackSchema),
 			"Validation error(s)"
 		),
+		[HttpStatusCodes.BAD_REQUEST]: jsonContent(
+			createMessageObjectSchema("Invalid request"),
+			"Error in request"
+		),
+		[HttpStatusCodes.UNAUTHORIZED]: jsonContent(
+			createMessageObjectSchema("User unauthorized"),
+			"Unauthorized error"
+		),
 	},
 	tags,
+	security: [
+		{
+			Bearer: [],
+		},
+	],
+	middleware: moderatorAuth,
 })
 
 export const patch = createRoute({
 	path: "/tracks/{id}",
 	method: "patch",
 	request: {
-		params: paramsIdSchema,
+		params: ParamsIdSchema,
 		body: jsonContentRequired(PatchTrackSchema, "Track to update"),
 	},
 	responses: {
-		[HttpStatusCodes.OK]: jsonContent(TrackSchemaPopulated, "Updated track"),
+		[HttpStatusCodes.OK]: jsonContent(
+			NormalizedPopulatedTrackSchema,
+			"Updated track"
+		),
 		[HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContentOneOf(
-			[createErrorSchema(PatchTrackSchema), createErrorSchema(paramsIdSchema)],
+			[createErrorSchema(PatchTrackSchema), createErrorSchema(ParamsIdSchema)],
 			"Validation error(s)"
 		),
-		[HttpStatusCodes.NOT_FOUND]: jsonContent(notFoundSchema, "Track not found"),
+		[HttpStatusCodes.BAD_REQUEST]: jsonContent(
+			createMessageObjectSchema("Invalid request"),
+			"Error in request"
+		),
+		[HttpStatusCodes.NOT_FOUND]: jsonContent(NotFoundSchema, "Track not found"),
+		[HttpStatusCodes.UNAUTHORIZED]: jsonContent(
+			createMessageObjectSchema("User unauthorized"),
+			"Unauthorized error"
+		),
 	},
 	tags,
+	security: [
+		{
+			Bearer: [],
+		},
+	],
+	middleware: moderatorAuth,
 })
 
 export const remove = createRoute({
 	path: "/tracks/{id}",
 	method: "delete",
 	request: {
-		params: paramsIdSchema,
+		params: ParamsIdSchema,
 	},
 	responses: {
 		[HttpStatusCodes.NO_CONTENT]: {
 			description: "Track deleted",
 		},
 		[HttpStatusCodes.UNPROCESSABLE_ENTITY]: jsonContent(
-			createErrorSchema(paramsIdSchema),
+			createErrorSchema(ParamsIdSchema),
 			"Incorrect track Id"
 		),
-		[HttpStatusCodes.NOT_FOUND]: jsonContent(notFoundSchema, "Track not found"),
+		[HttpStatusCodes.BAD_REQUEST]: jsonContent(
+			createMessageObjectSchema("Invalid request"),
+			"Error in request"
+		),
+		[HttpStatusCodes.NOT_FOUND]: jsonContent(NotFoundSchema, "Track not found"),
+		[HttpStatusCodes.UNAUTHORIZED]: jsonContent(
+			createMessageObjectSchema("User unauthorized"),
+			"Unauthorized error"
+		),
 	},
 	tags,
+	security: [
+		{
+			Bearer: [],
+		},
+	],
+	middleware: moderatorAuth,
 })
 
 export type ListRoute = typeof list

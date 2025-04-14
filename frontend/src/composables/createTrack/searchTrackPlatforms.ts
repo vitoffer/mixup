@@ -1,17 +1,18 @@
 import { fetchTracksOnPlatformByText } from "@/api/searchTrack"
-import { Platform } from "@/types"
+import { Platform, TrackPlatformSearchResult } from "@/types"
 import { AutoCompleteCompleteEvent } from "primevue"
 import { ref } from "vue"
 
 export const useSearchTrackPlatforms = () => {
-	const trackFoundOnPlatform = ref<object | string>({})
+	const trackFoundOnPlatform = ref<string>("")
 	const searchPlatformText = ref<string>("")
-	const platformTrackSuggestions = ref<Record<Platform, object[]>>({
-		youtubeMusic: [{}],
-		yandexMusic: [{}],
-		spotify: [{}],
+	const platformTrackSuggestions = ref<
+		Record<Platform, TrackPlatformSearchResult[]>
+	>({
+		youtubeMusic: [],
+		yandexMusic: [],
+		spotify: [],
 	})
-	const searchTrackOnPlatformRounded = ref(true)
 
 	async function searchTrackOnPlatform(
 		event: AutoCompleteCompleteEvent,
@@ -36,7 +37,6 @@ export const useSearchTrackPlatforms = () => {
 		trackFoundOnPlatform,
 		searchPlatformText,
 		platformTrackSuggestions,
-		searchTrackOnPlatformRounded,
 		searchTrackOnPlatform,
 	}
 }

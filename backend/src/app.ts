@@ -1,6 +1,7 @@
 import dbConnect from "./db/connect"
 import createApp from "./lib/createApp"
 import configOpenApi from "./lib/configOpenApi"
+import authRoute from "./routes/auth/auth.index"
 import tracksRoute from "./routes/tracks/tracks.index"
 import apisRoute from "./routes/apis/apis.index"
 
@@ -9,7 +10,7 @@ configOpenApi(app)
 
 await dbConnect()
 
-const routes = [tracksRoute, apisRoute]
+const routes = [authRoute, tracksRoute, apisRoute]
 routes.forEach((route) => {
 	app.route("/", route)
 })

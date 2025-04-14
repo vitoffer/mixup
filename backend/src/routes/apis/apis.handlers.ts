@@ -1,33 +1,58 @@
-import { RouteHandler } from "@hono/zod-openapi"
-import { SearchTracksRoute } from "./apis.routes"
+import {
+	OriginalTracksSuggestionsRoute,
+	SearchTracksRoute,
+} from "./apis.routes"
 import { getSpotifySearchResults } from "../../apis/spotify"
 import { getYandexMusicSearchResults } from "../../apis/yandex"
 import { getYoutubeVideosSearchResults } from "../../apis/youtube"
 import * as HttpStatusCodes from "stoker/http-status-codes"
+import { PlatformType } from "../../types"
+import { CleanedApiSearchResultType } from "../../schemas/apis"
+import { AppRouteHandler } from "@/lib/types"
 
-const providerHandlers = {
+const platformHandlers: Record<
+	PlatformType,
+	(query: string) => Promise<CleanedApiSearchResultType[]>
+> = {
 	spotify: getSpotifySearchResults,
-	yandex: getYandexMusicSearchResults,
-	youtube: getYoutubeVideosSearchResults,
+	yandexMusic: getYandexMusicSearchResults,
+	youtubeMusic: getYoutubeVideosSearchResults,
 }
 
-export const searchTracks: RouteHandler<SearchTracksRoute> = async (c) => {
-	const { provider } = c.req.valid("param")
+export const searchTracks: AppRouteHandler<SearchTracksRoute> = async (c) => {
+	const { platform } = c.req.valid("param")
 	const { q } = c.req.valid("query")
 
-	const handler = providerHandlers[provider]
+	const handler = platformHandlers[platform]
 
 	try {
 		const results = await handler(q)
 
-		if (!results) {
-			throw new Error("Results list is null")
-		}
-
 		return c.json(results, HttpStatusCodes.OK)
 	} catch (error) {
 		return c.json(
-			{ message: `Error fetching ${provider} search results` },
+			{ message: `Error fetching ${platform} search results` },
+			HttpStatusCodes.INTERNAL_SERVER_ERROR
+		)
+	}
+}
+
+export const originalTracksSuggestions: AppRouteHandler<
+	OriginalTracksSuggestionsRoute
+> = async (c) => {
+	const { q } = c.req.valid("query")
+
+	try {
+		const res: Partial<Record<PlatformType, CleanedApiSearchResultType[]>> = {}
+		for (const platform in platformHandlers) {
+			res[platform as PlatformType] = (
+				await platformHandlers[platform as PlatformType](q)
+			).slice(0, 2)
+		}
+		return c.json(res, HttpStatusCodes.OK)
+	} catch (error) {
+		return c.json(
+			{ message: `Error fetching suggestions` },
 			HttpStatusCodes.INTERNAL_SERVER_ERROR
 		)
 	}

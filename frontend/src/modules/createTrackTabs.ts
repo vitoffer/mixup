@@ -1,7 +1,7 @@
 import { CreateTrackPlatformTab } from "@/types"
-import youtubeMusicIcon from "../assets/icons/youtube_logo.svg?url"
 import spotifyIcon from "../assets/icons/spotify_logo.svg?url"
-import yandexMusicIcon from "../assets/icons/yandex_logo.svg?url"
+import yandexMusicIcon from "../assets/icons/yandexMusic_logo.svg?url"
+import youtubeMusicIcon from "../assets/icons/youtubeMusic_logo.svg?url"
 
 export const tabs: CreateTrackPlatformTab[] = [
 	{

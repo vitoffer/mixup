@@ -1,4 +1,4 @@
-import { RouteHandler, z } from "@hono/zod-openapi"
+import { z } from "@hono/zod-openapi"
 import {
 	CreateRoute,
 	GetOneRoute,
@@ -6,20 +6,39 @@ import {
 	PatchRoute,
 	RemoveRoute,
 } from "./tracks.routes"
-import Track, { TrackSchemaPopulated } from "../../models/Track"
 import * as HttpStatusCodes from "stoker/http-status-codes"
 import * as HttpStatusPhrases from "stoker/http-status-phrases"
+import { DbPopulatedTrackSchema, Track } from "../../models/Track"
+import { normalizeTrack } from "./tracks.helpers"
+import { AppRouteHandler } from "@/lib/types"
 
-export const list: RouteHandler<ListRoute> = async (c) => {
-	const tracks = await Track.find().populate("mixedTracks")
+export const list: AppRouteHandler<ListRoute> = async (c) => {
+	let resultTracks: z.infer<typeof DbPopulatedTrackSchema>[]
 
-	return c.json(tracks, HttpStatusCodes.OK)
+	const rawTracks = await Track.find().populate("originalTracks")
+	const result = DbPopulatedTrackSchema.array().safeParse(rawTracks)
+
+	if (!result.success) {
+		console.error(result.error)
+
+		return c.json(
+			{ message: `Error getting track list` },
+			HttpStatusCodes.INTERNAL_SERVER_ERROR
+		)
+	} else {
+		resultTracks = result.data
+	}
+
+	const normalizedInsertedTrack = resultTracks.map(normalizeTrack)
+	return c.json(normalizedInsertedTrack, HttpStatusCodes.OK)
 }
 
-export const getOne: RouteHandler<GetOneRoute> = async (c) => {
+export const getOne: AppRouteHandler<GetOneRoute> = async (c) => {
 	const { id } = c.req.valid("param")
 
-	const track = await Track.findById(id).populate("mixedTracks")
+	const track = (await Track.findById(id).populate(
+		"originalTracks"
+	)) as z.infer<typeof DbPopulatedTrackSchema> | null
 
 	if (!track) {
 		return c.json(
@@ -28,21 +47,25 @@ export const getOne: RouteHandler<GetOneRoute> = async (c) => {
 		)
 	}
 
-	return c.json(track, HttpStatusCodes.OK)
+	const normalizedInsertedTrack = normalizeTrack(track)
+
+	return c.json(normalizedInsertedTrack, HttpStatusCodes.OK)
 }
 
-export const create: RouteHandler<CreateRoute> = async (c) => {
+export const create: AppRouteHandler<CreateRoute> = async (c) => {
 	const track = c.req.valid("json")
 
 	const rawInsertedTrack = await Track.create(track)
 	const populatedInsertedTrack = (await rawInsertedTrack.populate(
-		"mixedTracks"
-	)) as z.infer<typeof TrackSchemaPopulated>
+		"originalTracks"
+	)) as z.infer<typeof DbPopulatedTrackSchema>
 
-	return c.json(populatedInsertedTrack, HttpStatusCodes.CREATED)
+	const normalizedInsertedTrack = normalizeTrack(populatedInsertedTrack)
+
+	return c.json(normalizedInsertedTrack, HttpStatusCodes.CREATED)
 }
 
-export const patch: RouteHandler<PatchRoute> = async (c) => {
+export const patch: AppRouteHandler<PatchRoute> = async (c) => {
 	const { id } = c.req.valid("param")
 	const updates = c.req.valid("json")
 
@@ -62,13 +85,15 @@ export const patch: RouteHandler<PatchRoute> = async (c) => {
 	}
 
 	const populatedUpdatedTrack = (await rawUpdatedTrack.populate(
-		"mixedTracks"
-	)) as z.infer<typeof TrackSchemaPopulated>
+		"originalTracks"
+	)) as z.infer<typeof DbPopulatedTrackSchema>
 
-	return c.json(populatedUpdatedTrack, HttpStatusCodes.OK)
+	const normalizedUpdatedTrack = normalizeTrack(populatedUpdatedTrack)
+
+	return c.json(normalizedUpdatedTrack, HttpStatusCodes.OK)
 }
 
-export const remove: RouteHandler<RemoveRoute> = async (c) => {
+export const remove: AppRouteHandler<RemoveRoute> = async (c) => {
 	const { id } = c.req.valid("param")
 
 	const result = await Track.deleteOne({ _id: id })

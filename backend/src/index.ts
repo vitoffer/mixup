@@ -1,6 +1,7 @@
 import app from "./app"
+import env from "./env"
 
-const port = process.env.NODE_ENV ? process.env.BACKEND_PORT || 4000 : 4000
+const port = env.BACKEND_PORT
 
 export default {
 	port: port,
