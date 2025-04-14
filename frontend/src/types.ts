@@ -27,6 +27,8 @@ export interface TrackPlatformSearchResult {
 	thumbnailUrl: string
 }
 
+export type TrackSuggestion = Track | TrackPlatformSearchResult
+
 export interface UserJWTPayload extends JwtPayload {
 	username: string
 	role: Role

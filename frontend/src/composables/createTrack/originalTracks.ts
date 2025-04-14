@@ -1,13 +1,8 @@
 import { getOriginalTracksSuggestions } from "@/api/searchTrack"
 import { loadTracks, trackList } from "@/modules/trackList"
-import { Platform, Track, TrackPlatformSearchResult } from "@/types"
+import { Platform, TrackSuggestion } from "@/types"
 import { AutoCompleteCompleteEvent } from "primevue"
 import { ref } from "vue"
-
-type TrackSuggestion =
-	| Track
-	| { splitter: true; text: string }
-	| TrackPlatformSearchResult
 
 export const useOriginalTracks = () => {
 	const originalTracksSuggestions = ref<

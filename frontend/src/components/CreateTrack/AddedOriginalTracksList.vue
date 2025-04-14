@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { Track, TrackPlatformSearchResult } from "@/types"
+import { TrackSuggestion } from "@/types"
 import TrackItem from "../TrackItem.vue"
 
 defineProps<{
-	originalTracksList: (Track | TrackPlatformSearchResult)[]
+	originalTracksList: TrackSuggestion[]
 }>()
 
 defineEmits<{

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Track, TrackPlatformSearchResult } from "@/types"
+import { Track, TrackSuggestion } from "@/types"
 import {
 	AutoCompleteCompleteEvent,
 	AutoCompleteOptionSelectEvent,
@@ -9,11 +9,10 @@ import { ref } from "vue"
 import PlatformTrackSearch from "./PlatformTrackSearch.vue"
 
 const props = defineProps<{
-	originalTracksSuggestions: (
-		| Track
-		| { splitter: boolean; text: string }
-		| TrackPlatformSearchResult
-	)[]
+	originalTracksSuggestions: {
+		label: string
+		items: TrackSuggestion[]
+	}[]
 	originalTracksList: Track[]
 }>()
 

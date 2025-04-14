@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RouterLink } from "vue-router"
 import thumbnailPlaceholder from "@/assets/images/thumbnail_placeholder.png"
-import { Track, TrackPlatformSearchResult } from "@/types"
+import { Track, TrackSuggestion } from "@/types"
 import { computed, ref, watch } from "vue"
 import { useUserStore } from "@/stores/userStore"
 import { useConfirm } from "primevue"
@@ -10,7 +10,7 @@ import { useToastStore } from "@/stores/toastStore"
 
 const props = withDefaults(
 	defineProps<{
-		track: Track | TrackPlatformSearchResult
+		track: TrackSuggestion
 		withLinks?: boolean
 		unbordered?: boolean
 		editable?: boolean

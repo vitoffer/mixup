@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Track, TrackPlatformSearchResult } from "@/types"
+import { TrackSuggestion } from "@/types"
 import {
 	AutoCompleteChangeEvent,
 	AutoCompleteCompleteEvent,
@@ -13,11 +13,10 @@ defineOptions({
 
 const props = withDefaults(
 	defineProps<{
-		suggestions: (
-			| Track
-			| { splitter: boolean; text: string }
-			| TrackPlatformSearchResult
-		)[]
+		suggestions: {
+			label: string
+			items: TrackSuggestion[]
+		}[]
 		inputId: string
 		disabled?: boolean
 		dropdown?: boolean

@@ -1,6 +1,6 @@
 import { useToastStore } from "@/stores/toastStore"
 import { useUserStore } from "@/stores/userStore"
-import { Platform, Track, TrackPlatformSearchResult } from "@/types"
+import { Platform, Track, TrackSuggestion } from "@/types"
 import axios, { AxiosResponse } from "axios"
 
 export async function postSaveTrack(
@@ -8,7 +8,7 @@ export async function postSaveTrack(
 	urls: Record<Platform, string | null>,
 	artistsNames: string[],
 	tags: string[],
-	originalTracks: (Track | TrackPlatformSearchResult)[],
+	originalTracks: TrackSuggestion[],
 	thumbnailUrl: string | null,
 ) {
 	const toastStore = useToastStore()
