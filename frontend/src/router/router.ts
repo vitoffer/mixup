@@ -6,6 +6,7 @@ import NotFoundView from "@/views/NotFound.vue"
 import CreateMix from "@/views/CreateMix.vue"
 import CreateOriginal from "@/views/CreateOriginal.vue"
 import LoginView from "@/views/Login.vue"
+import RegisterModeratorView from "@/views/RegisterModerator.vue"
 import { type RouteRecordRaw } from "vue-router"
 import { apiCheckRole } from "@/api/auth"
 
@@ -26,6 +27,14 @@ const routes: RouteRecordRaw[] = [
 		component: CreateOriginal,
 	},
 	{ name: "login", path: "/login", component: LoginView },
+	{
+		name: "regModer",
+		path: "/reg-moder",
+		component: RegisterModeratorView,
+		beforeEnter: async () => {
+			return await apiCheckRole(["admin"])
+		},
+	},
 	{ path: "/:pathMatch(.*)*", component: NotFoundView },
 ]
 

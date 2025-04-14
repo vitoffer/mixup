@@ -2,6 +2,7 @@
 import trackListIcon from "../assets/icons/track_list.svg?component"
 import createTrackIcon from "../assets/icons/create_track.svg?component"
 import userIcon from "../assets/icons/user.svg?component"
+import regModerIcon from "../assets/icons/reg-moder.svg?component"
 import { useRoute } from "vue-router"
 import { DefineComponent, shallowRef, watch } from "vue"
 import { useUserStore } from "@/stores/userStore"
@@ -43,6 +44,12 @@ async function getAccessibleLinks() {
 			icon: createTrackIcon,
 		})
 
+	if (await userStore.checkRole(["admin"]))
+		links.value.push({
+			name: "regModer",
+			icon: regModerIcon,
+		})
+
 	links.value.sort((a, b) => sortByObj[a.name] - sortByObj[b.name])
 }
 
@@ -55,7 +62,9 @@ function isActive(linkName: string) {
 			? true
 			: linkName === "login" && route.path === "/login"
 				? true
-				: false
+				: linkName === "regModer" && route.path === "/reg-moder"
+					? true
+					: false
 }
 </script>
 

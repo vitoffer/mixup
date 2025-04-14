@@ -1,6 +1,6 @@
 import { useUserStore } from "@/stores/userStore"
 import axios, { AxiosError } from "axios"
-import { BASIC_AUTH_ROUTE } from "./constants"
+import { BASIC_AUTH_ROUTE } from "../constants"
 import { Role, UserJWTPayload } from "@/types"
 
 export async function login(
