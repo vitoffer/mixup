@@ -16,7 +16,7 @@ const EnvSchema = z
 		SPOTIFY_CLIENT_SECRET: z.string().length(32),
 		DB_USER: z.string().transform(encodeURIComponent),
 		DB_PASSWORD: z.string().transform(encodeURIComponent),
-		DB_HOST: z.union([z.string().ip(), z.literal("localhost")]),
+		DB_HOST: z.string(),
 		DB_PORT: z.coerce.number(),
 		DB_NAME: z.string(),
 		JWT_SECRET: z.string().length(64),
