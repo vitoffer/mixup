@@ -36,6 +36,7 @@ watch(
 
 <template>
 	<Toast />
+	<ConfirmDialog />
 	<div class="mb-[52px]">
 		<RouterView />
 	</div>

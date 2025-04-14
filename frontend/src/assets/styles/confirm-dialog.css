@@ -1,0 +1,23 @@
+.p-dialog {
+	@apply max-h-[90%] scale-100 rounded-[20px] border bg-gray-800 shadow-sm;
+}
+
+.p-dialog-content {
+	@apply overflow-y-auto px-5 pt-0 pb-5;
+}
+
+.p-dialog-header {
+	@apply flex shrink-0 items-center justify-between p-5;
+}
+
+.p-dialog-title {
+	@apply text-xl font-semibold;
+}
+
+.p-dialog-footer {
+	@apply flex shrink-0 justify-end gap-2 px-5 pt-0 pb-5;
+}
+
+.p-dialog-header-actions {
+	@apply flex items-center gap-2;
+}

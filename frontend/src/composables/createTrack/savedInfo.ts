@@ -99,9 +99,9 @@ export const useSavedInfo = () => {
 
 	async function saveTrack(isMix: boolean, successMessage: string) {
 		const thumbnailUrl =
-			savedThumbnails.value.spotify ||
 			savedThumbnails.value.yandexMusic ||
 			savedThumbnails.value.youtubeMusic ||
+			savedThumbnails.value.spotify ||
 			null
 
 		const savedTrack = await postSaveTrack(
@@ -131,6 +131,8 @@ export const useSavedInfo = () => {
 		}
 		searchPlatformText.value = event.value
 	}
+
+	function loadInfoFromAvailableTrack(track: Track) {}
 
 	return {
 		savedLinks,

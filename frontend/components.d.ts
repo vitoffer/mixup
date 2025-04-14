@@ -15,6 +15,7 @@ declare module 'vue' {
     AutoComplete: typeof import('primevue/autocomplete')['default']
     BackButton: typeof import('./src/components/BackButton.vue')['default']
     BaseInfoEdit: typeof import('./src/components/CreateTrack/BaseInfoEdit.vue')['default']
+    ConfirmDialog: typeof import('primevue/confirmdialog')['default']
     ConfirmPopup: typeof import('primevue/confirmpopup')['default']
     FloatLabel: typeof import('primevue/floatlabel')['default']
     InputText: typeof import('primevue/inputtext')['default']

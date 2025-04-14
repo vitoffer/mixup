@@ -20,7 +20,7 @@ export const useUserStore = defineStore(
 		}
 
 		function checkRole(requiredRoles: Role[]) {
-			if (!checkAuth) {
+			if (!checkAuth()) {
 				return false
 			}
 			return requiredRoles.includes((info.value as UserJWTPayload).role)

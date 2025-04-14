@@ -33,6 +33,8 @@ async function localLoadTracks() {
 				<TrackItem
 					:track="track"
 					with-links
+					editable
+					@load-tracks="localLoadTracks"
 				/>
 			</li>
 		</ul>
