@@ -9,6 +9,7 @@ import TagsEdit from "./TagsEdit.vue"
 import BaseInfoEdit from "./BaseInfoEdit.vue"
 import PlatformTabList from "./PlatformTabList.vue"
 import PlatformTrackSearch from "./PlatformTrackSearch.vue"
+import { ref } from "vue"
 
 const props = withDefaults(
 	defineProps<{
@@ -44,12 +45,15 @@ const {
 	changeText,
 } = useSavedInfo()
 
+const id = ref<null | string>(null)
+
 function updateOriginalTracksList(newValue: Track[]) {
 	originalTracks.value = newValue
 }
 
 async function navigateToCreateOriginal() {
 	mixEditStore.mix = {
+		id: null,
 		title: title.value,
 		artistsNames: artistsNames.value,
 		tags: tags.value,
@@ -79,6 +83,7 @@ function confirmClearSavedLink(event: Event, platform: Platform) {
 onMounted(() => {
 	const savedState = mixEditStore.mix
 	if (props.isMix && savedState) {
+		id.value = savedState.id
 		title.value = savedState.title
 		artistsNames.value = savedState.artistsNames
 		tags.value = savedState.tags
@@ -138,7 +143,7 @@ onBeforeRouteLeave((to) => {
 		></slot>
 		<button
 			class="flex cursor-pointer items-center justify-center rounded-[10px] bg-yellow-800 px-16 py-4 text-2xl leading-none font-bold text-gray-900"
-			@click="saveTrack(isMix, successMessage)"
+			@click="saveTrack(id, isMix, successMessage)"
 		>
 			OK
 		</button>

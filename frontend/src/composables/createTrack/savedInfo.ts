@@ -97,7 +97,11 @@ export const useSavedInfo = () => {
 		trackFoundOnPlatform.value = searchPlatformText.value
 	}
 
-	async function saveTrack(isMix: boolean, successMessage: string) {
+	async function saveTrack(
+		id: string | null,
+		isMix: boolean,
+		successMessage: string,
+	) {
 		const thumbnailUrl =
 			savedThumbnails.value.yandexMusic ||
 			savedThumbnails.value.youtubeMusic ||
@@ -105,6 +109,7 @@ export const useSavedInfo = () => {
 			null
 
 		const savedTrack = await postSaveTrack(
+			id,
 			title.value,
 			{
 				youtubeMusic: savedLinks.value.youtubeMusic || null,
@@ -113,7 +118,7 @@ export const useSavedInfo = () => {
 			},
 			artistsNames.value.split(", "),
 			tags.value,
-			isMix ? [] : originalTracks.value,
+			isMix ? originalTracks.value : [],
 			thumbnailUrl,
 		)
 
@@ -121,7 +126,9 @@ export const useSavedInfo = () => {
 			return
 		}
 
-		toastStore.addToast({ summary: successMessage })
+		const chosenSuccessMessage = id ? "Микс успешно обновлен" : successMessage
+
+		toastStore.addToast({ summary: chosenSuccessMessage })
 		router.push({ name: isMix ? "trackList" : "createMix" })
 	}
 
@@ -131,8 +138,6 @@ export const useSavedInfo = () => {
 		}
 		searchPlatformText.value = event.value
 	}
-
-	function loadInfoFromAvailableTrack(track: Track) {}
 
 	return {
 		savedLinks,

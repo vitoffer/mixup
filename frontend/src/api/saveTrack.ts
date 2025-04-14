@@ -1,9 +1,16 @@
+import { BASIC_TRACKS_ROUTE } from "@/constants"
 import { useToastStore } from "@/stores/toastStore"
 import { useUserStore } from "@/stores/userStore"
-import { Platform, Track, TrackSuggestion } from "@/types"
+import {
+	Platform,
+	Track,
+	TrackPlatformSearchResult,
+	TrackSuggestion,
+} from "@/types"
 import axios, { AxiosResponse } from "axios"
 
 export async function postSaveTrack(
+	id: string | null,
 	title: string,
 	urls: Record<Platform, string | null>,
 	artistsNames: string[],
@@ -17,18 +24,20 @@ export async function postSaveTrack(
 	try {
 		originalTracks = await Promise.all(
 			originalTracks.map(async (originalTrack) => {
-				if (!("id" in originalTrack)) {
+				if (!("id" in originalTrack) || !originalTrack.id) {
+					const originalSuggestion = originalTrack as TrackPlatformSearchResult
 					const savedOriginalTrack = await postSaveTrack(
-						originalTrack.title,
+						null,
+						originalSuggestion.title,
 						{
 							spotify: null,
 							yandexMusic: null,
-							youtubeMusic: originalTrack.url,
+							youtubeMusic: originalSuggestion.url,
 						},
-						originalTrack.artistsNames,
+						originalSuggestion.artistsNames,
 						[],
 						[],
-						originalTrack.thumbnailUrl,
+						originalSuggestion.thumbnailUrl,
 					)
 
 					if ("error" in savedOriginalTrack) {
@@ -47,8 +56,18 @@ export async function postSaveTrack(
 
 		originalTracks = originalTracks.filter((obj) => Object.keys(obj).length > 0)
 
-		const { data }: AxiosResponse<Track> = await axios.post(
-			`${import.meta.env.VITE_BASE_API_URL}/tracks`,
+		let method, url
+
+		if (!id) {
+			method = axios.post
+			url = `${BASIC_TRACKS_ROUTE}`
+		} else {
+			method = axios.patch
+			url = `${BASIC_TRACKS_ROUTE}/${id}`
+		}
+
+		const { data }: AxiosResponse<Track> = await method(
+			url,
 			{
 				title,
 				urls,
@@ -63,7 +82,6 @@ export async function postSaveTrack(
 				},
 			},
 		)
-
 		return data
 	} catch (e) {
 		toastStore.addToast({

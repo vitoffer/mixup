@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { RouterLink } from "vue-router"
+import { RouterLink, useRouter } from "vue-router"
 import thumbnailPlaceholder from "@/assets/images/thumbnail_placeholder.png"
 import { Track, TrackSuggestion } from "@/types"
 import { computed, ref, watch } from "vue"
@@ -7,6 +7,7 @@ import { useUserStore } from "@/stores/userStore"
 import { useConfirm } from "primevue"
 import { deleteTrack } from "@/api/deleteTrack"
 import { useToastStore } from "@/stores/toastStore"
+import { useMixEditStore } from "@/stores/mixEditStore"
 
 const props = withDefaults(
 	defineProps<{
@@ -29,6 +30,7 @@ const emit = defineEmits<{
 const userStore = useUserStore()
 const confirm = useConfirm()
 const toastStore = useToastStore()
+const router = useRouter()
 
 const navLink = computed(() => {
 	return "id" in props.track
@@ -55,7 +57,23 @@ watch(
 	},
 )
 
-function editTrack() {}
+function editTrack() {
+	const mixEditStore = useMixEditStore()
+	const track = props.track as Track
+	mixEditStore.mix = {
+		id: track.id,
+		title: track.title,
+		artistsNames: track.artistsNames.join(", "),
+		tags: track.tags,
+		savedLinks: {
+			yandexMusic: track.urls.yandexMusic || "",
+			youtubeMusic: track.urls.youtubeMusic || "",
+			spotify: track.urls.spotify || "",
+		},
+		originalTracks: track.originalTracks,
+	}
+	router.push({ name: "createMix" })
+}
 
 function confirmDelete() {
 	confirm.require({
