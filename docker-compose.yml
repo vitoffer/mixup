@@ -33,6 +33,7 @@ services:
       - PROXY_PORT=${PROXY_PORT}
       - PROXY_USERNAME=${PROXY_USERNAME}
       - PROXY_PASSWORD=${PROXY_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
     networks:
       - mixup-net
     ports:
