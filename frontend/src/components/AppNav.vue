@@ -38,13 +38,13 @@ async function getAccessibleLinks() {
 		{},
 	)
 
-	if (await userStore.checkRole(["moderator", "admin"]))
+	if (userStore.checkRole(["moderator", "admin"]))
 		links.value.push({
 			name: "createMix",
 			icon: createTrackIcon,
 		})
 
-	if (await userStore.checkRole(["admin"]))
+	if (userStore.checkRole(["admin"]))
 		links.value.push({
 			name: "regModer",
 			icon: regModerIcon,

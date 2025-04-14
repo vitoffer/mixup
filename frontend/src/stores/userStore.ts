@@ -1,7 +1,6 @@
 import { defineStore } from "pinia"
 import { computed, ref } from "vue"
 import { jwtDecode } from "jwt-decode"
-import { getMe } from "@/api/auth"
 import { Role, UserJWTPayload } from "@/types"
 
 export const useUserStore = defineStore(
@@ -13,14 +12,21 @@ export const useUserStore = defineStore(
 			token.value ? jwtDecode(token.value) : null,
 		)
 
-		async function checkRole(requiredRoles: Role[]) {
+		function checkAuth() {
 			if (info.value === null) {
 				return false
 			}
-			return requiredRoles.includes(info.value.role)
+			return true
 		}
 
-		return { token, info, checkRole }
+		function checkRole(requiredRoles: Role[]) {
+			if (!checkAuth) {
+				return false
+			}
+			return requiredRoles.includes((info.value as UserJWTPayload).role)
+		}
+
+		return { token, info, checkAuth, checkRole }
 	},
 	{
 		persist: true,

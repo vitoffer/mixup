@@ -15,7 +15,7 @@ const { checkAuth } = useUserStore()
 localCheckAuth()
 
 async function localCheckAuth() {
-	if (!(await checkAuth())) {
+	if (!checkAuth()) {
 		toastStore.addToast({
 			summary: "Ошибка авторизации. Пожалуйста, войдите снова",
 		})
