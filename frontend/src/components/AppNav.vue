@@ -3,14 +3,13 @@ import trackListIcon from "../assets/icons/track_list.svg?component"
 import createTrackIcon from "../assets/icons/create_track.svg?component"
 import loginIcon from "../assets/icons/login.svg?component"
 import { useRoute } from "vue-router"
-import { DefineComponent, ref, watch } from "vue"
+import { DefineComponent, shallowRef, watch } from "vue"
 import { useUserStore } from "@/stores/user"
-import axios from "axios"
 
 const route = useRoute()
 const userStore = useUserStore()
 
-const links = ref<{ name: string; icon: DefineComponent }[]>([])
+const links = shallowRef<{ name: string; icon: DefineComponent }[]>([])
 
 watch(() => userStore.token, getAccessibleLinks, { immediate: true })
 
