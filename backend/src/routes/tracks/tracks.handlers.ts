@@ -15,8 +15,11 @@ import { AppRouteHandler } from "@/lib/types"
 export const list: AppRouteHandler<ListRoute> = async (c) => {
 	let resultTracks: z.infer<typeof DbPopulatedTrackSchema>[]
 
-	const rawTracks = await Track.find().populate("originalTracks")
-	const result = DbPopulatedTrackSchema.array().safeParse(rawTracks)
+	const rawTracks = await Track.find().populate({
+		path: "originalTracks",
+		populate: { path: "originalTracks" },
+	})
+	const result = DbPopulatedTrackSchema.array().safeParse(rawTracks, {})
 
 	if (!result.success) {
 		console.error(result.error)
@@ -36,9 +39,10 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
 export const getOne: AppRouteHandler<GetOneRoute> = async (c) => {
 	const { id } = c.req.valid("param")
 
-	const track = (await Track.findById(id).populate(
-		"originalTracks"
-	)) as z.infer<typeof DbPopulatedTrackSchema> | null
+	const track = (await Track.findById(id).populate({
+		path: "originalTracks",
+		populate: { path: "originalTracks" },
+	})) as z.infer<typeof DbPopulatedTrackSchema> | null
 
 	if (!track) {
 		return c.json(
@@ -56,9 +60,10 @@ export const create: AppRouteHandler<CreateRoute> = async (c) => {
 	const track = c.req.valid("json")
 
 	const rawInsertedTrack = await Track.create(track)
-	const populatedInsertedTrack = (await rawInsertedTrack.populate(
-		"originalTracks"
-	)) as z.infer<typeof DbPopulatedTrackSchema>
+	const populatedInsertedTrack = (await rawInsertedTrack.populate({
+		path: "originalTracks",
+		populate: { path: "originalTracks" },
+	})) as z.infer<typeof DbPopulatedTrackSchema>
 
 	const normalizedInsertedTrack = normalizeTrack(populatedInsertedTrack)
 
@@ -84,9 +89,10 @@ export const patch: AppRouteHandler<PatchRoute> = async (c) => {
 		)
 	}
 
-	const populatedUpdatedTrack = (await rawUpdatedTrack.populate(
-		"originalTracks"
-	)) as z.infer<typeof DbPopulatedTrackSchema>
+	const populatedUpdatedTrack = (await rawUpdatedTrack.populate({
+		path: "originalTracks",
+		populate: { path: "originalTracks" },
+	})) as z.infer<typeof DbPopulatedTrackSchema>
 
 	const normalizedUpdatedTrack = normalizeTrack(populatedUpdatedTrack)
 
