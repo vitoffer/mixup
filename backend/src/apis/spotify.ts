@@ -1,10 +1,10 @@
 import axios from "axios"
-import { HttpProxyAgent } from "http-proxy-agent"
+import { HttpsProxyAgent } from "https-proxy-agent"
 import { SearchResults } from "@spotify/web-api-ts-sdk"
 import { CleanedApiSearchResultType } from "../schemas/apis"
 import env from "@/env"
 
-const agent = new HttpProxyAgent(
+const agent = new HttpsProxyAgent(
 	`http://${env.PROXY_USERNAME}:${env.PROXY_PASSWORD}@${env.PROXY_HOST}:${env.PROXY_PORT}`
 )
 
@@ -49,7 +49,6 @@ export async function getSpotifySearchResults(query: string) {
 			`https://api.spotify.com/v1/search?q=${query}&type=track&limit=5`,
 			{
 				headers: { Authorization: `Bearer ${token}` },
-				httpAgent: agent,
 				httpsAgent: agent,
 			}
 		)
