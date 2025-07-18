@@ -1,8 +1,8 @@
 import { getOriginalTracksSuggestions } from "@/api/searchTrack"
 import { loadTracks, trackList } from "@/modules/trackList"
 import {
-	OriginalTrackSuggestion,
 	Platform,
+	TempOriginalTrack,
 	Track,
 	TrackPlatformSearchResult,
 	TrackSuggestion,
@@ -27,7 +27,7 @@ export const useOriginalTracks = () => {
 	function generateBaseTrackSchema(
 		suggestion: TrackPlatformSearchResult,
 		platform: Platform,
-	): OriginalTrackSuggestion {
+	): TempOriginalTrack {
 		return {
 			title: suggestion.title,
 			urls: {

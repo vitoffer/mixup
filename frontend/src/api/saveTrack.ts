@@ -2,7 +2,7 @@ import { BASIC_TRACKS_ROUTE } from "@/constants"
 import { useToastStore } from "@/stores/toastStore"
 import { useUserStore } from "@/stores/userStore"
 import {
-	OriginalTrackSuggestion,
+	TempOriginalTrack,
 	Platform,
 	Track,
 	TrackPlatformSearchResult,
@@ -26,7 +26,7 @@ export async function postSaveTrack(
 		originalTracks = await Promise.all(
 			originalTracks.map(async (originalTrack) => {
 				if (!("id" in originalTrack) || !originalTrack.id) {
-					const originalSuggestion = originalTrack as OriginalTrackSuggestion
+					const originalSuggestion = originalTrack as TempOriginalTrack
 					const savedOriginalTrack = await postSaveTrack(
 						null,
 						originalSuggestion.title,

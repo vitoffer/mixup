@@ -27,14 +27,14 @@ export interface TrackPlatformSearchResult {
 	thumbnailUrl: string
 }
 
-export type OriginalTrackSuggestion = Omit<
+export type TempOriginalTrack = Omit<
 	Track,
 	"id" | "isMix" | "originalTracks" | "tags"
 >
 
 export type TrackSuggestion =
 	| Track
-	| OriginalTrackSuggestion
+	| TempOriginalTrack
 	| TrackPlatformSearchResult
 
 export interface UserJWTPayload extends JwtPayload {

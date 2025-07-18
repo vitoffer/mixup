@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Track, TrackSuggestion } from "@/types"
+import { Platform, Track, TrackSuggestion } from "@/types"
 import {
 	AutoCompleteCompleteEvent,
 	AutoCompleteOptionSelectEvent,
@@ -26,17 +26,23 @@ const originalTracksSearch = ref("")
 
 const autocompleteDisabled = ref(false)
 
-function deleteOriginalTrack(title: string) {
+function deleteOriginalTrack(urls: Record<Platform, string | null>) {
 	emit(
 		"updateOriginalTracksList",
-		props.originalTracksList?.filter((track) => track.title !== title),
+		props.originalTracksList?.filter((track) =>
+			Object.values(track.urls).some(
+				(url) => !Object.values(urls).includes(url),
+			),
+		),
 	)
 }
 
 function selectOriginalTrack(event: AutoCompleteOptionSelectEvent) {
+	const suggestionUrl = Object.values(event.value.urls).find((url) => url)
+
 	if (
-		props.originalTracksList?.find(
-			(track) => track.title === event.value.title,
+		props.originalTracksList?.find((track) =>
+			Object.values(track.urls).some((url) => url === suggestionUrl),
 		) === undefined
 	) {
 		emit("updateOriginalTracksList", [...props.originalTracksList, event.value])
