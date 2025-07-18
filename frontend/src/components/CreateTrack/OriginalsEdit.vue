@@ -68,7 +68,7 @@ function selectOriginalTrack(event: AutoCompleteOptionSelectEvent) {
 			option-group-children="items"
 			class="original-search"
 			empty-search-message="Оригиналов по запросу не найдено"
-			label-text="Поиск трека по базе и на youtube music"
+			label-text="Поиск трека по базе и на платформах"
 		>
 			<template #footer>
 				<div class="mt-1 flex flex-col items-center leading-[1.25rem]">

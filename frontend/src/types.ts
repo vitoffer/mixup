@@ -1,6 +1,6 @@
 import { JwtPayload } from "jwt-decode"
 
-export type Platform = "spotify" | "yandexMusic" | "youtubeMusic"
+export type Platform = "yandexMusic" | "youtubeMusic" | "spotify"
 
 export interface Track {
 	id: string
@@ -27,7 +27,15 @@ export interface TrackPlatformSearchResult {
 	thumbnailUrl: string
 }
 
-export type TrackSuggestion = Track | TrackPlatformSearchResult
+export type OriginalTrackSuggestion = Omit<
+	Track,
+	"id" | "isMix" | "originalTracks" | "tags"
+>
+
+export type TrackSuggestion =
+	| Track
+	| OriginalTrackSuggestion
+	| TrackPlatformSearchResult
 
 export interface UserJWTPayload extends JwtPayload {
 	username: string

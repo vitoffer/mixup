@@ -2,6 +2,7 @@ import { BASIC_TRACKS_ROUTE } from "@/constants"
 import { useToastStore } from "@/stores/toastStore"
 import { useUserStore } from "@/stores/userStore"
 import {
+	OriginalTrackSuggestion,
 	Platform,
 	Track,
 	TrackPlatformSearchResult,
@@ -25,15 +26,11 @@ export async function postSaveTrack(
 		originalTracks = await Promise.all(
 			originalTracks.map(async (originalTrack) => {
 				if (!("id" in originalTrack) || !originalTrack.id) {
-					const originalSuggestion = originalTrack as TrackPlatformSearchResult
+					const originalSuggestion = originalTrack as OriginalTrackSuggestion
 					const savedOriginalTrack = await postSaveTrack(
 						null,
 						originalSuggestion.title,
-						{
-							spotify: null,
-							yandexMusic: null,
-							youtubeMusic: originalSuggestion.url,
-						},
+						originalSuggestion.urls,
 						originalSuggestion.artistsNames,
 						[],
 						[],

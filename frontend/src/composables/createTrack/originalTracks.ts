@@ -1,6 +1,12 @@
 import { getOriginalTracksSuggestions } from "@/api/searchTrack"
 import { loadTracks, trackList } from "@/modules/trackList"
-import { Platform, TrackSuggestion } from "@/types"
+import {
+	OriginalTrackSuggestion,
+	Platform,
+	Track,
+	TrackPlatformSearchResult,
+	TrackSuggestion,
+} from "@/types"
 import { AutoCompleteCompleteEvent } from "primevue"
 import { ref } from "vue"
 
@@ -17,6 +23,22 @@ export const useOriginalTracks = () => {
 	]
 
 	const platforms: Platform[] = ["yandexMusic", "youtubeMusic", "spotify"]
+
+	function generateBaseTrackSchema(
+		suggestion: TrackPlatformSearchResult,
+		platform: Platform,
+	): OriginalTrackSuggestion {
+		return {
+			title: suggestion.title,
+			urls: {
+				yandexMusic: platform === "yandexMusic" ? suggestion.url : null,
+				youtubeMusic: platform === "youtubeMusic" ? suggestion.url : null,
+				spotify: platform === "spotify" ? suggestion.url : null,
+			},
+			thumbnailUrl: suggestion.thumbnailUrl,
+			artistsNames: suggestion.artistsNames,
+		}
+	}
 
 	async function searchOriginalTrack(event: AutoCompleteCompleteEvent) {
 		setTimeout(async () => {
@@ -37,13 +59,22 @@ export const useOriginalTracks = () => {
 			const fetchedPlatformSuggestions =
 				(await getOriginalTracksSuggestions(event.query)) || null
 
+			const formattedPlatformSuggestions = Object.entries(
+				fetchedPlatformSuggestions,
+			).map((entry) => {
+				const [platform, suggestions] = entry
+				return suggestions.map((suggestion) =>
+					generateBaseTrackSchema(suggestion, platform as Platform),
+				)
+			})
+
 			const suggestionsList: { label: string; items: TrackSuggestion[] }[] = []
 
 			for (const [index, group] of groups.entries()) {
 				const items =
 					index === 0
 						? trackListSuggestions
-						: fetchedPlatformSuggestions[platforms[index - 1]] || []
+						: formattedPlatformSuggestions[index - 1] || []
 
 				suggestionsList.push({
 					label: group.label + (items.length === 0 ? " 0" : ""),

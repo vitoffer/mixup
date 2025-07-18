@@ -14,9 +14,9 @@ const platformHandlers: Record<
 	PlatformType,
 	(query: string) => Promise<CleanedApiSearchResultType[]>
 > = {
-	spotify: getSpotifySearchResults,
 	yandexMusic: getYandexMusicSearchResults,
 	youtubeMusic: getYoutubeVideosSearchResults,
+	spotify: getSpotifySearchResults,
 }
 
 export const searchTracks: AppRouteHandler<SearchTracksRoute> = async (c) => {
